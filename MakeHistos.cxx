@@ -1,4 +1,4 @@
-// g++ -g MakeHistos.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb
+// g++ -g MakeHistos.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb -lProof
 
 #define DEBUG 0
 
@@ -16,6 +16,7 @@
 #include <TH1.h>
 #include <TStopwatch.h>
 #include <TKey.h>
+#include <TProof.h>
 
 #include <TApplication.h>
 #include "TNucleus.h"
@@ -238,7 +239,8 @@ int main(int argc, char **argv)
     cutlist->Add(obj);
     printf("found a cut! %s \n",((TNamed *)obj)->GetName());
   }
-
+  
+  TProof::Open("");
   TChain *chain = new TChain("AnalysisTree");
   int i =1;
 
@@ -246,6 +248,8 @@ int main(int argc, char **argv)
   {
     chain->Add(argv[i++]);
   }
+  
+  chain->SetProof();
 
   printf("%i analysis trees added to chain.\n",i-1);
   chain->SetBranchAddress("TTigress",&tigress);
