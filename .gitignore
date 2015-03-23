@@ -30,3 +30,5 @@
 *~
 RunMe
 *.root
+.DS_Store
+
