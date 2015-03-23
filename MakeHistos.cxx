@@ -17,6 +17,7 @@
 #include <TStopwatch.h>
 #include <TKey.h>
 #include <TProof.h>
+#include <TTree.h>
 
 #include <TApplication.h>
 #include "TNucleus.h"
@@ -182,6 +183,16 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
     }
 
+    /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("pid1_beryllium"))))
+    {
+      if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
+      else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
+      {
+        cout<<".";
+      }
+    }*/
+
+
 //***********************
 //        Gammas
 //***********************
@@ -248,12 +259,19 @@ int main(int argc, char **argv)
   {
     chain->Add(argv[i++]);
   }
-  
+
   chain->SetProof();
 
   printf("%i analysis trees added to chain.\n",i-1);
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
+
+  TTree *ftree = new TTree("friendtree","friendtree");
+  //ftree->Branch(
+
+  chain->AddFriend("AnalysisTree","friendtree.root");
+  
+  
   TList *outlist = new TList;
   SetupHistos(outlist);
   ProcessChain(chain,outlist);
