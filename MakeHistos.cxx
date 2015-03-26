@@ -37,6 +37,15 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH2D("pid_2_summed","pid_2_summed",1400,0,140,700,0,70));//
   outlist->Add(new TH2D("pid_2_summed_single_pixel","pid_2_summed_single_pixel",1400,0,140,700,0,70));//
 
+  outlist->Add(new TH2D("pid_1_mult1","pid_1_mult1",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_2_mult1","pid_2_mult1",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_1_mult2","pid_1_mult2",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_2_mult2","pid_2_mult2",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_1_mult3","pid_1_mult3",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_2_mult3","pid_2_mult3",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_1_mult4","pid_1_mult4",700,0,70,700,0,70));//
+  outlist->Add(new TH2D("pid_2_mult4","pid_2_mult4",700,0,70,700,0,70));//
+
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
   outlist->Add(new TH2D("EvTheta_1D","EvTheta_1D",240,0,60,200,10,60));//
@@ -47,6 +56,29 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH2D("EvTheta_4D","EvTheta_4D",100,0,100,200,0,70));//
   outlist->Add(new TH2D("EvTheta_1Total","EvTheta_1Total",100,0,100,700,0,70));
   outlist->Add(new TH2D("EvTheta_2Total","EvTheta_2Total",100,0,100,700,0,70));
+  
+  outlist->Add(new TH2D("EvTheta_1Total_mult1","EvTheta_1Total_mult1",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2Total_mult1","EvTheta_2Total_mult1",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_1Total_mult2","EvTheta_1Total_mult2",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2Total_mult2","EvTheta_2Total_mult2",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_1Total_mult3","EvTheta_1Total_mult3",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2Total_mult3","EvTheta_2Total_mult3",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_1Total_mult4","EvTheta_1Total_mult4",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2Total_mult4","EvTheta_2Total_mult4",100,0,100,700,0,70));
+  
+  outlist->Add(new TH2D("EvTheta_3Total_mult1","EvTheta_3Total_mult1",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_4Total_mult1","EvTheta_4Total_mult1",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_3Total_mult2","EvTheta_3Total_mult2",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_4Total_mult2","EvTheta_4Total_mult2",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_3Total_mult3","EvTheta_3Total_mult3",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_4Total_mult3","EvTheta_4Total_mult3",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_3Total_mult4","EvTheta_3Total_mult4",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_4Total_mult4","EvTheta_4Total_mult4",100,0,100,700,0,70));
+
+  outlist->Add(new TH2D("EvTheta_1_BE","EvTheta_1_BE",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2_BE","EvTheta_2_BE",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_1_HE","EvTheta_1_HE",100,0,100,700,0,70));
+  outlist->Add(new TH2D("EvTheta_2_HE","EvTheta_2_HE",100,0,100,700,0,70));
   
   outlist->Add(new TH2I("CSM_HitPattern_1D","HitPattern_1D",16,0,16,16,0,16));//
   outlist->Add(new TH2I("CSM_HitPattern_1E","HitPattern_1E",16,0,16,16,0,16));//
@@ -90,6 +122,9 @@ void ProcessChain(TChain *chain,TList *outlist)
     {
       cout<<"nentries: "<<nentries<<endl;
     }
+
+    if(csm->GetMultiplicity()==0)
+      continue;
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
 
@@ -180,8 +215,39 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(temp2) temp2->Fill(hit->GetDVerticalEnergy()/1000.,hit->GetDHorizontalEnergy()/1000.);
       temp2 = (TH2D*)outlist->FindObject("CheckCalE");
       if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
-    }
 
+    //Multiplicity cut plots
+
+      if(hit->GetEEnergy()>0.)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+	if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
+      }
+
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+      if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+
+      //Particle cut plots
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",hit->GetDetectorNumber()))))
+      {
+	if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
+	else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
+	{
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+      }
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
+      {
+	if(!cut) cerr<<"Error: Alpha cut not found!"<<endl;
+	else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
+	{
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+      }
+
+    //example cut
     /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("pid1_beryllium"))))
     {
       if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
@@ -190,7 +256,7 @@ void ProcessChain(TChain *chain,TList *outlist)
         cout<<".";
       }
     }*/
-
+    }
 
 //***********************
 //        Gammas
@@ -263,10 +329,10 @@ int main(int argc, char **argv)
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
 
-  TTree *ftree = new TTree("friendtree","friendtree");
+  //TTree *ftree = new TTree("friendtree","friendtree");
   //ftree->Branch(
 
-  chain->AddFriend("AnalysisTree","friendtree.root");
+  //chain->AddFriend("AnalysisTree","friendtree.root");
   
   
   TList *outlist = new TList;
