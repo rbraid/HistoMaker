@@ -232,7 +232,7 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",hit->GetDetectorNumber()))))
       {
 	if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
+	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
@@ -241,7 +241,7 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
       {
 	if(!cut) cerr<<"Error: Alpha cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
+	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
