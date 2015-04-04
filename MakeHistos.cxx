@@ -51,7 +51,12 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_single_pixel",id));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
-    
+
+    outlist->Add(new TH2D(Form("pid_%i_single_pixel",id),Form("Single Pixel Particle ID, detector %i",id),1400,0,140,700,0,70));//
+      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_single_pixel",id));
+      temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
+      
     outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -108,10 +113,10 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
   
-  outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map",90,0,180,180,-180,180));
+  outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map",45,0,90,90,-180,180));
     temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
-    temp2->GetXaxis()->SetTitle("Phi (Degrees)");
-    temp2->GetYaxis()->SetTitle("Theta (Degrees)");
+    temp2->GetXaxis()->SetTitle("Theta (Degrees)");
+    temp2->GetYaxis()->SetTitle("Phi (Degrees)");
 
   outlist->Add(new TH1D("Multiplicity","Multiplicity",10,0,10));//
 
@@ -209,10 +214,13 @@ void ProcessChain(TChain *chain,TList *outlist)
           temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
           temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	  
-	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==0)
+	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject("pid_1_summed_single_pixel");
 	    temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
+	    
+	    temp2 = (TH2D*)outlist->FindObject("pid_1_single_pixel");
+	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
         }
       }
@@ -227,10 +235,13 @@ void ProcessChain(TChain *chain,TList *outlist)
           temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
           temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	  
-	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==15)
+	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject("pid_2_summed_single_pixel");
 	    temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
+	    
+	    temp2 = (TH2D*)outlist->FindObject("pid_2_single_pixel");
+	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
         }
       }
@@ -373,6 +384,7 @@ int main(int argc, char **argv)
   //ftree->Branch(
 
   //chain->AddFriend("AnalysisTree","friendtree.root");
+
   
   
   TList *outlist = new TList;
