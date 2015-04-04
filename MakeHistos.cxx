@@ -30,67 +30,53 @@ TList *cutlist = new TList;
 
 void SetupHistos(TList *outlist)
 {
-  outlist->Add(new TH2D("pid_1","pid_1",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_2","pid_2",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_1_summed","pid_1_summed",1400,0,140,700,0,70));//
-  outlist->Add(new TH2D("pid_1_summed_single_pixel","pid_1_summed_single_pixel",1400,0,140,700,0,70));//
-  outlist->Add(new TH2D("pid_2_summed","pid_2_summed",1400,0,140,700,0,70));//
-  outlist->Add(new TH2D("pid_2_summed_single_pixel","pid_2_summed_single_pixel",1400,0,140,700,0,70));//
+  TH1D *temp1 = 0;
+  TH2D *temp2 = 0;
+  TH2I *temp2INT = 0;
+  TH3D *temp3 = 0;
 
-  outlist->Add(new TH2D("pid_1_mult1","pid_1_mult1",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_2_mult1","pid_2_mult1",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_1_mult2","pid_1_mult2",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_2_mult2","pid_2_mult2",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_1_mult3","pid_1_mult3",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_2_mult3","pid_2_mult3",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_1_mult4","pid_1_mult4",700,0,70,700,0,70));//
-  outlist->Add(new TH2D("pid_2_mult4","pid_2_mult4",700,0,70,700,0,70));//
+  for(int id = 1; id<=2;id++)
+  {
+    outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
+    outlist->Add(new TH2D(Form("pid_%i_summed",id),Form("Particle ID, detector %i, summed",id),1400,0,140,700,0,70));//
+    outlist->Add(new TH2D(Form("pid_%i_summed_single_pixel",id),Form("Single Pixel Particle ID, detector %i, summed",id),1400,0,140,700,0,70));//
 
-  outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
-  
-  outlist->Add(new TH2D("EvTheta_1D","EvTheta_1D",240,0,60,200,10,60));//
-  outlist->Add(new TH2D("EvTheta_1E","EvTheta_1E",240,0,60,200,10,60));//
-  outlist->Add(new TH2D("EvTheta_2D","EvTheta_2D",240,0,60,200,10,60));//
-  outlist->Add(new TH2D("EvTheta_2E","EvTheta_2E",240,0,60,200,10,60));//
-  outlist->Add(new TH2D("EvTheta_3D","EvTheta_3D",100,0,100,200,0,70));//
-  outlist->Add(new TH2D("EvTheta_4D","EvTheta_4D",100,0,100,200,0,70));//
-  outlist->Add(new TH2D("EvTheta_1Total","EvTheta_1Total",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2Total","EvTheta_2Total",100,0,100,700,0,70));
-  
-  outlist->Add(new TH2D("EvTheta_1Total_mult1","EvTheta_1Total_mult1",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2Total_mult1","EvTheta_2Total_mult1",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_1Total_mult2","EvTheta_1Total_mult2",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2Total_mult2","EvTheta_2Total_mult2",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_1Total_mult3","EvTheta_1Total_mult3",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2Total_mult3","EvTheta_2Total_mult3",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_1Total_mult4","EvTheta_1Total_mult4",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2Total_mult4","EvTheta_2Total_mult4",100,0,100,700,0,70));
-  
-  outlist->Add(new TH2D("EvTheta_3Total_mult1","EvTheta_3Total_mult1",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_4Total_mult1","EvTheta_4Total_mult1",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_3Total_mult2","EvTheta_3Total_mult2",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_4Total_mult2","EvTheta_4Total_mult2",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_3Total_mult3","EvTheta_3Total_mult3",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_4Total_mult3","EvTheta_4Total_mult3",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_3Total_mult4","EvTheta_3Total_mult4",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_4Total_mult4","EvTheta_4Total_mult4",100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_HE",id),Form("EvTheta %i, cut on He",id),100,0,100,700,0,70));
+    
+    
+    
+    for(int mid = 1; mid<=4;mid++)
+    {
+      outlist->Add(new TH2D(Form("pid_%i_mult%i",id,mid),Form("Particle ID, detector %i with Multiplicity %i",id,mid),700,0,70,700,0,70));
+      outlist->Add(new TH2D(Form("EvTheta_%iTotal_mult%i",id,mid),Form("E vs Theta Detector %i with Multiplicity %i",id,mid),100,0,100,700,0,70));
+    }
+  }
 
-  outlist->Add(new TH2D("EvTheta_1_BE","EvTheta_1_BE",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2_BE","EvTheta_2_BE",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_1_HE","EvTheta_1_HE",100,0,100,700,0,70));
-  outlist->Add(new TH2D("EvTheta_2_HE","EvTheta_2_HE",100,0,100,700,0,70));
-  
-  outlist->Add(new TH2I("CSM_HitPattern_1D","HitPattern_1D",16,0,16,16,0,16));//
-  outlist->Add(new TH2I("CSM_HitPattern_1E","HitPattern_1E",16,0,16,16,0,16));//
-  outlist->Add(new TH2I("CSM_HitPattern_2D","HitPattern_2D",16,0,16,16,0,16));//
-  outlist->Add(new TH2I("CSM_HitPattern_2E","HitPattern_2E",16,0,16,16,0,16));//
-  outlist->Add(new TH2I("CSM_HitPattern_3D","HitPattern_3D",16,0,16,16,0,16));//
-  outlist->Add(new TH2I("CSM_HitPattern_4D","HitPattern_4D",16,0,16,16,0,16));//
+  for(int det=1;det<=4;det++)
+  {
+    for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
+    {
+      if(det>2 && type=='E')//This skips 3 and 4 E, which don't exist
+	continue;
+
+      outlist->Add(new TH2D(Form("EvTheta_%i%c",det,type),Form("EvTheta, Detector %i, Position %c",det,type),100,0,100,700,0,70));//
+      outlist->Add(new TH2I(Form("CSM_HitPattern_%i%c",det,type),Form("HitPattern, Detector %i, Position %c",det,type),16,0,16,16,0,16));//
+    }
+  }
   
   outlist->Add(new TH2D("CheckCalD","CheckCalD",600,0,60,600,0,60));
   outlist->Add(new TH2D("CheckCalE","CheckCalE",600,0,60,600,0,60));
+
+  outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
+  
   
   outlist->Add(new TH2D("CSM_HP_Theta_Phi","HP_Theta_Phi",90,0,180,180,-180,180));
+    temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
+    temp2->SetTitle("Angular Coverage Map");
+    temp2->GetXaxis()->SetTitle("Phi (Degrees)");
+    temp2->GetYaxis()->SetTitle("Theta (Degrees)");
 
   outlist->Add(new TH1D("Multiplicity","Multiplicity",10,0,10));//
 
