@@ -205,8 +205,11 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(temp2) temp2->Fill(hit->GetEPosition().Theta()*180/3.141597,hit->GetEEnergy()/1000.);
       if(DEBUG) cout<<"HitPattern"<<endl;
 
-      temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
-      temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+      if(hit->GetDEnergy()>500)
+      {
+	temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
+	temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+      }
       
       temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
       if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
