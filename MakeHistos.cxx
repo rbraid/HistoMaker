@@ -114,7 +114,7 @@ void SetupHistos(TList *outlist)
     }
   }
 
-  outlist->Add(new TH1D("energyspec","Energy Spectrum",1000,0,100));
+  outlist->Add(new TH1D("energyspec","Energy Spectrum",2000,0,20));
     temp1 = (TH1D*)outlist->FindObject("energyspec");
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts per bin");
@@ -263,14 +263,20 @@ void ProcessChain(TChain *chain,TList *outlist)
 	}
       }
 
-      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",hit->GetDetectorNumber()));
-      if(temp2) temp2->Fill(hit->GetDVerticalEnergy()/1000.,hit->GetDHorizontalEnergy()/1000.);
-      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",hit->GetDetectorNumber()));
-      if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
+      if(hit->GetDVerticalEnergy()>0 && hit->GetDHorizontalEnergy()>0)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",hit->GetDetectorNumber()));
+	if(temp2) temp2->Fill(hit->GetDVerticalEnergy()/1000.,hit->GetDHorizontalEnergy()/1000.);
+      }
+      if(hit->GetEVerticalEnergy()>0 && hit->GetEHorizontalEnergy()>0)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",hit->GetDetectorNumber()));
+	if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
+      }
 
     //Multiplicity cut plots
 
-      if(hit->GetEEnergy()>0.)
+      if(hit->GetEEnergy()>100.)
       {
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
 	if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
