@@ -257,9 +257,9 @@ void ProcessChain(TChain *chain,TList *outlist)
 	  }
         }
       }
-      else if(hit->GetDetectorNumber()==3)
+      else if(hit->GetDetectorNumber()==1)
       {
-	if(hit->GetDVerticalStrip()==11)
+	if(hit->GetDHorizontalStrip()==9)
 	{
 	  temp1 = (TH1D*)outlist->FindObject("energyspec");
 	  temp1->Fill(hit->GetDVerticalEnergy()/1000.);
@@ -323,6 +323,16 @@ void ProcessChain(TChain *chain,TList *outlist)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
       }
+
+      /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_bad_fvb_1")))
+      {
+	if(!cut) cerr<<"Error: Front vs Back cut not found!"<<endl;
+	else if(cut->IsInside(hit->GetDVerticalEnergy()/1000., hit->GetDHorizontalEnergy()/1000. ) )
+	{
+	  hit->Print();
+	}
+      }*/
+	
 
     //example cut
     /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("pid1_beryllium"))))
