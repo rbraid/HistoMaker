@@ -72,10 +72,18 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    
+    outlist->Add(new TH2D(Form("CheckCalE_%i",id),Form("Front Energy vs Back Energy, Detector %i E",id),600,0,60,600,0,60));
+      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",id));
+      temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Front)");
+      temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Back)");
     
     for(int mid = 1; mid<=4;mid++)
     {
+      outlist->Add(new TH2D(Form("CheckCalD_%i",mid),Form("Front Energy vs Back Energy, Detector %i D",mid),600,0,60,600,0,60));
+      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",id));
+      temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
+      temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
+      
       outlist->Add(new TH2D(Form("pid_%i_mult%i",id,mid),Form("Particle ID, detector %i with Multiplicity %i",id,mid),700,0,70,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",id,mid));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
@@ -107,8 +115,6 @@ void SetupHistos(TList *outlist)
     }
   }
   
-  outlist->Add(new TH2D("CheckCalD","CheckCalD",600,0,60,600,0,60));
-  outlist->Add(new TH2D("CheckCalE","CheckCalE",600,0,60,600,0,60));
 
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
@@ -246,9 +252,9 @@ void ProcessChain(TChain *chain,TList *outlist)
         }
       }
 
-      temp2 = (TH2D*)outlist->FindObject("CheckCalD");
+      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",hit->GetDetectorNumber()));
       if(temp2) temp2->Fill(hit->GetDVerticalEnergy()/1000.,hit->GetDHorizontalEnergy()/1000.);
-      temp2 = (TH2D*)outlist->FindObject("CheckCalE");
+      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",hit->GetDetectorNumber()));
       if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
 
     //Multiplicity cut plots
@@ -384,7 +390,6 @@ int main(int argc, char **argv)
   //ftree->Branch(
 
   //chain->AddFriend("AnalysisTree","friendtree.root");
-
   
   
   TList *outlist = new TList;
