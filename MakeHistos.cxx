@@ -94,7 +94,7 @@ void SetupHistos(TList *outlist)
   for(int det=1;det<=4;det++)
   {
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
-    temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",id));
+    temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
     temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
     for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
