@@ -257,7 +257,24 @@ void ProcessChain(TChain *chain,TList *outlist)
 	  }
         }
       }
-      else if(hit->GetDetectorNumber()==1)
+      else if(hit->GetDetectorNumber()==3)
+      {
+	if(&& hit->GetDEnergy()>0)
+	{
+	  temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
+	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
+      }
+      else if(hit->GetDetectorNumber()==4)
+      {
+	if(hit->GetDEnergy()>0)
+	{
+	  temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
+	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
+      }
+      
+      if(hit->GetDetectorNumber()==1)
       {
 	if(hit->GetDHorizontalStrip()==9)
 	{
