@@ -79,11 +79,6 @@ void SetupHistos(TList *outlist)
     
     for(int mid = 1; mid<=4;mid++)
     {
-      outlist->Add(new TH2D(Form("CheckCalD_%i",mid),Form("Front Energy vs Back Energy, Detector %i D",mid),600,0,60,600,0,60));
-      temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",id));
-      temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
-      temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
-      
       outlist->Add(new TH2D(Form("pid_%i_mult%i",id,mid),Form("Particle ID, detector %i with Multiplicity %i",id,mid),700,0,70,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",id,mid));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
@@ -98,6 +93,10 @@ void SetupHistos(TList *outlist)
 
   for(int det=1;det<=4;det++)
   {
+    outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
+    temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",id));
+    temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
+    temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
     for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
     {
       if(det>2 && type=='E')//This skips 3 and 4 E, which don't exist
