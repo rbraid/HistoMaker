@@ -259,7 +259,7 @@ void ProcessChain(TChain *chain,TList *outlist)
       }
       else if(hit->GetDetectorNumber()==3)
       {
-	if(&& hit->GetDEnergy()>0)
+	if(hit->GetDEnergy()>0)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
 	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
