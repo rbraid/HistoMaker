@@ -114,7 +114,11 @@ void SetupHistos(TList *outlist)
       temp2INT->GetYaxis()->SetTitle("Horizontal Strip Number");
     }
   }
-  
+
+  outlist->Add(new TH1D("energyspec","Energy Spectrum",1000,0,100));
+    temp1 = (TH1D*)outlist->FindObject("energyspec");
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts per bin");
 
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
@@ -250,6 +254,14 @@ void ProcessChain(TChain *chain,TList *outlist)
 	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
         }
+      }
+      else if(hit->GetDetectorNumber()==3)
+      {
+	if(hit->GetDVerticalStrip()==11)
+	{
+	  temp1 = (TH1D*)outlist->FindObject("energyspec");
+	  temp1->Fill(hit->GetDVerticalEnergy()/1000.);
+	}
       }
 
       temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",hit->GetDetectorNumber()));
