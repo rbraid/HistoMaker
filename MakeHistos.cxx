@@ -37,6 +37,7 @@ void SetupHistos(TList *outlist)
 
   for(int id = 1; id<=2;id++)
   {
+    
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
@@ -144,6 +145,16 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
     temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
 
+  outlist->Add(new TH2D("EnergyCheck","Energy for each strip",240,0,240,7000,0,70));//
+    temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
+    temp2->GetXaxis()->SetTitle("Strip Number");
+    temp2->GetYaxis()->SetTitle("Energy");
+
+  outlist->Add(new TH2D("ChargeCheck","Charge for each strip",240,0,240,3000,0,6000));//
+    temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
+    temp2->GetXaxis()->SetTitle("Strip Number");
+    temp2->GetYaxis()->SetTitle("Charge");
+    
   if(DEBUG)
   {
     cout<<"Histos Set"<<endl;
@@ -201,6 +212,59 @@ void ProcessChain(TChain *chain,TList *outlist)
 
       if(DEBUG) hit->Print();
 
+      /*
+      1DV = 0
+      1DH = 20
+      1EV = 40
+      1EH = 60
+      2DV = 80
+      2DH = 100
+      2EV = 120
+      2EH = 140
+      3DV = 160
+      3DH = 180
+      4DV = 200
+      4DH = 220
+      */
+
+      int offset = -1;
+      if(hit->GetDetectorNumber()==1)
+	offset=0;
+      else if(hit->GetDetectorNumber()==2)
+	offset=80;
+      else if(hit->GetDetectorNumber()==3)
+	offset=160;
+      else if(hit->GetDetectorNumber()==4)
+	offset=200;
+      
+      temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
+      if(hit->GetDVerticalEnergy()>10.)
+	temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalEnergy()/1000.);
+      if(hit->GetDHorizontalEnergy()>10.)
+	temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalEnergy()/1000.);
+      
+      if(hit->GetDetectorNumber()<3)
+      {
+	if(hit->GetEVerticalEnergy()>10.)
+	  temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalEnergy()/1000.);
+	if(hit->GetEHorizontalEnergy()>10.)
+	  temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalEnergy()/1000.);
+      }
+      
+      temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
+      if(hit->GetDVerticalCharge() != 0)
+	temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalCharge()/125.);
+      if(hit->GetDHorizontalCharge() != 0)
+	temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalCharge()/125.);
+      
+      if(hit->GetDetectorNumber()<3)
+      {
+	if(hit->GetEVerticalCharge() != 0)
+	  temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalCharge()/125.);
+	if(hit->GetEHorizontalCharge() != 0)
+	  temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalCharge()/125.);
+      }
+      
       temp3 = (TH3D*)outlist->FindObject("positions");
       temp3->Fill(hit->GetDPosition().Z(),hit->GetDPosition().Y(),hit->GetDPosition().X());
 
