@@ -41,6 +41,11 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("pid_%i_fvb",id),Form("Particle ID, detector %i, cut on 1:1",id),700,0,70,700,0,70));//
+      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",id));
+      temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("pid_%i_summed",id),Form("Particle ID, detector %i, summed",id),1400,0,140,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",id));
@@ -69,6 +74,11 @@ void SetupHistos(TList *outlist)
     
     outlist->Add(new TH2D(Form("EvTheta_%i_HE",id),Form("EvTheta %i, cut on He",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_fvb",id),Form("EvTheta %i, cut on 1:1",id),100,0,100,700,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_fvb",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
@@ -313,7 +323,8 @@ void ProcessChain(TChain *chain,TList *outlist)
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
       }
       else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_high_1",hit->GetDetectorNumber()))))
       {
@@ -321,7 +332,8 @@ void ProcessChain(TChain *chain,TList *outlist)
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
       }
 
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
@@ -330,7 +342,8 @@ void ProcessChain(TChain *chain,TList *outlist)
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
       }
       else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
       {
@@ -338,7 +351,22 @@ void ProcessChain(TChain *chain,TList *outlist)
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);      }
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	}
+      }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_good_fvb")))
+      {
+	if(!cut) cerr<<"Error: Front vs Back good cut not found!"<<endl;
+	else if(cut->IsInside(hit->GetDVerticalEnergy()/1000., hit->GetDHorizontalEnergy()/1000. ) )
+	{
+	  if(hit->GetEEnergy()>10.)
+	  {
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_fvb",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
+	  }
+	}
       }
 
       /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_bad_fvb_1")))
