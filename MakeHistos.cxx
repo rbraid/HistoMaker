@@ -289,54 +289,47 @@ void ProcessChain(TChain *chain,TList *outlist)
       if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
       if(DEBUG) cout<<"PID"<<endl;
 
-      if(hit->GetDetectorNumber()==1)
+
+      if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
       {
-        if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
-        {
-          temp2 = (TH2D*)outlist->FindObject("pid_1");
-          temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-          temp2 = (TH2D*)outlist->FindObject("pid_1_summed");
-          temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
-          temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
-          temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-	  
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber());
+	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber());
+	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
+	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber());
+	temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+
+	if(hit->GetDetectorNumber()==1)
+	{
 	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject("pid_1_summed_single_pixel");
-	    temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
-	    
+	    temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
+
 	    temp2 = (TH2D*)outlist->FindObject("pid_1_single_pixel");
 	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
-        }
-      }
-      else if(hit->GetDetectorNumber()==2)
-      {
-        if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
-        {
-          temp2 = (TH2D*)outlist->FindObject("pid_2");
-          temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-          temp2 = (TH2D*)outlist->FindObject("pid_2_summed");
-          temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
-          temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
-          temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-	  
+	}
+	else if(hit->GetDetectorNumber()==2)
+	{
 	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject("pid_2_summed_single_pixel");
-	    temp2->Fill(hit->GetEEnergy()/1000.+hit->GetDEnergy()/1000.,hit->GetDEnergy()/1000.);
-	    
+	    temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
+
 	    temp2 = (TH2D*)outlist->FindObject("pid_2_single_pixel");
 	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
-        }
+	}
+      }
+
       }
       else if(hit->GetDetectorNumber()==3)
       {
 	if(hit->GetDEnergy()>0)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
-	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 	}
       }
       else if(hit->GetDetectorNumber()==4)
@@ -344,7 +337,7 @@ void ProcessChain(TChain *chain,TList *outlist)
 	if(hit->GetDEnergy()>0)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
-	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 	}
       }
       
