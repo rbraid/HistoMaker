@@ -292,11 +292,11 @@ void ProcessChain(TChain *chain,TList *outlist)
 
       if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
       {
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber());
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber());
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
-	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber());
+	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 
 	if(hit->GetDetectorNumber()==1)
@@ -323,8 +323,7 @@ void ProcessChain(TChain *chain,TList *outlist)
 	}
       }
 
-      }
-      else if(hit->GetDetectorNumber()==3)
+      if(hit->GetDetectorNumber()==3)
       {
 	if(hit->GetDEnergy()>0)
 	{
