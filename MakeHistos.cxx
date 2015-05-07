@@ -1,4 +1,4 @@
-// g++ -g MakeHistos.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb
+// g++ -g MakeHistos.cxx MakeFriend.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb
 
 #define DEBUG 0
 
@@ -24,6 +24,7 @@
 #include "Globals.h"
 #include "TTigress.h"
 #include "TCSM.h"
+#include "MakeFriend.h"
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
 TList *cutlist = new TList;
@@ -162,9 +163,12 @@ void SetupHistos(TList *outlist)
 }
 
 
-void ProcessChain(TChain *chain,TList *outlist)
+void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 {
   int nentries = chain->GetEntries();
+  cout<<DRED;
+  chain->Print();
+  cout<<RESET_COLOR;
   TStopwatch w;
   w.Start();
 
@@ -198,6 +202,7 @@ void ProcessChain(TChain *chain,TList *outlist)
 //        General
 //***********************
 
+      myFriend->ResetFlags();
 
       TH1D *temp1 = 0;
       TH2D *temp2 = 0;
@@ -380,6 +385,8 @@ void ProcessChain(TChain *chain,TList *outlist)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+
+	  myFriend->SetBe();
 	}
       }
       else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_high_1",hit->GetDetectorNumber()))))
@@ -399,6 +406,9 @@ void ProcessChain(TChain *chain,TList *outlist)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+
+	  myFriend->SetAlpha();
+	  
 	}
       }
       else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
@@ -444,6 +454,7 @@ void ProcessChain(TChain *chain,TList *outlist)
         cout<<".";
       }
     }*/
+    myFriend->Fill();
     }
 
 //***********************
@@ -470,7 +481,7 @@ void ProcessChain(TChain *chain,TList *outlist)
       w.Continue();
     }
   }
-
+  
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
   cout<<endl;
   return;
@@ -517,15 +528,11 @@ int main(int argc, char **argv)
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
 
-  //TTree *ftree = new TTree("friendtree","friendtree");
-  //ftree->Branch(
-
-  //chain->AddFriend("AnalysisTree","friendtree.root");
-  
+  MakeFriend *myFriend = new MakeFriend;
   
   TList *outlist = new TList;
   SetupHistos(outlist);
-  ProcessChain(chain,outlist);
+  ProcessChain(chain,outlist,myFriend);
   outlist->Sort();
 
   if(DEBUG)
@@ -534,9 +541,12 @@ int main(int argc, char **argv)
   }
 
   TFile f("output.root","recreate");
+  f.cd();
   outlist->Write();
   f.Close();
 
+  myFriend->Write();
+  
   if(DEBUG)
   {
     cout<<"All done"<<endl;
