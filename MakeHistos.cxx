@@ -25,6 +25,8 @@
 #include "TTigress.h"
 #include "TCSM.h"
 #include "MakeFriend.h"
+#include "thicknessheader.h"
+
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
 TList *cutlist = new TList;
