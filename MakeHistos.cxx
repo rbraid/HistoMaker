@@ -46,6 +46,11 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
 
+    outlist->Add(new TH2D(Form("pid_%i_thickness",id),Form("Particle ID, detector %i, with thickness correction",id),400,0,40,200,0,1000));//
+      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",id));
+      temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
+
     outlist->Add(new TH2D(Form("pid_%i_fvb",id),Form("Particle ID, detector %i, cut on 1:1",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",id));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
@@ -56,8 +61,8 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID, detector %i, summed, with thickness correction",id),400,0,40,100,0,1000));//
-      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",id));
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID, detector %i, summed, with thickness correction",id),400,0,40,200,0,1000));//
+      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
@@ -308,12 +313,14 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
 	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
 	if(thickness>5)
 	{
 	//cout<<thickness<<endl;
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness);
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
+	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/thickness);
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
