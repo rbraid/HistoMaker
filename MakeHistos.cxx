@@ -178,9 +178,9 @@ void SetupHistos(TList *outlist)
 void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 {
   int nentries = chain->GetEntries();
-  cout<<DRED;
-  chain->Print();
-  cout<<RESET_COLOR;
+//   cout<<DRED;
+//   chain->Print();
+//   cout<<RESET_COLOR;
   TStopwatch w;
   w.Start();
 
