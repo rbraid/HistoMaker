@@ -46,7 +46,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("pid_%i_thickness",id),Form("Particle ID, detector %i, with thickness correction",id),800,0,40,800,0,1000));//
+    outlist->Add(new TH2D(Form("pid_%i_thickness",id),Form("Particle ID, detector %i, with thickness correction",id),3200,0,160,200,0,2000));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",id));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
@@ -61,7 +61,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID, detector %i, summed, with thickness correction",id),800,0,40,800,0,1000));//
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID, detector %i, summed, with thickness correction",id),3200,0,160,200,0,2000));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
