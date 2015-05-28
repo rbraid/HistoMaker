@@ -33,6 +33,7 @@ TList *cutlist = new TList;
 
 void SetupHistos(TList *outlist)
 {
+  if(DEBUG) cout<<"Setting up Histos"<<endl;
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TH2I *temp2INT = 0;
@@ -40,6 +41,10 @@ void SetupHistos(TList *outlist)
 
   for(int id = 1; id<=2;id++)
   {
+    outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),2500,-10,15));
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
@@ -174,8 +179,54 @@ void SetupHistos(TList *outlist)
   }
 }
 
+double GetExciteE_Heavy(double be12E, double be12T, double BeamE)
+{
+//   cout<<"BeamE: "<<BeamE<<endl;
+//   cout<<"BeE: "<<be12E<<endl;
+//   cout<<"BeT: "<<be12T<<endl;
+  be12E=be12E/1000.;
+  const double pi = 3.14159;
 
-void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
+  const double MEVpNUC = 931.494061;
+  
+  const double MASS_BE8 = 8*MEVpNUC+4.9416;
+  const double MASS_BE12 = 12*MEVpNUC+25.0766;
+  const double MASS_BE9 = 9*MEVpNUC+11.3484;
+  const double MASS_BE11 = 11*MEVpNUC+20.1771;
+  const double MASS_HE4 = 4*MEVpNUC+2.4249;
+  const double MASS_C12 = 12*MEVpNUC;
+  const double MASS_C13 = 13*MEVpNUC+3.1250;
+  const double MASS_BE10 = 10*MEVpNUC+12.6074;
+  
+//   if(BeamE!=55 && BeamE!=30.14)
+//   {
+//     cerr<<" Error in excitation reconstruction.  I am getting an improper beam energy."<<endl;
+//     return(-1);
+//   }
+  //11Be(9Be,8Be)12Be*
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = MASS_BE8;
+  const double M4 = MASS_BE12;
+  double mQ = M1+M2-M3-M4;
+  
+  double V1 = sqrt(2*BeamE/M1);
+  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
+  double V4 = sqrt(2*be12E/M4);
+  double kPrimeM4 = COMV / V4;
+  
+  double COMTotalE = M2 / ( M1 + M2 ) * BeamE;
+  double COMEnergyM4 = be12E * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( be12T ) );
+  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
+  double ExcitedState = mQ - QVal;
+
+//   cout<<"EX: "<<ExcitedState<<endl;
+  
+  return(ExcitedState);
+  
+}
+
+void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 {
   int nentries = chain->GetEntries();
 //   cout<<DRED;
@@ -214,7 +265,7 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 //        General
 //***********************
 
-      myFriend->ResetFlags();
+      //myFriend->Reset();
 
       TH1D *temp1 = 0;
       TH2D *temp2 = 0;
@@ -407,7 +458,7 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 
-	  myFriend->SetBe();
+	  //myFriend->SetBe(y);
 	}
       }
       else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_high_1",hit->GetDetectorNumber()))))
@@ -428,7 +479,7 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 
-	  myFriend->SetAlpha();
+	  //myFriend->SetAlpha(y);
 	  
 	}
       }
@@ -456,6 +507,17 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
 	}
       }
 
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v1",hit->GetDetectorNumber()))))
+      {
+	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
+	
+	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness))
+	{
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
+	}
+      }
+
       /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_bad_fvb_1")))
       {
 	if(!cut) cerr<<"Error: Front vs Back cut not found!"<<endl;
@@ -475,7 +537,9 @@ void ProcessChain(TChain *chain,TList *outlist, MakeFriend *myFriend)
         cout<<".";
       }
     }*/
-    myFriend->Fill();
+    //myFriend->Fill();
+
+    //myFriend->GetAlpha(0)->Print();
     }
 
 //***********************
@@ -549,11 +613,11 @@ int main(int argc, char **argv)
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
 
-  MakeFriend *myFriend = new MakeFriend;
+  //MakeFriend *myFriend = new MakeFriend(csm);
   
   TList *outlist = new TList;
   SetupHistos(outlist);
-  ProcessChain(chain,outlist,myFriend);
+  ProcessChain(chain,outlist);//,myFriend);
   outlist->Sort();
 
   if(DEBUG)
@@ -566,7 +630,7 @@ int main(int argc, char **argv)
   outlist->Write();
   f.Close();
 
-  myFriend->Write();
+  //myFriend->Write();
   
   if(DEBUG)
   {
