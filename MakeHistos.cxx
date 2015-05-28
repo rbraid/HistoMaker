@@ -41,7 +41,7 @@ void SetupHistos(TList *outlist)
 
   for(int id = 1; id<=2;id++)
   {
-    outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),2500,-10,15));
+    outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),3500,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
@@ -507,14 +507,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v2",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_high_%i_v1",hit->GetDetectorNumber()))))
       {
 	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
 	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness))
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),55));
 	}
       }
 
