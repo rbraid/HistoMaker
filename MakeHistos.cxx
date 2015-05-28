@@ -220,7 +220,7 @@ double GetExciteE_Heavy(double be12E, double be12T, double BeamE)
   double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
   double ExcitedState = mQ - QVal;
 
-//   cout<<"EX: "<<ExcitedState<<endl;
+//   cout<<"EX: "<<ExcitedState<<endl<<endl;
   
   return(ExcitedState);
   
@@ -455,9 +455,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-
 	  //myFriend->SetBe(y);
 	}
       }
@@ -507,14 +504,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_high_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v2",hit->GetDetectorNumber()))))
       {
 	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
 	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness))
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),55));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	}
       }
 
