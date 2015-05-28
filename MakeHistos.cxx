@@ -507,7 +507,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v2",hit->GetDetectorNumber()))))
       {
 	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
 	
