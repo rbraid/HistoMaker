@@ -46,7 +46,7 @@ void SetupHistos(TList *outlist)
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2D(Form("Alphacone_%i",id+2),Form("Alpha cone in detector %i",id+2),700,0,70,700,0,70));//
+    outlist->Add(new TH2D(Form("Alphacone_%i",id+2),Form("Alpha cone in detector %i",id+2),200,0,20,200,0,20));//
       temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",id+2));
       temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
@@ -274,6 +274,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	if(cut->IsInside(csm->GetHit(y)->GetEEnergy()/1000., csm->GetHit(y)->GetDEnergy()/1000. ) )
 	{
+	  //cout<<"Found a Be at: "<<y<<endl;
 	  BeLoc = y;
 	}
       }
@@ -298,10 +299,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  continue;
 	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
 	{
+	  //cout<<"Found an Alpha at: "<<y<<endl;
 	  if(AlLoc1==-1)
 	    AlLoc1 = y;
 	  else if(AlLoc2==-1)
+	  {
 	    AlLoc2 = y;
+	    //cout<<"I found 2 alphas"<<endl;
+	  }
 	  else
 	    cerr<<"I seem to have too many Alphas"<<endl;
 	}
@@ -311,7 +316,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     if(AlLoc2!=-1)
     {
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
-      alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy(),csm->GetHit(AlLoc1)->GetEnergy());
+      alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
     }
     
     for(int y=0; y<csm->GetMultiplicity(); y++)
