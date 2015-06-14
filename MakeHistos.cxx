@@ -1,4 +1,4 @@
-// g++ -g MakeHistos.cxx MakeFriend.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb
+// g++ -g MakeHistos.cxx -Wl,--no-as-needed -L$GRSISYS/libraries -lGRSIFormat -lGRSIDetector -lTigress  -lCSM -I$GRSISYS/include --std=c++0x -o RunMe  -O2 `root-config --cflags --libs` -lTreePlayer -lgsl -lgslcblas -ggdb
 
 #define DEBUG 0
 
@@ -259,6 +259,23 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(DEBUG)
       {
         cout<<"First Get Multiplicity()"<<endl;
+      }
+
+      if(-1)
+	cout<<"-1"<<endl;
+      if(0)
+	cout<<"0"<<endl;
+      if(1)
+	cout<<"1"<<endl;
+      if(2)
+	cout<<"2"<<endl;
+    }
+
+    for(int y=0; y<csm->GetMultiplicity(); y++)
+    {
+      if(DEBUG)
+      {
+	cout<<"Second Get Multiplicity()"<<endl;
       }
 
 //***********************
