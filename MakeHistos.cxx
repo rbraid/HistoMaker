@@ -45,6 +45,11 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH2D(Form("Alphacone_%i",id+2),Form("Alpha cone in detector %i",id+2),700,0,70,700,0,70));//
+      temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",id+2));
+      temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
@@ -253,14 +258,68 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       continue;
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
-
+    
+    int BeLoc = -1;
+    int AlLoc1 = -1;
+    int AlLoc2 = -1;
+    
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
       {
-	cout<<"First Get Multiplicity()"<<endl;
+	cout<<"Be's Get Multiplicity()"<<endl;
       }
 
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",csm->GetHit(y)->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(csm->GetHit(y)->GetEEnergy()/1000., csm->GetHit(y)->GetDEnergy()/1000. ) )
+	{
+	  BeLoc = y;
+	}
+      }
+    }
+
+    if(BeLoc!=-1)
+    {
+      int AlphaDetector = csm->GetHit(BeLoc)->GetDetectorNumber();
+      if(AlphaDetector==1)
+	AlphaDetector=4;
+      else if(AlphaDetector==2)
+	AlphaDetector=3;
+      else
+	cerr<<"The BE is not in detector 1 or 2, what?"<<endl;
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	if(DEBUG)
+	{
+	  cout<<"Alpha's Get Multiplicity()"<<endl;
+	}
+	if(y==BeLoc)
+	  continue;
+	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
+	{
+	  if(AlLoc1==-1)
+	    AlLoc1 = y;
+	  else if(AlLoc2==-1)
+	    AlLoc2 = y;
+	  else
+	    cerr<<"I seem to have too many Alphas"<<endl;
+	}
+      }
+    }
+
+    if(AlLoc2!=-1)
+    {
+      TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
+      alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy(),csm->GetHit(AlLoc1)->GetEnergy());
+    }
+    
+    for(int y=0; y<csm->GetMultiplicity(); y++)
+    {
+      if(DEBUG)
+      {
+	cout<<"Main Get Multiplicity()"<<endl;
+      }
 //***********************
 //        General
 //***********************
