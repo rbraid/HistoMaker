@@ -258,10 +258,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       continue;
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
-    
+
+    if(csm->GetMultiplicity()>=3)
+    {
     int BeLoc = -1;
     int AlLoc1 = -1;
     int AlLoc2 = -1;
+
+    int hits[4] = {0};
     
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -278,6 +282,55 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  BeLoc = y;
 	}
       }
+
+      hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+    }
+
+    //printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+
+    if(hits[0]>0 && hits[3]>=2)
+    {
+      double e1 = 0;
+      double e2 = 0;
+
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	if(csm->GetHit(y)->GetDetectorNumber()==4)
+	{
+	  if(e1<1)
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	  else if(e2<1)
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
+	  else
+	    cout<<".";
+	}
+      }
+
+      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
+      alphaconepointer->Fill(e1,e2);
+    }
+
+    if(hits[1]>0 && hits[2]>=2)
+    {
+      double e1 = 0;
+      double e2 = 0;
+      
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	if(csm->GetHit(y)->GetDetectorNumber()==3)
+	{
+	  if(e1<1)
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	  else if(e2<1)
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
+	  else
+	    cout<<".";
+	}
+      }
+      
+      
+      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
+      alphaconepointer->Fill(e1,e2);
     }
 
     if(BeLoc!=-1)
@@ -315,10 +368,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     if(AlLoc2!=-1)
     {
-      TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
-      alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
+      //TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
+      //alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
     }
-    
+    }
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
@@ -577,7 +630,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	  //if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	}
       }
 
