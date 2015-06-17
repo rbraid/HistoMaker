@@ -260,11 +260,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
 
-    if(csm->GetMultiplicity()>=3)
+    if(csm->GetMultiplicity()==3)
     {
-    int BeLoc = -1;
-    int AlLoc1 = -1;
-    int AlLoc2 = -1;
+//     int BeLoc = -1;
+//     int AlLoc1 = -1;
+//     int AlLoc2 = -1;
 
     int hits[4] = {0};
     
@@ -275,15 +275,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	cout<<"Be's Get Multiplicity()"<<endl;
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",csm->GetHit(y)->GetDetectorNumber()))))
-      {
-	if(cut->IsInside(csm->GetHit(y)->GetEEnergy()/1000., csm->GetHit(y)->GetDEnergy()/1000. ) )
-	{
-	  //cout<<"Found a Be at: "<<y<<endl;
-	  BeLoc = y;
-	}
-      }
-
+//       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",csm->GetHit(y)->GetDetectorNumber()))))
+//       {
+// 	if(cut->IsInside(csm->GetHit(y)->GetEEnergy()/1000., csm->GetHit(y)->GetDEnergy()/1000. ) )
+// 	{
+// 	  //cout<<"Found a Be at: "<<y<<endl;
+// 	  BeLoc = y;
+// 	}
+//       }
       hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
     }
 
@@ -296,6 +295,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
+	
 	if(csm->GetHit(y)->GetDetectorNumber()==2)
 	{
 	  if(e1<1)
@@ -303,7 +303,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  else if(e2<1)
 	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
-	    cout<<".";
+	  {
+	    cout<<endl<<endl<<"0,1"<<endl;
+	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	  }
 	}
       }
       
@@ -325,7 +329,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  else if(e2<1)
 	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
-	    cout<<".";
+	  {
+	    cout<<endl<<endl<<"1,0"<<endl;
+	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	  }
 	}
       }
       
@@ -347,7 +355,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  else if(e2<1)
 	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
-	    cout<<".";
+	  {
+	    cout<<endl<<endl<<"0,3"<<endl;
+	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	  }
 	}
       }
 
@@ -369,7 +381,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  else if(e2<1)
 	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
-	    cout<<".";
+	  {
+	    cout<<endl<<endl<<"1,2"<<endl;
+	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	  }
 	}
       }
       
@@ -378,45 +394,45 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       alphaconepointer->Fill(e1,e2);
     }
 
-    if(BeLoc!=-1)
-    {
-      int AlphaDetector = csm->GetHit(BeLoc)->GetDetectorNumber();
-      if(AlphaDetector==1)
-	AlphaDetector=4;
-      else if(AlphaDetector==2)
-	AlphaDetector=3;
-      else
-	cerr<<"The BE is not in detector 1 or 2, what?"<<endl;
-      for(int y=0; y<csm->GetMultiplicity(); y++)
-      {
-	if(DEBUG)
-	{
-	  cout<<"Alpha's Get Multiplicity()"<<endl;
-	}
-	if(y==BeLoc)
-	  continue;
-	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
-	{
-	  //cout<<"Found an Alpha at: "<<y<<endl;
-	  if(AlLoc1==-1)
-	    AlLoc1 = y;
-	  else if(AlLoc2==-1)
-	  {
-	    AlLoc2 = y;
-	    //cout<<"I found 2 alphas"<<endl;
-	  }
-	  else
-	    cerr<<"I seem to have too many Alphas"<<endl;
-	}
-      }
-    }
+//     if(BeLoc!=-1)
+//     {
+//       int AlphaDetector = csm->GetHit(BeLoc)->GetDetectorNumber();
+//       if(AlphaDetector==1)
+// 	AlphaDetector=4;
+//       else if(AlphaDetector==2)
+// 	AlphaDetector=3;
+//       else
+// 	cerr<<"The BE is not in detector 1 or 2, what?"<<endl;
+//       for(int y=0; y<csm->GetMultiplicity(); y++)
+//       {
+// 	if(DEBUG)
+// 	{
+// 	  cout<<"Alpha's Get Multiplicity()"<<endl;
+// 	}
+// 	if(y==BeLoc)
+// 	  continue;
+// 	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
+// 	{
+// 	  //cout<<"Found an Alpha at: "<<y<<endl;
+// 	  if(AlLoc1==-1)
+// 	    AlLoc1 = y;
+// 	  else if(AlLoc2==-1)
+// 	  {
+// 	    AlLoc2 = y;
+// 	    //cout<<"I found 2 alphas"<<endl;
+// 	  }
+// 	  else
+// 	    cerr<<"I seem to have too many Alphas"<<endl;
+// 	}
+//       }
+//     }
 
-    if(AlLoc2!=-1)
-    {
-      //TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
-      //alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
-    }
-    }
+//     if(AlLoc2!=-1)
+//     {
+//       TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
+//       alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
+//     }
+     }
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
