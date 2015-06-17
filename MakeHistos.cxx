@@ -312,7 +312,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-      alphaconepointer->Fill(e1,e2);
+      if(e2>1)
+	alphaconepointer->Fill(e1,e2);
     }
 
     if(hits[1]>0 && hits[0]>=2)
@@ -338,7 +339,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-      alphaconepointer->Fill(e1,e2);
+      if(e2>1)
+	alphaconepointer->Fill(e1,e2);
     }
 
     if(hits[0]>0 && hits[3]>=2)
@@ -364,7 +366,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
 
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
-      alphaconepointer->Fill(e1,e2);
+      if(e2>1)
+	alphaconepointer->Fill(e1,e2);
     }
 
     if(hits[1]>0 && hits[2]>=2)
@@ -391,7 +394,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       
       
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-      alphaconepointer->Fill(e1,e2);
+      if(e2>1)
+	alphaconepointer->Fill(e1,e2);
     }
 
 //     if(BeLoc!=-1)
