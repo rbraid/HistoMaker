@@ -45,11 +45,6 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH2D(Form("Alphacone_%i",id+2),Form("Alpha cone in detector %i",id+2),200,0,20,200,0,20));//
-      temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",id+2));
-      temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
-      temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
@@ -127,6 +122,12 @@ void SetupHistos(TList *outlist)
 
   for(int det=1;det<=4;det++)
   {
+
+    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),200,0,20,200,0,20));//
+    temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
+    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+    
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
@@ -287,6 +288,50 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
 
     //printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+
+    if(hits[0]>0 && hits[1]>=2)
+    {
+      double e1 = 0;
+      double e2 = 0;
+      
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	if(csm->GetHit(y)->GetDetectorNumber()==2)
+	{
+	  if(e1<1)
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	  else if(e2<1)
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
+	  else
+	    cout<<".";
+	}
+      }
+      
+      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
+      alphaconepointer->Fill(e1,e2);
+    }
+
+    if(hits[1]>0 && hits[0]>=2)
+    {
+      double e1 = 0;
+      double e2 = 0;
+      
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	if(csm->GetHit(y)->GetDetectorNumber()==1)
+	{
+	  if(e1<1)
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	  else if(e2<1)
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
+	  else
+	    cout<<".";
+	}
+      }
+      
+      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
+      alphaconepointer->Fill(e1,e2);
+    }
 
     if(hits[0]>0 && hits[3]>=2)
     {
