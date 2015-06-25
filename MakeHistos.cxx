@@ -25,7 +25,6 @@
 #include "TTigress.h"
 #include "TCSM.h"
 #include "MakeFriend.h"
-#include "thicknessheader.h"
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -546,14 +545,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
-	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
-	if(thickness>5)
+	if(hit->GetDthickness()>5)
 	{
 	//cout<<thickness<<endl;
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness);
+	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/thickness);
+	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
@@ -687,10 +685,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
 
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_%i_v2",hit->GetDetectorNumber()))))
-      {
-	double thickness = thick[hit->GetDetectorNumber()-1][hit->GetDVerticalStrip()][hit->GetDHorizontalStrip()];
-	
-	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDEnergy()/thickness))
+      {	
+	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
