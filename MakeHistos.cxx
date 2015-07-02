@@ -298,9 +298,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(csm->GetHit(y)->GetDetectorNumber()==2)
 	{
 	  if(e1<1)
-	    e1=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
 	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
 	  {
 	    cout<<endl<<endl<<"0,1"<<endl;
@@ -319,15 +319,19 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       double e1 = 0;
       double e2 = 0;
-      
+
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
 	if(csm->GetHit(y)->GetDetectorNumber()==1)
 	{
 	  if(e1<1)
-	    e1=csm->GetHit(y)->GetDEnergy()/1000.;
+	  {
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	  }
 	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetDEnergy()/1000.;
+	  {
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;;
+	  }
 	  else
 	  {
 	    cout<<endl<<endl<<"1,0"<<endl;
@@ -336,7 +340,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-      
+
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
       if(e2>1)
 	alphaconepointer->Fill(e1,e2);
@@ -352,9 +356,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(csm->GetHit(y)->GetDetectorNumber()==4)
 	{
 	  if(e1<1)
-	    e1=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
 	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
 	  {
 	    cout<<endl<<endl<<"0,3"<<endl;
@@ -379,9 +383,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(csm->GetHit(y)->GetDetectorNumber()==3)
 	{
 	  if(e1<1)
-	    e1=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e1=csm->GetHit(y)->GetEnergy()/1000.;
 	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetDEnergy()/1000.;
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	  else
 	  {
 	    cout<<endl<<endl<<"1,2"<<endl;
