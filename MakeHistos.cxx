@@ -317,8 +317,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     if(hits[1]>0 && hits[0]>=2)
     {
-      double e1 = 0;
-      double e2 = 0;
       int h1 = -1;
       int h2 = -1;
 
@@ -326,21 +324,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	if(csm->GetHit(y)->GetDetectorNumber()==1)
 	{
-	  if(e1<.0001)
+	  if(h1 == -1)
 	  {
-	    e1=csm->GetHit(y)->GetEnergy()/1000.;
 	    h1=y;
 	  }
-	  else if(e2<.0001)
+	  else if(h2 == -1)
 	  {
-	    e2=csm->GetHit(y)->GetEnergy()/1000.;
 	    h2=y;
 	  }
 	  else
 	  {
 	    cout<<endl<<endl<<"1,0"<<endl;
 	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
 	  }
 	}
       }
@@ -355,8 +350,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	cout<<RESET_COLOR<<endl;
       }*/
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-      if(e2>1)
-	alphaconepointer->Fill(e1,e2);
+      if(h2 != -1)
+	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
     }
 
     if(hits[0]>0 && hits[3]>=2)
