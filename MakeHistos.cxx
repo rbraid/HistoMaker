@@ -319,18 +319,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       double e1 = 0;
       double e2 = 0;
+      int h1 = -1;
+      int h2 = -1;
 
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
 	if(csm->GetHit(y)->GetDetectorNumber()==1)
 	{
-	  if(e1<1)
+	  if(e1<.0001)
 	  {
 	    e1=csm->GetHit(y)->GetEnergy()/1000.;
+	    h1=y;
 	  }
-	  else if(e2<1)
+	  else if(e2<.0001)
 	  {
-	    e2=csm->GetHit(y)->GetEnergy()/1000.;;
+	    e2=csm->GetHit(y)->GetEnergy()/1000.;
+	    h2=y;
 	  }
 	  else
 	  {
@@ -340,7 +344,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-
+      /*if(abs(e1-e2)<.001)
+      {
+	cout<<DRED;
+	csm->GetHit(h1)->Print();
+	cout<<DGREEN<<e1<<endl;
+	cout<<DBLUE;
+	csm->GetHit(h2)->Print();
+	cout<<DGREEN<<e2<<endl;
+	cout<<RESET_COLOR<<endl;
+      }*/
       TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
       if(e2>1)
 	alphaconepointer->Fill(e1,e2);
