@@ -122,7 +122,7 @@ void SetupHistos(TList *outlist)
   for(int det=1;det<=4;det++)
   {
 
-    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),2000,0,20,2000,0,20));//
+    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),200,0,20,200,0,20));//
     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
@@ -259,7 +259,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
 
-    if(csm->GetMultiplicity()==3)
+    if(csm->GetMultiplicity()>=3)
     {
 //     int BeLoc = -1;
 //     int AlLoc1 = -1;
@@ -339,23 +339,32 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
+      
       if(h2 != -1)
       {
-      if(abs(csm->GetHit(h1)->GetEnergy()/1000.-csm->GetHit(h2)->GetEnergy()/1000.)<.01)
-      {
-cout<<endl<<endl;
-	cout<<DRED;
-	csm->GetHit(h1)->Print();
-	cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
-	cout<<DBLUE;
-	csm->GetHit(h2)->Print();
-	cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
-	cout<<RESET_COLOR<<endl;
-      }
-      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
+	if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	{
+	  cout<<endl<<endl;
+	  printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+	  
+	  cout<<DRED;
+	  csm->GetHit(h1)->Print();
+	  cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
+	  cout<<DBLUE;
+	  csm->GetHit(h2)->Print();
+	  cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
+	  cout<<RESET_COLOR;
+
+	  for(int z=0; z<csm->GetMultiplicity(); z++)
+	  {
+	    csm->GetHit(z)->Print();
+	  }
+	  cout<<endl;
+	}
+	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 
 	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-}
+      }
     }
 
     if(hits[0]>0 && hits[3]>=2)
