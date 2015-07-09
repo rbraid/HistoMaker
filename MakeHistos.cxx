@@ -323,6 +323,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
 	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
       if(h2 != -1)
@@ -393,6 +395,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
 	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
 	if(h2 != -1)
@@ -709,14 +713,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  //myFriend->SetBe(y);
 	}
       }
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
-      {
-	if( cut->IsInside(hit->GetEnergy()/1000., hit->GetDdE_dx()) )
-	{
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-	}
-      }
+//       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
+//       {
+// 	if( cut->IsInside(hit->GetEnergy()/1000., hit->GetDdE_dx()) )
+// 	{
+// 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+// 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+// 	}
+//       }
 
 //       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
 //       {
