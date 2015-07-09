@@ -148,11 +148,6 @@ void SetupHistos(TList *outlist)
     }
   }
 
-  outlist->Add(new TH1D("energyspec","Energy Spectrum",2000,0,20));
-    temp1 = (TH1D*)outlist->FindObject("energyspec");
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts per bin");
-
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
   
@@ -619,15 +614,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
 	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
-	}
-      }
-      
-      if(hit->GetDetectorNumber()==1)
-      {
-	if(hit->GetDHorizontalStrip()==9)
-	{
-	  temp1 = (TH1D*)outlist->FindObject("energyspec");
-	  temp1->Fill(hit->GetDVerticalEnergy()/1000.);
 	}
       }
 
