@@ -323,7 +323,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
 	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
@@ -395,7 +395,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
 	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
