@@ -649,29 +649,28 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  //myFriend->SetBe(y);
 	}
       }
-      else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
       {
-	if(!cut) cerr<<"Error: Beryllium high energy cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDdE_dx()) )
+	if( cut->IsInside(hit->GetEnergy()/1000., hit->GetDdE_dx()) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
-      {
-	if(!cut) cerr<<"Error: Alpha cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
-	{
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-
-	  //myFriend->SetAlpha(y);
-	  
-	}
-      }
-      else if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
+//       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
+//       {
+// 	if(!cut) cerr<<"Error: Alpha cut not found!"<<endl;
+// 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
+// 	{
+// 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
+// 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+// 
+// 	  //myFriend->SetAlpha(y);
+// 	  
+// 	}
+//       }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
       {
 	if(!cut) cerr<<"Error: Alpha high energy cut not found!"<<endl;
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
