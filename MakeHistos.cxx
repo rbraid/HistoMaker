@@ -40,6 +40,15 @@ void SetupHistos(TList *outlist)
 
   for(int id = 1; id<=2;id++)
   {
+
+    for(int strip = 0; strip<16; strip++)
+    {
+      outlist->Add(new TH2D(Form("stripPID_det%i_strip%02i",id,strip),Form("Detector %i PID strip %i",id,strip),3200,0,40,800,0,800));
+      temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",id,strip));
+      temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
+    }
+    
     outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),3500,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -147,6 +156,7 @@ void SetupHistos(TList *outlist)
       temp2INT->GetYaxis()->SetTitle("Horizontal Strip Number");
     }
   }
+
 
   outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
   
@@ -634,6 +644,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	//cout<<thickness<<endl;
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
+
+	temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
+	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
+	
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
 	}
