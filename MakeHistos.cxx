@@ -49,7 +49,7 @@ void SetupHistos(TList *outlist)
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
       
       outlist->Add(new TH1D(Form("BeEx%i_strip%02i",id,strip),Form("Be-12 Excitation Energy Strip %i",id,strip),3500,-10,25));
-      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_strip%02i",id,strip));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
     }
@@ -795,6 +795,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
+	  cout<<hit->GetDetectorNumber()<<" "<<hit->GetDVerticalStrip()<<endl;
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
