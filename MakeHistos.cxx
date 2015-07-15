@@ -784,7 +784,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("perstrip_Be12_%i_%02i",hit->GetDetectorNumber(),hit->GetVerticalStrip()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("perstrip_Be12_%i_%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()))))
       {	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
