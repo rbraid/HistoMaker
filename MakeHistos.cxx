@@ -784,16 +784,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      /*if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("perstrip_Be12_%i_%02i",hit->GetDetectorNumber(),hit->GetVerticalStrip()))))
       {	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
-	  //temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  //if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	}
-      }*/
+      }
 
       /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_bad_fvb_1")))
       {
