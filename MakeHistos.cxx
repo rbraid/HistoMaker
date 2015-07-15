@@ -263,6 +263,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       continue;
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
+    
+    /*if(csm->GetMultiplicity()==2)
+    {
+      if(csm->GetHit(0)->GetDetectorNumber==csm->GetHit(1)->GetDetectorNumber())
+      {
+	if(csm->GetHit(0)->GetDEnergy()<.01 && csm->GetHit(1)->GetDEnergy()<.01)
+	{
+	  chain->GetEntry(x);
+	  
+	}
+      }
+    }*/
 
     if(csm->GetMultiplicity()>=3)
     {
@@ -331,10 +343,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       if(hbe !=-1)
       {
-	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
-	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
-	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
+// 	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
+// 	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+// 	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
+// 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
       if(h2 != -1)
@@ -403,10 +415,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	if(hbe !=-1)
 	{
-	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
-	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
-	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
+// 	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
+// 	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+// 	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
+// 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
 	if(h2 != -1)
