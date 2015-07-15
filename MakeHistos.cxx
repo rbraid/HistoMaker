@@ -48,7 +48,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
       
-      outlist->Add(new TH1D(Form("BeEx%i_strip%02i",id,strip),Form("Be-12 Excitation Energy Strip %i",id,strip),3500,-10,25));
+      outlist->Add(new TH1D(Form("BeEx%i_strip%02i",id,strip),Form("Be-12 Excitation Energy Strip %i",id,strip),500,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_strip%02i",id,strip));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
