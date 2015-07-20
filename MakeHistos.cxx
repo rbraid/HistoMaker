@@ -322,7 +322,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
-	if(csm->GetHit(y)->GetDetectorNumber()==2)
+	if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1 )
 	{
 	  if(h1 == -1)
 	  {
@@ -338,7 +338,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
 	  }
 	}
-	else if(csm->GetHit(y)->GetDetectorNumber()==1)
+	else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
 	{
 	  if(hbe == -1)
 	  {
@@ -394,7 +394,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
-	  if(csm->GetHit(y)->GetDetectorNumber()==1)
+	  if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
 	  {
 	    if(h1 == -1)
 	    {
@@ -410,7 +410,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
 	    }
 	  }
-	  else if(csm->GetHit(y)->GetDetectorNumber()==2)
+	  else if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1)
 	  {
 	    if(hbe == -1)
 	    {
