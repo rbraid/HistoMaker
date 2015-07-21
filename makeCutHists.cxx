@@ -41,7 +41,7 @@ void SetupHistos(TList *outlist)
   {
     for(int theta=10;theta<=55;theta++)
     {
-      outlist->Add(new TH2D(Form("pid_det%i_theta%02i",id,theta),Form("Single Theta PID plots. Detector %i, Theta %i",id,theta),3200,0,160,800,0,2000));
+      outlist->Add(new TH2D(Form("pid_det%i_theta%02i",id,theta),Form("Single Theta PID plots. Detector %i, Theta %i",id,theta),1600,0,40,1600,0,800));
       temp2 = (TH2D*)outlist->FindObject(Form("pid_det%i_theta%02i",id,theta));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
