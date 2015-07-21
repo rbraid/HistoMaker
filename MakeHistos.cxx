@@ -24,7 +24,6 @@
 #include "Globals.h"
 #include "TTigress.h"
 #include "TCSM.h"
-#include "MakeFriend.h"
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
