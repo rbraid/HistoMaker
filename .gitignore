@@ -28,7 +28,7 @@
 *.app
 
 *~
-RunMe
+Run*
 *.root
 .DS_Store
 
