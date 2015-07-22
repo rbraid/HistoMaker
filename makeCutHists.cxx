@@ -39,6 +39,11 @@ void SetupHistos(TList *outlist)
 
   for(int id = 1; id<=2;id++)
   {
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
     for(int theta=10;theta<=55;theta++)
     {
       outlist->Add(new TH2D(Form("pid_det%i_theta%02i",id,theta),Form("Single Theta PID plots. Detector %i, Theta %i",id,theta),1600,0,40,1600,0,800));
@@ -140,6 +145,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_det%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
 	if(temp2) temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
       }
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      {
+	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
+	{
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	}
+      }
     }
 
 //***********************
@@ -181,7 +195,7 @@ int main(int argc, char **argv)
   }
 
   TApplication *app = new TApplication("app",0,0);
-  TFile cf("cuts.root");
+  TFile cf("thetacuts.root");
   TIter *iter = new TIter(cf.GetListOfKeys());
 
   while(TObject *obj = iter->Next())
