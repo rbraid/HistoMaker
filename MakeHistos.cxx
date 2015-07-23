@@ -801,7 +801,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
       {	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
