@@ -358,31 +358,31 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
-      if(h2 != -1)
+      /*if(h2 != -1)
       {
-	/*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
-	 *       {     *
-	 *       cout<<endl<<endl;
-	 *       printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-	 *
-	 *       cout<<DRED;
-	 *       csm->GetHit(h1)->Print();
-	 *       cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
-	 *       cout<<DBLUE;
-	 *       csm->GetHit(h2)->Print();
-	 *       cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
-	 *       cout<<RESET_COLOR;
-	 *
-	 *       for(int z=0; z<csm->GetMultiplicity(); z++)
-	 *       {
-	 *	 csm->GetHit(z)->Print();
-	 }
-	 cout<<endl;
-	 }*/
+	if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	{
+	  cout<<endl<<endl;
+	  printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+
+	  cout<<DRED;
+	  csm->GetHit(h1)->Print();
+	  cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
+	  cout<<DBLUE;
+	  csm->GetHit(h2)->Print();
+	  cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
+	  cout<<RESET_COLOR;
+
+	  for(int z=0; z<csm->GetMultiplicity(); z++)
+	  {
+	    csm->GetHit(z)->Print();
+	  }
+	  cout<<endl;
+	}
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
 
 	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	 }
+	 }*/
       }
 
       if(hits[1]>0 && hits[0]>=2)
@@ -430,31 +430,31 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
-	if(h2 != -1)
+	/*if(h2 != -1)
 	{
-	  /*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
-	   *	{
-	   *	  cout<<endl<<endl;
-	   *	  printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-	   *
-	   *	  cout<<DRED;
-	   *	  csm->GetHit(h1)->Print();
-	   *	  cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
-	   *	  cout<<DBLUE;
-	   *	  csm->GetHit(h2)->Print();
-	   *	  cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
-	   *	  cout<<RESET_COLOR;
-	   *
-	   *	  for(int z=0; z<csm->GetMultiplicity(); z++)
-	   *	  {
-	   *	    csm->GetHit(z)->Print();
-	   }
-	   cout<<endl;
-	   }*/
+	  if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	  {
+	    cout<<endl<<endl;
+	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+
+	    cout<<DRED;
+	    csm->GetHit(h1)->Print();
+	    cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
+	    cout<<DBLUE;
+	    csm->GetHit(h2)->Print();
+	    cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
+	    cout<<RESET_COLOR;
+
+	    for(int z=0; z<csm->GetMultiplicity(); z++)
+	    {
+	      csm->GetHit(z)->Print();
+	    }
+	    cout<<endl;
+	  }
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 
 	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	}
+	}*/
       }
       
     if(hits[0]>0 && hits[3]>=2)
