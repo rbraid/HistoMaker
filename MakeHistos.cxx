@@ -46,16 +46,19 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",id,strip));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
-      
-      outlist->Add(new TH1D(Form("BeEx%i_strip%02i",id,strip),Form("Be-12 Excitation Energy Strip %i",id,strip),500,-10,25));
-      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_strip%02i",id,strip));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
 
       outlist->Add(new TH2D(Form("EvTheta_%i_BE_strip%02i",id,strip),Form("EvTheta %i, cut on Be Strip",id,strip),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",id,strip));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    }
+
+    for(int theta=10;theta<55;theta++)
+    {
+      outlist->Add(new TH1D(Form("BeEx%i_theta%02i",id,theta),Form("Be-12 Excitation Energy Theta %i",id,theta),500,-10,25));
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",id,theta));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
     }
     
     outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),3500,-10,25));
@@ -358,9 +361,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
-      /*if(h2 != -1)
+      if(h2 != -1)
       {
-	if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	/*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
 	{
 	  cout<<endl<<endl;
 	  printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
@@ -378,11 +381,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    csm->GetHit(z)->Print();
 	  }
 	  cout<<endl;
-	}
+	}*/
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
 
 	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	 }*/
+	 }
       }
 
       if(hits[1]>0 && hits[0]>=2)
@@ -430,9 +433,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
-	/*if(h2 != -1)
+	if(h2 != -1)
 	{
-	  if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	  /*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
 	  {
 	    cout<<endl<<endl;
 	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
@@ -450,11 +453,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      csm->GetHit(z)->Print();
 	    }
 	    cout<<endl;
-	  }
+	  }*/
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 
 	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	}*/
+	}
       }
       
     if(hits[0]>0 && hits[3]>=2)
@@ -799,7 +802,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14));
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
