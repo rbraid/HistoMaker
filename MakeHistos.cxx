@@ -111,8 +111,13 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut",id),Form("EvTheta %i, cut on Be excitation energy",id),100,0,100,700,0,70));
-      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut",id));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_gs",id),Form("EvTheta %i, cut on Be12 GS",id),100,0,100,700,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_1e",id),Form("EvTheta %i, cut on Be 2.24",id),100,0,100,700,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
@@ -810,9 +815,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(temp1) temp1->Fill(excite);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
 	  if(temp1) temp1->Fill(excite);
-	  if(excite<3 && excite>2.5)
+	  if(excite<3.8 && excite>1.8)
 	  {
-	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut",hit->GetDetectorNumber()));
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  }
+	  if(excite<1.3 && excite>0)
+	  {
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",hit->GetDetectorNumber()));
 	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 	  }
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
