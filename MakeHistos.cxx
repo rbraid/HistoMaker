@@ -398,7 +398,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  cout<<endl;
 	}*/
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-	if(csm->GetHit(h2)->GetEnergy()>10 && csm->GetHit(h1)->GetEnergy()>10)
+	if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
 	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
 	}
       }
@@ -470,7 +470,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    cout<<endl;
 	  }*/
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-	  if(csm->GetHit(h2)->GetEnergy()>10 && csm->GetHit(h1)->GetEnergy()>10)
+	  if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
 	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
 	}
       }
