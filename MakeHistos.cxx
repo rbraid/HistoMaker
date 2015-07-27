@@ -120,6 +120,11 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_sc",id),Form("EvTheta %i, cut on Be <5",id),100,0,100,700,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("EvTheta_%i_HE",id),Form("EvTheta %i, cut on He",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",id));
@@ -393,9 +398,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  cout<<endl;
 	}*/
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-
+	if(csm->GetHit(h2)->GetEnergy()>10 && csm->GetHit(h1)->GetEnergy()>10)
 	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	 }
+	}
       }
 
       if(hits[1]>0 && hits[0]>=2)
@@ -465,7 +470,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    cout<<endl;
 	  }*/
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-
+	  if(csm->GetHit(h2)->GetEnergy()>10 && csm->GetHit(h1)->GetEnergy()>10)
 	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
 	}
       }
@@ -823,6 +828,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(excite<1.3 && excite>0)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  }
+	  if(excite<5)
+	  {
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",hit->GetDetectorNumber()));
 	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 	  }
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
