@@ -61,7 +61,7 @@ void SetupHistos(TList *outlist)
       temp1->GetYaxis()->SetTitle("Counts");
     }
     
-    outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),3500,-10,25));
+    outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),350,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
@@ -160,6 +160,8 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),200,0,20,200,0,20));//
     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
