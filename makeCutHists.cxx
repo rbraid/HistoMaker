@@ -45,6 +45,13 @@ void SetupHistos(TList *outlist)
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE11",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
+    //temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     for(int theta=10;theta<=55;theta++)
     {
@@ -146,11 +153,20 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       if(hit->GetEEnergy()>100)
       {
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_det%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_Be_det%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
 	if(temp2) temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
       }
       
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      {
+	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
+	{
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	}
+      }
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
       {
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
