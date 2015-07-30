@@ -1,8 +1,11 @@
 // g++ MakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #define DEBUG 0
+#define TGTTHICKNESS 2.4
+#define BEAMENERGY 30.14
 
 #include <cstdio>
+#include <fstream>
 
 #include <TObject.h>
 
@@ -57,6 +60,11 @@ void SetupHistos(TList *outlist)
     {
       outlist->Add(new TH1D(Form("BeEx%i_theta%02i",id,theta),Form("Be-12 Excitation Energy Theta %i",id,theta),500,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",id,theta));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+
+      outlist->Add(new TH1D(Form("BeEx%i_theta%02i_corr",id,theta),Form("Be-12 Excitation Energy Theta %i energy corrected",id,theta),500,-10,25));
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",id,theta));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
     }
@@ -218,6 +226,50 @@ void SetupHistos(TList *outlist)
   }
 }
 
+double Func11(double x)
+{
+  return(1080.85*x - 33.4462*pow(x,2) + 0.92379*pow(x,3) - 0.0160147*pow(x,4) + 0.0001199256*pow(x,5));
+}
+
+double Func12(double x)
+{
+  return(1208.8*x - 41.8894*pow(x,2) + 1.25691*pow(x,3) - 0.0223553*pow(x,4) + 0.0001661186*pow(x,5));
+}
+
+double Func4(double x)
+{
+  return(166.114*x - 6.2685*pow(x,2) + 0.168201*pow(x,3) - 0.002540775*pow(x,4) + 0.00001618362*pow(x,5));
+}
+
+double CorrectEnergy(double E, double T, int mass)
+{
+  bool debugCE = 0;
+
+  E = E/1000.;  //Go from keV to MeV
+  
+  if(debugCE) cout<<"My initial energy is: "<<E<<" MeV"<<endl;
+  double effthick = TGTTHICKNESS/1000.; //This function uses mm not um.
+  effthick = effthick/2; //We assume we only go through half on average.
+  if(debugCE) cout<<"Half of the thickness of the Target is: "<<effthick<<" mm"<<endl;
+  effthick = effthick/cos(T); //This takes into account the angle effect, the minimum is perpindicular
+  if(debugCE) cout<<"The effective thickness is: "<<effthick<<" mm, due to an angle of: "<<T*180./3.14159<<" degrees"<<endl;
+
+  double elost = -10.;
+  
+  if(mass==11)
+    elost = Func11(effthick);
+  else if(mass==12)
+    elost = Func12(effthick);
+  else if(mass==4)
+    elost = Func4(effthick);
+  else
+    elost = -100;
+    
+  if(debugCE) cout<<"My energy lost is: "<<elost<<" MeV"<<endl;
+  
+  return((E+elost)*1000.);//Note the conversion back to keV here.
+}
+
 double GetExciteE_Heavy(double be12E, double be12T, double BeamE)
 {
 //   cout<<"BeamE: "<<BeamE<<endl;
@@ -274,6 +326,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   TStopwatch w;
   w.Start();
 
+  ofstream ofile;
+  ofile.open("interesting.h");
+  ofile<<"bool IsInteresting["<<nentries<<"] = {";
+  
+
   if(DEBUG)
   {
     cout<<"Starting ProcessChain"<<endl;
@@ -283,6 +340,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     chain->GetEntry(x);
 
+    bool IsInteresting = 0;
+    
     if(DEBUG)
     {
       cout<<"nentries: "<<nentries<<endl;
@@ -372,38 +431,39 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       if(hbe !=-1)
       {
-// 	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
-// 	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-// 	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
-// 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
+	// 	TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
+	// 	expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+	// 	TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
+	// 	evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
       }
 
       if(h2 != -1)
       {
-	/*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
-	{
-	  cout<<endl<<endl;
-	  printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-
-	  cout<<DRED;
-	  csm->GetHit(h1)->Print();
-	  cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
-	  cout<<DBLUE;
-	  csm->GetHit(h2)->Print();
-	  cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
-	  cout<<RESET_COLOR;
-
-	  for(int z=0; z<csm->GetMultiplicity(); z++)
-	  {
-	    csm->GetHit(z)->Print();
-	  }
-	  cout<<endl;
-	}*/
+	if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	 {
+	   IsInteresting = 1;
+// 	 cout<<endl<<endl;
+// 	 printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+// 
+// 	 cout<<DRED;
+// 	 csm->GetHit(h1)->Print();
+// 	 cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
+// 	 cout<<DBLUE;
+// 	 csm->GetHit(h2)->Print();
+// 	 cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
+// 	 cout<<RESET_COLOR;
+// 
+// 	 for(int z=0; z<csm->GetMultiplicity(); z++)
+// 	 {
+// 	   csm->GetHit(z)->Print();
+// 	 }
+// 	 cout<<endl;
+	 }
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
 	if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
-	alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
-	}
+	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
       }
+    }
 
       if(hits[1]>0 && hits[0]>=2)
       {
@@ -444,133 +504,137 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	if(hbe !=-1)
 	{
-// 	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
-// 	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
-// 	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
-// 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
+	  // 	  TH1D* expointer = (TH1D*)outlist->FindObject(Form("BeEx%i",csm->GetHit(hbe)->GetDetectorNumber()));
+	  // 	  expointer->Fill(GetExciteE_Heavy(csm->GetHit(hbe)->GetEnergy(),csm->GetHit(hbe)->GetDPosition().Theta(),30.14));
+	  // 	  TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",csm->GetHit(hbe)->GetDetectorNumber()));
+	  // 	  evtpointer->Fill(csm->GetHit(hbe)->GetDPosition().Theta()*180/3.14159,csm->GetHit(hbe)->GetEnergy()/1000.);
 	}
 
 	if(h2 != -1)
 	{
-	  /*if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
-	  {
-	    cout<<endl<<endl;
-	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-
-	    cout<<DRED;
-	    csm->GetHit(h1)->Print();
-	    cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
-	    cout<<DBLUE;
-	    csm->GetHit(h2)->Print();
-	    cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
-	    cout<<RESET_COLOR;
-
-	    for(int z=0; z<csm->GetMultiplicity(); z++)
-	    {
-	      csm->GetHit(z)->Print();
-	    }
-	    cout<<endl;
-	  }*/
+	  if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
+	   {
+	     IsInteresting = 1;
+// 	   cout<<endl<<endl;
+// 	   printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+// 
+// 	   cout<<DRED;
+// 	   csm->GetHit(h1)->Print();
+// 	   cout<<DGREEN<<csm->GetHit(h1)->GetEnergy()/1000.<<endl;
+// 	   cout<<DBLUE;
+// 	   csm->GetHit(h2)->Print();
+// 	   cout<<DGREEN<<csm->GetHit(h2)->GetEnergy()/1000.<<endl;
+// 	   cout<<RESET_COLOR;
+// 
+// 	   for(int z=0; z<csm->GetMultiplicity(); z++)
+// 	   {
+// 	     csm->GetHit(z)->Print();
+// 	   }
+// 	   cout<<endl;
+	   }
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 	  if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
-	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
+	    alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
 	}
       }
-      
-    if(hits[0]>0 && hits[3]>=2)
-    {
-      double e1 = 0;
-      double e2 = 0;
 
-      for(int y=0; y<csm->GetMultiplicity(); y++)
-      {
-	if(csm->GetHit(y)->GetDetectorNumber()==4)
+	if(hits[0]>0 && hits[3]>=2)
 	{
-	  if(e1<1)
-	    e1=csm->GetHit(y)->GetEnergy()/1000.;
-	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetEnergy()/1000.;
-	  else
+	  double e1 = 0;
+	  double e2 = 0;
+
+	  for(int y=0; y<csm->GetMultiplicity(); y++)
 	  {
-	    cout<<endl<<endl<<"0,3"<<endl;
-	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	    if(csm->GetHit(y)->GetDetectorNumber()==4)
+	    {
+	      if(e1<1)
+		e1=csm->GetHit(y)->GetEnergy()/1000.;
+	      else if(e2<1)
+		e2=csm->GetHit(y)->GetEnergy()/1000.;
+	      else
+	      {
+		cout<<endl<<endl<<"0,3"<<endl;
+		printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+		cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	      }
+	    }
 	  }
+
+	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
+	  if(e2>1)
+	    alphaconepointer->Fill(e1,e2);
 	}
-      }
 
-      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
-      if(e2>1)
-	alphaconepointer->Fill(e1,e2);
-    }
-
-    if(hits[1]>0 && hits[2]>=2)
-    {
-      double e1 = 0;
-      double e2 = 0;
-      
-      for(int y=0; y<csm->GetMultiplicity(); y++)
-      {
-	if(csm->GetHit(y)->GetDetectorNumber()==3)
+	if(hits[1]>0 && hits[2]>=2)
 	{
-	  if(e1<1)
-	    e1=csm->GetHit(y)->GetEnergy()/1000.;
-	  else if(e2<1)
-	    e2=csm->GetHit(y)->GetEnergy()/1000.;
-	  else
+	  double e1 = 0;
+	  double e2 = 0;
+
+	  for(int y=0; y<csm->GetMultiplicity(); y++)
 	  {
-	    cout<<endl<<endl<<"1,2"<<endl;
-	    printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-	    cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	    if(csm->GetHit(y)->GetDetectorNumber()==3)
+	    {
+	      if(e1<1)
+		e1=csm->GetHit(y)->GetEnergy()/1000.;
+	      else if(e2<1)
+		e2=csm->GetHit(y)->GetEnergy()/1000.;
+	      else
+	      {
+		cout<<endl<<endl<<"1,2"<<endl;
+		printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+		cout<<"E1: "<<e1<<" E2: "<<e2<<" Next E: "<<csm->GetHit(y)->GetEnergy()/1000.<<endl<<endl;
+	      }
+	    }
 	  }
+
+
+	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
+	  if(e2>1)
+	    alphaconepointer->Fill(e1,e2);
 	}
+
+	//     if(BeLoc!=-1)
+	//     {
+	  //       int AlphaDetector = csm->GetHit(BeLoc)->GetDetectorNumber();
+	  //       if(AlphaDetector==1)
+	  // 	AlphaDetector=4;
+	  //       else if(AlphaDetector==2)
+	  // 	AlphaDetector=3;
+	  //       else
+	  // 	cerr<<"The BE is not in detector 1 or 2, what?"<<endl;
+	  //       for(int y=0; y<csm->GetMultiplicity(); y++)
+	  //       {
+	    // 	if(DEBUG)
+	    // 	{
+	      // 	  cout<<"Alpha's Get Multiplicity()"<<endl;
+	      // 	}
+	      // 	if(y==BeLoc)
+	      // 	  continue;
+	      // 	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
+	      // 	{
+		// 	  //cout<<"Found an Alpha at: "<<y<<endl;
+		// 	  if(AlLoc1==-1)
+		// 	    AlLoc1 = y;
+		// 	  else if(AlLoc2==-1)
+		// 	  {
+		  // 	    AlLoc2 = y;
+		  // 	    //cout<<"I found 2 alphas"<<endl;
+		  // 	  }
+		  // 	  else
+		  // 	    cerr<<"I seem to have too many Alphas"<<endl;
+		  // 	}
+		  //       }
+		  //     }
+
+		  //     if(AlLoc2!=-1)
+		  //     {
+		    //       TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
+		    //       alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
+		    //     }
       }
-      
-      
-      TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-      if(e2>1)
-	alphaconepointer->Fill(e1,e2);
-    }
 
-//     if(BeLoc!=-1)
-//     {
-//       int AlphaDetector = csm->GetHit(BeLoc)->GetDetectorNumber();
-//       if(AlphaDetector==1)
-// 	AlphaDetector=4;
-//       else if(AlphaDetector==2)
-// 	AlphaDetector=3;
-//       else
-// 	cerr<<"The BE is not in detector 1 or 2, what?"<<endl;
-//       for(int y=0; y<csm->GetMultiplicity(); y++)
-//       {
-// 	if(DEBUG)
-// 	{
-// 	  cout<<"Alpha's Get Multiplicity()"<<endl;
-// 	}
-// 	if(y==BeLoc)
-// 	  continue;
-// 	else if(csm->GetHit(y)->GetDetectorNumber()==AlphaDetector)
-// 	{
-// 	  //cout<<"Found an Alpha at: "<<y<<endl;
-// 	  if(AlLoc1==-1)
-// 	    AlLoc1 = y;
-// 	  else if(AlLoc2==-1)
-// 	  {
-// 	    AlLoc2 = y;
-// 	    //cout<<"I found 2 alphas"<<endl;
-// 	  }
-// 	  else
-// 	    cerr<<"I seem to have too many Alphas"<<endl;
-// 	}
-//       }
-//     }
-
-//     if(AlLoc2!=-1)
-//     {
-//       TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",csm->GetHit(AlLoc1)->GetDetectorNumber()));
-//       alphaconepointer->Fill(csm->GetHit(AlLoc1)->GetEnergy()/1000.,csm->GetHit(AlLoc2)->GetEnergy()/1000.);
-//     }
-     }
+    ofile<<IsInteresting<<",";
+      
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
@@ -817,11 +881,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {	
 	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
 	{
-	  double excite = GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),30.14);
+	  double excite = GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta(),BEAMENERGY);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
 	  if(temp1) temp1->Fill(excite);
+	  
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
+	  double corrE = CorrectEnergy(hit->GetEnergy(),hit->GetDPosition().Theta(), 12);
+	  double excite2 = GetExciteE_Heavy(corrE,hit->GetDPosition().Theta(),BEAMENERGY);
+	  if(temp1) temp1->Fill(excite2);
+	  
 	  if(excite<3.8 && excite>1.8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",hit->GetDetectorNumber()));
@@ -841,6 +911,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	}
+      }
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      {
+	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
+	{
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE11",hit->GetDetectorNumber()));
+	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+
+	  //cout<<"   Final Be11 Energy: "<<CorrectEnergy(hit->GetEnergy(),hit->GetDPosition().Theta(), 11)<<endl;
+	  
 	}
       }
 
@@ -892,6 +974,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       w.Continue();
     }
   }
+
+  ofile<<"};"<<endl;
+  ofile.close();
   
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
   cout<<endl;
