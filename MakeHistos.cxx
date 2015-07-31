@@ -326,10 +326,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   TStopwatch w;
   w.Start();
 
-  ofstream ofile;
-  ofile.open("interesting.h");
-  ofile<<"bool IsInteresting["<<nentries<<"] = {";
-  
+//   ofstream ofile;
+//   ofile.open("interesting.h");
+//   ofile<<"bool IsInteresting["<<nentries<<"] = {";
+//   
 
   if(DEBUG)
   {
@@ -460,7 +460,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	 cout<<endl;
 	 }
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-	if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
+	//if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
 	  alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
       }
     }
@@ -533,7 +533,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	   cout<<endl;
 	   }
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-	  if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
+	  //if(csm->GetHit(h2)->GetEEnergy()>10 && csm->GetHit(h1)->GetEEnergy()>10)
 	    alphaconepointer->Fill(csm->GetHit(h1)->GetEnergy()/1000.,csm->GetHit(h2)->GetEnergy()/1000.);
 	}
       }
@@ -633,7 +633,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		    //     }
       }
 
-    ofile<<IsInteresting<<",";
+    //ofile<<IsInteresting<<",";
       
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -975,8 +975,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
   }
 
-  ofile<<"};"<<endl;
-  ofile.close();
+//   ofile<<"};"<<endl;
+//   ofile.close();
   
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
   cout<<endl;
