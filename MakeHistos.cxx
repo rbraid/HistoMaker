@@ -73,7 +73,12 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
-    
+
+    outlist->Add(new TH1D(Form("BeEx%i_corr",id),Form("Be-12 Excitation Energy, with straggling correction",id),350,-10,25));
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",id));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
@@ -98,16 +103,6 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
-    
-    outlist->Add(new TH2D(Form("pid_%i_summed_single_pixel",id),Form("Single Pixel Particle ID, detector %i, summed",id),1400,0,140,700,0,70));//
-      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_single_pixel",id));
-      temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
-      temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("pid_%i_single_pixel",id),Form("Single Pixel Particle ID, detector %i",id),1400,0,140,700,0,70));//
-      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_single_pixel",id));
-      temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
-      temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
       
     outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
@@ -232,7 +227,7 @@ double GetExciteE_Heavy(double be12E, double be12T)
 //   cout<<"BeE: "<<be12E<<endl;
 //   cout<<"BeT: "<<be12T<<endl;
   be12E=be12E/1000.;
-  const double pi = 3.14159;
+  const double pi = TMath::Pi();
 
   const double MEVpNUC = 931.494061;
   
@@ -311,68 +306,68 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     if(csm->GetMultiplicity()>=3)
     {
 
-    int hits[4] = {0};
-    
-    for(int y=0; y<csm->GetMultiplicity(); y++)
-    {
-      if(DEBUG)
-      {
-	cout<<"Be's Get Multiplicity()"<<endl;
-      }
-
-      hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
-    }
-
-    //printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
-
-    if(hits[0]>0 && hits[1]>=2)
-    {
+      int hits[4] = {0};
 
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
-	if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1 )
+	if(DEBUG)
 	{
-	  if(!Alpha1Flag)
-	  {
-	    csm->GetHit(y)->SetIsotope(4,"He");
-	    Alpha1Hit = csm->GetHit(y);
-	    Alpha1Flag = 1;
-	  }
-	  else if(!Alpha2Flag)
-	  {
-	    csm->GetHit(y)->SetIsotope(4,"He");
-	    Alpha2Hit = csm->GetHit(y);
-	    Alpha2Flag = 1;
-	  }
-	  else
-	    cerr<<" Too many alphas"<<endl;
+	  cout<<"Be's Get Multiplicity()"<<endl;
 	}
-	else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
-	{
-	  if(!Be12Flag)
-	  {
-	    csm->GetHit(y)->SetIsotope("12Be");
-	    Be12Hit = csm->GetHit(y);
-	    Be12Flag = 1;
-	  }
-	  else
-	  {
-	    cerr<<" Too many Be12"<<endl;
-	  }
-	}
+
+	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
       }
 
-      if(Alpha2Flag)
+      //printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
+
+      if(hits[0]>0 && hits[1]>=2)
       {
-	if( Alpha1Hit->GetEnergyMeV()>7.8 && Alpha2Hit->GetEnergyMeV()<4.8 )
+
+	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
-	  IsInteresting = 1;
+	  if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1 )
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(y);
+	      Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	    }
+	    else
+	      cerr<<" Too many alphas"<<endl;
+	  }
+	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	  {
+	    if(!Be12Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope("12Be");
+	      Be12Hit = csm->GetHit(y);
+	      Be12Flag = 1;
+	    }
+	    else
+	    {
+	      cerr<<" Too many Be12"<<endl;
+	    }
+	  }
 	}
 
-	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	if(Alpha2Flag)
+	{
+	  if( Alpha1Hit->GetEnergyMeV()>7.8 && Alpha2Hit->GetEnergyMeV()<4.8 )
+	  {
+	    IsInteresting = 1;
+	  }
+
+	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
+	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	}
       }
-    }
 
       if(hits[1]>0 && hits[0]>=2)
       {
@@ -410,98 +405,98 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
 
-	if(h2 != -1)
+	if(Alpha2Flag)
 	{
-	  if( csm->GetHit(h1)->GetEnergy()/1000.>7.8 && csm->GetHit(h2)->GetEnergy()/1000.<4.8 )
-	   {
-	     IsInteresting = 1;
-	   }
+	  if( Alpha1Hit->GetEnergyMeV()>7.8 && Alpha2Hit->GetEnergyMeV()<4.8 )
+	  {
+	    IsInteresting = 1;
+	  }
 	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	}
       }
 
-	if(hits[0]>0 && hits[3]>=2)
+      if(hits[0]>0 && hits[3]>=2)
+      {
+	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
-	  for(int y=0; y<csm->GetMultiplicity(); y++)
+	  if(csm->GetHit(y)->GetDetectorNumber()==4)
 	  {
-	    if(csm->GetHit(y)->GetDetectorNumber()==4)
+	    if(!Alpha1Flag)
 	    {
-	      if(!Alpha1Flag)
-	      {
-		csm->GetHit(y)->SetIsotope(4,"He");
-		Alpha1Hit = csm->GetHit(y);
-		Alpha1Flag = 1;
-	      }
-	      else if(!Alpha2Flag)
-	      {
-		csm->GetHit(y)->SetIsotope(4,"He");
-		Alpha2Hit = csm->GetHit(y);
-		Alpha2Flag = 1;
-	      }
-	      else
-		cerr<<" Too many alphas in side detector."<<endl;
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(y);
+	      Alpha1Flag = 1;
 	    }
-	    else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	    else if(!Alpha2Flag)
 	    {
-	      if(!Be12Flag)
-	      {
-		csm->GetHit(y)->SetIsotope("12Be");
-		Be12Hit = csm->GetHit(y);
-		Be12Flag = 1;
-	      }
-	      else
-	      {
-		cerr<<" Too many Be12"<<endl;
-	      }
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	    }
+	    else
+	      cerr<<" Too many alphas in side detector."<<endl;
+	  }
+	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	  {
+	    if(!Be12Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope("12Be");
+	      Be12Hit = csm->GetHit(y);
+	      Be12Flag = 1;
+	    }
+	    else
+	    {
+	      cerr<<" Too many Be12"<<endl;
 	    }
 	  }
-
-	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
-	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	}
 
-	if(hits[1]>0 && hits[2]>=2)
-	{
-	  for(int y=0; y<csm->GetMultiplicity(); y++)
-	  {
-	    if(csm->GetHit(y)->GetDetectorNumber()==3)
-	    {
-	      if(!Alpha1Flag)
-	      {
-		csm->GetHit(y)->SetIsotope(4,"He");
-		Alpha1Hit = csm->GetHit(y);
-		Alpha1Flag = 1;
-	      }
-	      else if(!Alpha2Flag)
-	      {
-		csm->GetHit(y)->SetIsotope(4,"He");
-		Alpha2Hit = csm->GetHit(y);
-		Alpha2Flag = 1;
-	      }
-	      else
-		cerr<<" Too many alphas in side detector."<<endl;
-	    }
-	    else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
-	    {
-	      if(!Be12Flag)
-	      {
-		csm->GetHit(y)->SetIsotope("12Be");
-		Be12Hit = csm->GetHit(y);
-		Be12Flag = 1;
-	      }
-	      else
-	      {
-		cerr<<" Too many Be12"<<endl;
-	      }
-	    }
-	  }
-
-	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-	}
+	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
+	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
       }
 
+      if(hits[1]>0 && hits[2]>=2)
+      {
+	for(int y=0; y<csm->GetMultiplicity(); y++)
+	{
+	  if(csm->GetHit(y)->GetDetectorNumber()==3)
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	Alpha1Hit = csm->GetHit(y);
+	Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	    }
+	    else
+	      cerr<<" Too many alphas in side detector."<<endl;
+	  }
+	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	  {
+	    if(!Be12Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope("12Be");
+	      Be12Hit = csm->GetHit(y);
+	      Be12Flag = 1;
+	    }
+	    else
+	    {
+	      cerr<<" Too many Be12"<<endl;
+	    }
+	  }
+	}
+
+	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
+	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+      }
+    }
+    
     //ofile<<IsInteresting<<",";
       
     for(int y=0; y<csm->GetMultiplicity(); y++)
@@ -586,14 +581,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       temp3->Fill(hit->GetDPosition().Z(),hit->GetDPosition().Y(),hit->GetDPosition().X());
 
       temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
-      temp2->Fill(hit->GetEPosition().Theta()*180/3.141597,hit->GetEPosition().Phi()*180/3.141597);
+      temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
       
       if(DEBUG) cout<<"EVTheta"<<endl;
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iD",hit->GetDetectorNumber()));
-      temp2->Fill(hit->GetDPosition().Theta()*180/3.141597,hit->GetDEnergy()/1000.);
+      temp2->Fill(hit->GetThetaDeg(),hit->GetDEnergy()/1000.);
 
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iE",hit->GetDetectorNumber()));
-      if(temp2) temp2->Fill(hit->GetEPosition().Theta()*180/3.141597,hit->GetEEnergy()/1000.);
+      if(temp2) temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEEnergy()/1000.);
       if(DEBUG) cout<<"HitPattern"<<endl;
 
       if(hit->GetDEnergy()>500)
@@ -612,44 +607,21 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
+	temp2->Fill(hit->GetEnergyMeV(),hit->GetDEnergy()/1000.);
 	if(hit->GetDthickness()>5)
 	{
-	//cout<<thickness<<endl;
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
+	  //cout<<thickness<<endl;
+	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
+	  temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 
-	temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
-	temp2->Fill(hit->GetEnergy()/1000.,hit->GetDdE_dx());
+	  temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
+	  temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 	
-	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
+	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
+	  temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
-	temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
-
-	if(hit->GetDetectorNumber()==1)
-	{
-	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject("pid_1_summed_single_pixel");
-	    temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
-
-	    temp2 = (TH2D*)outlist->FindObject("pid_1_single_pixel");
-	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-	  }
-	}
-	else if(hit->GetDetectorNumber()==2)
-	{
-	  if(hit->GetDHorizontalStrip()==8 && hit->GetDVerticalStrip()==8)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject("pid_2_summed_single_pixel");
-	    temp2->Fill(hit->GetEnergy()/1000.,hit->GetDEnergy()/1000.);
-
-	    temp2 = (TH2D*)outlist->FindObject("pid_2_single_pixel");
-	    temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-	  }
-	}
+	temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
       }
 
       if(hit->GetDetectorNumber()==3)
@@ -657,7 +629,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(hit->GetDEnergy()>0)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_1Total");
-	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	}
       }
       else if(hit->GetDetectorNumber()==4)
@@ -665,7 +637,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(hit->GetDEnergy()>0)
 	{
 	  temp2 = (TH2D*)outlist->FindObject("EvTheta_2Total");
-	  temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	}
       }
 
@@ -689,46 +661,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
 
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
-      if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+      if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 
       //Particle cut plots
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Be_1",hit->GetDetectorNumber()))))
-      {
-	if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
-	{
-	  //myFriend->SetBe(y);
-	}
-      }
-//       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",hit->GetDetectorNumber()))))
-//       {
-// 	if( cut->IsInside(hit->GetEnergy()/1000., hit->GetDdE_dx()) )
-// 	{
-// 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-// 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-// 	}
-//       }
-
-//       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_1",hit->GetDetectorNumber()))))
-//       {
-// 	if(!cut) cerr<<"Error: Alpha cut not found!"<<endl;
-// 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
-// 	{
-// 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-// 	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-// 
-// 	  //myFriend->SetAlpha(y);
-// 	  
-// 	}
-//       }
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
       {
 	if(!cut) cerr<<"Error: Alpha high energy cut not found!"<<endl;
 	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	  if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	}
       }
       if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_good_fvb")))
@@ -739,84 +682,59 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(hit->GetEEnergy()>10.)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_fvb",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+	    if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
 	    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",hit->GetDetectorNumber()));
 	    if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	  }
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())))))
       {	
-	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
 	{
 	  double excite = GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta());
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())));
 	  if(temp1) temp1->Fill(excite);
 	  
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)));
-	  //double corrE = CorrectEnergy(hit->GetEnergy(),hit->GetDPosition().Theta(), 12);
-	  //double excite2 = GetExciteE_Heavy(corrE,hit->GetDPosition().Theta());
-	 // if(temp1) temp1->Fill(excite2);
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())));
+	  double excite2 = GetExciteE_Heavy(hit->GetCorrectedEnergyMeV(),hit->GetDPosition().Theta());
+	  if(temp1) temp1->Fill(excite2);
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(excite2);
 	  
 	  if(excite<3.8 && excite>1.8)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	  }
 	  if(excite<1.3 && excite>0)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	  }
 	  if(excite<5)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	  }
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
+	  if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./3.14159)))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
       {
-	if(cut->IsInside(hit->GetEnergy()/1000.,hit->GetDdE_dx()))
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE11",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetDPosition().Theta()*180/3.14159,hit->GetEnergy()/1000.);
-
-	  //cout<<"   Final Be11 Energy: "<<CorrectEnergy(hit->GetEnergy(),hit->GetDPosition().Theta(), 11)<<endl;
-	  
+	  if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());	  
 	}
       }
-
-      /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_bad_fvb_1")))
-      {
-	if(!cut) cerr<<"Error: Front vs Back cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetDVerticalEnergy()/1000., hit->GetDHorizontalEnergy()/1000. ) )
-	{
-	  hit->Print();
-	}
-      }*/
-	
-
-    //example cut
-    /*if(TCutG *cut = (TCutG*)(cutlist->FindObject("pid1_beryllium"))))
-    {
-      if(!cut) cerr<<"Error: Beryllium cut not found!"<<endl;
-      else if(cut->IsInside(hit->GetEEnergy(), hit->GetDEnergy() ) )
-      {
-        cout<<".";
-      }
-    }*/
-    //myFriend->Fill();
-
-    //myFriend->GetAlpha(0)->Print();
     }
 
 //***********************
@@ -909,12 +827,10 @@ int main(int argc, char **argv)
   printf("%i analysis trees added to chain.\n",i-1);
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
-
-  //MakeFriend *myFriend = new MakeFriend(csm);
   
   TList *outlist = new TList;
   SetupHistos(outlist);
-  ProcessChain(chain,outlist);//,myFriend);
+  ProcessChain(chain,outlist);
   outlist->Sort();
 
   if(DEBUG)
@@ -926,8 +842,6 @@ int main(int argc, char **argv)
   f.cd();
   outlist->Write();
   f.Close();
-
-  //myFriend->Write();
   
   if(DEBUG)
   {
