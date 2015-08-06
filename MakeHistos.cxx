@@ -700,6 +700,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(temp1) temp1->Fill(excite);
 	  
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())));
+	  hit->SetIsotope("12Be");
 	  double excite2 = GetExciteE_Heavy(hit->GetCorrectedEnergyMeV(),hit->GetDPosition().Theta());
 	  if(temp1) temp1->Fill(excite2);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
