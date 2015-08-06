@@ -226,7 +226,7 @@ double GetExciteE_Heavy(double be12E, double be12T)
 //   cout<<"BeamE: "<<BeamE<<endl;
 //   cout<<"BeE: "<<be12E<<endl;
 //   cout<<"BeT: "<<be12T<<endl;
-  //be12E=be12E/1000.;
+  be12E=be12E/1000.;
   const double pi = TMath::Pi();
 
   const double MEVpNUC = 931.494061;
@@ -689,19 +689,19 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
       {	
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
 	{
 	  double excite = GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta());
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())));
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
 	  if(temp1) temp1->Fill(excite);
 	  
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetDPosition().Theta()*180./TMath::Pi())));
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
 	  hit->SetIsotope("12Be");
-	  double excite2 = GetExciteE_Heavy(hit->GetCorrectedEnergyMeV(),hit->GetDPosition().Theta());
+	  double excite2 = GetExciteE_Heavy(hit->GetCorrectedEnergy(),hit->GetDPosition().Theta());
 	  if(temp1) temp1->Fill(excite2);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite2);
