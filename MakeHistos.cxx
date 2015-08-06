@@ -226,7 +226,7 @@ double GetExciteE_Heavy(double be12E, double be12T)
 //   cout<<"BeamE: "<<BeamE<<endl;
 //   cout<<"BeE: "<<be12E<<endl;
 //   cout<<"BeT: "<<be12T<<endl;
-  be12E=be12E/1000.;
+  //be12E=be12E/1000.;
   const double pi = TMath::Pi();
 
   const double MEVpNUC = 931.494061;
