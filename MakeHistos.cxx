@@ -190,8 +190,12 @@ void SetupHistos(TList *outlist)
   }
 
 
-  outlist->Add(new TH3D("positions","positions",100,0,100,60,-30,30,200,-100,100));
-  
+  outlist->Add(new TH3D("positions","positions",200,0,100,120,-30,30,400,-100,100));
+  outlist->Add(new TH2D("positions_proj","positions_proj",200,0,100,400,-100,100));
+  temp2 = (TH2D*)outlist->FindObject("positions_proj");
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Z");
+    temp2->GetYaxis()->SetTitle("X");
   
   outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map",45,0,90,90,-180,180));
     temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
@@ -498,6 +502,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
     
     //ofile<<IsInteresting<<",";
+
+    /*if(IsInteresting)
+    {
+      cout<<GREEN<<csm->GetHit(0)->GetTriggerID()<<RESET_COLOR<<endl;
+      for(int iter=0;iter<csm->GetMultiplicity();iter++)
+      {
+	csm->GetHit(iter)->Print();
+      }
+      cout<<endl;
+    }*/
       
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -576,9 +590,19 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(hit->GetEHorizontalCharge() != 0)
 	  temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalCharge()/125.);
       }
-      
-      temp3 = (TH3D*)outlist->FindObject("positions");
-      temp3->Fill(hit->GetDPosition().Z(),hit->GetDPosition().Y(),hit->GetDPosition().X());
+
+      if(hit->GetDPosition().Z() != 1 && hit->GetDPosition().Y() != 0 && hit->GetDPosition().X() != 0)
+      {
+	temp3 = (TH3D*)outlist->FindObject("positions");
+	temp3->Fill(hit->GetDPosition().Z(),hit->GetDPosition().Y(),hit->GetDPosition().X());
+	if(hit->GetEEnergy()>1)
+	  temp3->Fill(hit->GetEPosition().Z(),hit->GetEPosition().Y(),hit->GetEPosition().X());
+
+	temp2 = (TH2D*)outlist->FindObject("positions_proj");
+	temp2->Fill(hit->GetDPosition().Z(),hit->GetDPosition().X());
+	if(hit->GetEEnergy()>1)
+	  temp2->Fill(hit->GetEPosition().Z(),hit->GetEPosition().X());
+      }
 
       temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
       temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
