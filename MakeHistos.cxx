@@ -104,7 +104,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
       
-    outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),400,0,100,1400,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -336,7 +336,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      Alpha2Flag = 1;
 	    }
 	    else
+	    {
 	      cout<<"Too Many Alphas!"<<endl;
+	      IsInteresting = 1;
+	    }
 	  }
 	}
 
@@ -347,6 +350,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+
+// 	if(Alpha2Hit->GetEnergyMeV()>5.7 && Alpha2Hit->GetEnergyMeV()<6.8 && Alpha1Hit->GetEnergyMeV()>10)
+// 	  IsInteresting = 1;
       }
       else if(Alpha2Flag)
       {
@@ -534,7 +540,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     
     //ofile<<IsInteresting<<",";
 
-    /*if(IsInteresting)
+    if(IsInteresting)
     {
       cout<<GREEN<<csm->GetHit(0)->GetTriggerID()<<RESET_COLOR<<endl;
       for(int iter=0;iter<csm->GetMultiplicity();iter++)
@@ -542,7 +548,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	csm->GetHit(iter)->Print();
       }
       cout<<endl;
-    }*/
+    }
       
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -657,8 +663,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(DEBUG) cout<<"PID"<<endl;
 
 
-      if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
-      {
+      //if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
+      //{
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
@@ -677,7 +683,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-      }
+      //}
 
       if(hit->GetDetectorNumber()==3)
       {
