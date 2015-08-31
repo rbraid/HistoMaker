@@ -404,9 +404,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    IsInteresting = 1;
 	  }
-
-	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	  if((Alpha1Hit->GetEEnergy()>10 && Alpha2Hit->GetEEnergy()>10) || (Alpha1Hit->GetEEnergy()<1 && Alpha2Hit->GetEEnergy()<1))
+	  {
+	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
+	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	  }
 	}
       }
 
@@ -452,8 +454,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    IsInteresting = 1;
 	  }
-	  TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-	  alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	  if((Alpha1Hit->GetEEnergy()>10 && Alpha2Hit->GetEEnergy()>10) || (Alpha1Hit->GetEEnergy()<1 && Alpha2Hit->GetEEnergy()<1))
+	  {
+	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
+	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	  }
 	}
       }
 
@@ -536,20 +541,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
       }
-     }
-    
+     
     //ofile<<IsInteresting<<",";
 
 //     if(IsInteresting)
-//     {
-//       cout<<GREEN<<csm->GetHit(0)->GetTriggerID()<<RESET_COLOR<<endl;
-//       for(int iter=0;iter<csm->GetMultiplicity();iter++)
+//       if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_Interesting")))
 //       {
-// 	csm->GetHit(iter)->Print();
-//       }
-//       cout<<endl;
-//     }
-      
+// 	if(Alpha2Flag)
+// 	{
+// 	  if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+// 	  {
+// 	    for(int iter=0;iter<csm->GetMultiplicity();iter++)
+// 	    {
+// 	      csm->GetHit(iter)->Print();
+// 	    }
+// 	    cout<<GREEN<<"*******"<<RESET_COLOR<<endl;
+// 	  }
+// 	}
+//       }	
+    }
+
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
