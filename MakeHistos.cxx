@@ -321,7 +321,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thickness_alpha_%i_1",csm->GetHit(y)->GetDetectorNumber()))))
 	{
-	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()))
+	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()) && csm->GetHit(y)->GetEEnergy() > 10)
 	  {
 	    if(!Alpha1Flag)
 	    {
@@ -663,8 +663,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(DEBUG) cout<<"PID"<<endl;
 
 
-      //if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
-      //{
+      if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
+      {
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",hit->GetDetectorNumber()));
@@ -683,7 +683,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-      //}
+      }
 
       if(hit->GetDetectorNumber()==3)
       {
