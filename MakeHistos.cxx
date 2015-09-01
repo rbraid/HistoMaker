@@ -108,7 +108,12 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE8",id),Form("EvTheta %i of the reconstructed 8Be",id),400,0,100,1400,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+      
     outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -262,6 +267,53 @@ double GetExciteE_Heavy(double be12E, double be12T)
   
 }
 
+double* CalcBe8fromAlpha(double a1E, double a1T, double a1P, double a2E, double a2T, double a2P)
+{
+  const double pi=TMath::Pi();
+  
+  double *Be8Values = new double[3];
+  
+  //Make the masses for the 8Be and 4He
+  const double mBe8 = 8.0*931.494027 + 4.9416;
+  const double mAlpha = 4.0*931.494027 + 2.4249156;
+  
+  vector<double> PVecAlpha1, PVecAlpha2, pBe;
+  //Convert from energy to momentum
+  double PAlpha1 = sqrt( 2.0*mAlpha*a1E );
+  double PAlpha2 = sqrt( 2.0*mAlpha*a2E );
+  
+  //fill the momentum vector for the first alpha
+  PVecAlpha1.push_back( PAlpha1*sin( a1T )*cos( a1P ) );
+  PVecAlpha1.push_back( PAlpha1*sin( a1T )*sin( a1P ) );
+  PVecAlpha1.push_back( PAlpha1*cos( a1T ) );
+  
+  //fill the momentum vector for the second alpha
+  PVecAlpha2.push_back( PAlpha2*sin( a2T )*cos( a2P ) );
+  PVecAlpha2.push_back( PAlpha2*sin( a2T )*sin( a2P ) );
+  PVecAlpha2.push_back( PAlpha2*cos( a2T ) );
+  
+  //fill the 8Be vector
+  pBe.push_back( ( PVecAlpha1[0]+PVecAlpha2[0] ) );
+  pBe.push_back( ( PVecAlpha1[1]+PVecAlpha2[1] ) );
+  pBe.push_back( ( PVecAlpha1[2]+PVecAlpha2[2] ) );
+  
+  //make the 8Be physical parameters, energy, theta, phi
+  Be8Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe8 );  //Energy, from E=p^2/2m
+  Be8Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
+  //Be8Values[2] = atan( pBe[1]/pBe[0] ); //Phi
+  
+  if( pBe[0] > 0.0 && pBe[1] > 0.0 )
+    Be8Values[2] = atan( pBe[1] / pBe[0] );
+  else if( pBe[0] < 0.0 && pBe[1] > 0.0 )
+    Be8Values[2] = atan( pBe[1] / pBe[0] ) + pi;
+  else if( pBe[0] < 0.0 && pBe[1] < 0.0 )
+    Be8Values[2] = atan( pBe[1] / pBe[0] ) + pi;
+  else if( pBe[0] > 0.0 && pBe[1] < 0.0 )
+    Be8Values[2] = atan( pBe[1] / pBe[0] ) + 2*pi;
+  
+  return Be8Values;
+}
+
 void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 {
   int nentries = chain->GetEntries();
@@ -409,6 +461,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
+
+	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit->GetEnergyMeV(), Alpha1Hit->GetDPosition().Theta(), Alpha1Hit->GetDPosition().Phi(),
+					 Alpha2Hit->GetEnergyMeV(), Alpha2Hit->GetDPosition().Theta(), Alpha2Hit->GetDPosition().Phi());
+	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_2_BE8");
+	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
 	}
       }
 
@@ -459,6 +516,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
+	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit->GetEnergyMeV(), Alpha1Hit->GetDPosition().Theta(), Alpha1Hit->GetDPosition().Phi(),
+					 Alpha2Hit->GetEnergyMeV(), Alpha2Hit->GetDPosition().Theta(), Alpha2Hit->GetDPosition().Phi());
+	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_1_BE8");
+	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
 	}
       }
 
