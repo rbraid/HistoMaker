@@ -78,6 +78,11 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("AlphaEx%i",id),Form("AlphaEx Excitation Energy",id),350,-10,25));
+      temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",id));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
       
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
@@ -267,7 +272,7 @@ double GetExciteE_Heavy(double be12E, double be12T)
   
 }
 
-double* CalcBe8fromAlpha(double a1E, double a1T, double a1P, double a2E, double a2T, double a2P)
+double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
 {
   const double pi=TMath::Pi();
   
@@ -279,18 +284,18 @@ double* CalcBe8fromAlpha(double a1E, double a1T, double a1P, double a2E, double 
   
   vector<double> PVecAlpha1, PVecAlpha2, pBe;
   //Convert from energy to momentum
-  double PAlpha1 = sqrt( 2.0*mAlpha*a1E );
-  double PAlpha2 = sqrt( 2.0*mAlpha*a2E );
+  double PAlpha1 = sqrt( 2.0*mAlpha*A1H->GetEnergyMeV() );
+  double PAlpha2 = sqrt( 2.0*mAlpha*A2H->GetEnergyMeV() );
   
   //fill the momentum vector for the first alpha
-  PVecAlpha1.push_back( PAlpha1*sin( a1T )*cos( a1P ) );
-  PVecAlpha1.push_back( PAlpha1*sin( a1T )*sin( a1P ) );
-  PVecAlpha1.push_back( PAlpha1*cos( a1T ) );
+  PVecAlpha1.push_back( PAlpha1*sin( A1H->GetDPosition().Theta() )*cos( A1H->GetDPosition().Phi() ) );
+  PVecAlpha1.push_back( PAlpha1*sin( A1H->GetDPosition().Theta() )*sin( A1H->GetDPosition().Phi() ) );
+  PVecAlpha1.push_back( PAlpha1*cos( A1H->GetDPosition().Theta() ) );
   
   //fill the momentum vector for the second alpha
-  PVecAlpha2.push_back( PAlpha2*sin( a2T )*cos( a2P ) );
-  PVecAlpha2.push_back( PAlpha2*sin( a2T )*sin( a2P ) );
-  PVecAlpha2.push_back( PAlpha2*cos( a2T ) );
+  PVecAlpha2.push_back( PAlpha2*sin( A2H->GetDPosition().Theta() )*cos( A1H->GetDPosition().Phi() ) );
+  PVecAlpha2.push_back( PAlpha2*sin( A2H->GetDPosition().Theta() )*sin( A1H->GetDPosition().Phi() ) );
+  PVecAlpha2.push_back( PAlpha2*cos( A2H->GetDPosition().Theta() ) );
   
   //fill the 8Be vector
   pBe.push_back( ( PVecAlpha1[0]+PVecAlpha2[0] ) );
@@ -312,6 +317,41 @@ double* CalcBe8fromAlpha(double a1E, double a1T, double a1P, double a2E, double 
     Be8Values[2] = atan( pBe[1] / pBe[0] ) + 2*pi;
   
   return Be8Values;
+}
+
+double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
+{
+  
+  double *Be8Values = new double[3];
+  
+  Be8Values = CalcBe8fromAlpha(A1H,A2H);
+
+  const double MEVpNUC = 931.494061;
+
+  const double MASS_BE8 = 8*MEVpNUC+4.9416;
+  const double MASS_BE12 = 12*MEVpNUC+25.0766;
+  const double MASS_BE9 = 9*MEVpNUC+11.3484;
+  const double MASS_BE11 = 11*MEVpNUC+20.1771;
+  
+  //11Be(9Be,8Be)12Be*
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = MASS_BE8;
+  const double M4 = MASS_BE12;
+  double mQ = M1+M2-M3-M4;
+  
+  double VelBeam = sqrt(2*BEAMENERGY/M1);
+  double COMV = ( M1 / ( M1 + M2 ) ) * VelBeam;
+  double VelocityM3 = sqrt(2 * (Be8Values[0]) / M3);
+  double kPrimeM3 = COMV / VelocityM3;
+  
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAMENERGY;
+  double COMEnergyM3 = Be8Values[0] * ( 1 + kPrimeM3*kPrimeM3 - 2*kPrimeM3*cos( Be8Values[1] ) );
+  double QVal =  ( COMEnergyM3*( M3 + M4 ) ) / M4 - COMTotalE;
+  double ExcitedState = mQ - QVal;
+  
+  return(ExcitedState);
+  
 }
 
 void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
@@ -462,10 +502,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
 
-	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit->GetEnergyMeV(), Alpha1Hit->GetDPosition().Theta(), Alpha1Hit->GetDPosition().Phi(),
-					 Alpha2Hit->GetEnergyMeV(), Alpha2Hit->GetDPosition().Theta(), Alpha2Hit->GetDPosition().Phi());
+	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
 	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_2_BE8");
 	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	  TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx2");
+	  alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
 	}
       }
 
@@ -516,10 +557,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
-	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit->GetEnergyMeV(), Alpha1Hit->GetDPosition().Theta(), Alpha1Hit->GetDPosition().Phi(),
-					 Alpha2Hit->GetEnergyMeV(), Alpha2Hit->GetDPosition().Theta(), Alpha2Hit->GetDPosition().Phi());
+	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
 	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_1_BE8");
 	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	  TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx1");
+	  alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
 	}
       }
 
