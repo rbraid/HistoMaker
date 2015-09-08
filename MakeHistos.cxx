@@ -177,6 +177,13 @@ void SetupHistos(TList *outlist)
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("twohit_%i",det),Form("2 Hits in detector %i",det),200,0,20,200,0,20));//
+    temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i",det));
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
@@ -436,6 +443,32 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	}
 
 	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+      }
+
+      for(int det=0;det<4;det++)
+      {
+	if(hits[det]>=2)
+	{
+	  int loc1 = -1;
+	  int loc2 = -1;
+	  for(int search=0; search<csm->GetMultiplicity();search++)
+	  {
+	    if(csm->GetHit(search)->GetDetectorNumber() == det+1)
+	    {
+	      if(loc1==-1)
+		loc1=search;
+	      else if(loc2==-1)
+		loc2=search;
+	      else
+		cerr<<"Too many hits in one detector"<<endl;
+	    }
+	  }
+	  if(loc2!=-2)
+	  {
+	    TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
+	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+	  }
+	}
       }
 
 //       if(Alpha2Flag && Alpha1Hit->GetDetectorNumber()==Alpha2Hit->GetDetectorNumber())
