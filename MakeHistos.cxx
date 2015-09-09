@@ -842,7 +842,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else
       {
-	cout<<Alpha1Hit->GetDetectorNumber()<<"   "<<Alpha2Hit->GetDetectorNumber()<<endl;
+	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
+	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
       }
     }
 
