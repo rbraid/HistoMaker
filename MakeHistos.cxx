@@ -494,8 +494,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-//       int AlphaSum = Ahits[0]+Ahits[1]+Ahits[2]+Ahits[3];
-//       int BeSum = Bhits[0]+Bhits[1]+Bhits[2]+Bhits[3];
+       int AlphaSum = Ahits[0]+Ahits[1]+Ahits[2]+Ahits[3];
+       int BeSum = Bhits[0]+Bhits[1]+Bhits[2]+Bhits[3];
 //       if(BeSum >=1)
 //       {
 // 	cout<<"Alpha Sum: "<<AlphaSum<<endl;
@@ -600,14 +600,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-
-
-      /*if(hits[0]>0 && hits[1]>=2)
+      else if(hits[0]==1&&hits[1]==2&&AlphaSum+BeSum==0)
       {
-
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
-	  if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1 )
+	  if(csm->GetHit(y)->GetDetectorNumber()==1+1 && csm->GetHit(y)->GetEnergy()>1 )
 	  {
 	    if(!Alpha1Flag)
 	    {
@@ -624,7 +621,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    else
 	      cerr<<" Too many alphas"<<endl;
 	  }
-	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	  else if(csm->GetHit(y)->GetDetectorNumber()==0+1 && csm->GetHit(y)->GetEnergy()>1)
 	  {
 	    if(!Be12Flag)
 	    {
@@ -638,37 +635,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    }
 	  }
 	}
-
-	if(Alpha2Flag)
-	{
-	  if( Alpha1Hit->GetEnergyMeV()>7.8 && Alpha2Hit->GetEnergyMeV()<4.8 )
-	  {
-	    IsInteresting = 1;
-	  }
-	  if((Alpha1Hit->GetEEnergy()>10 && Alpha2Hit->GetEEnergy()>10) || (Alpha1Hit->GetEEnergy()<1 && Alpha2Hit->GetEEnergy()<1))
-	  {
-	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
-	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_2_1")))
-	  {
-	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-	    {
-	      double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
-	      TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_2_BE8");
-	      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-	      TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx2");
-	      alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
-	    }
-	  }
-	}
       }
-
-      if(hits[1]>0 && hits[0]>=2)
+      else if(hits[0]==2&&hits[1]==1&&AlphaSum+BeSum==0)
       {
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
-	  if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
+	  if(csm->GetHit(y)->GetDetectorNumber()==0+1 && csm->GetHit(y)->GetEnergy()>1 )
 	  {
 	    if(!Alpha1Flag)
 	    {
@@ -685,7 +657,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    else
 	      cerr<<" Too many alphas"<<endl;
 	  }
-	  else if(csm->GetHit(y)->GetDetectorNumber()==2 && csm->GetHit(y)->GetEnergy()>1)
+	  else if(csm->GetHit(y)->GetDetectorNumber()==1+1 && csm->GetHit(y)->GetEnergy()>1)
 	  {
 	    if(!Be12Flag)
 	    {
@@ -696,115 +668,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    else
 	    {
 	      cerr<<" Too many Be12"<<endl;
-	    }
-	  }
-	}
-
-	if(Alpha2Flag)
-	{
-	  if( Alpha1Hit->GetEnergyMeV()>7.8 && Alpha2Hit->GetEnergyMeV()<4.8 )
-	  {
-	    IsInteresting = 1;
-	  }
-	  if((Alpha1Hit->GetEEnergy()>10 && Alpha2Hit->GetEEnergy()>10) || (Alpha1Hit->GetEEnergy()<1 && Alpha2Hit->GetEEnergy()<1))
-	  {
-	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
-	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_1_1")))
-	  {
-	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-	    {
-	      double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
-	      TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_1_BE8");
-	      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-	      TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx1");
-	      alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
 	    }
 	  }
 	}
       }
 
-      if(hits[0]>0 && hits[3]>=2)
-      {
-	for(int y=0; y<csm->GetMultiplicity(); y++)
-	{
-	  if(csm->GetHit(y)->GetDetectorNumber()==4)
-	  {
-	    if(!Alpha1Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	      Alpha1Hit = csm->GetHit(y);
-	      Alpha1Flag = 1;
-	    }
-	    else if(!Alpha2Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(y);
-	      Alpha2Flag = 1;
-	    }
-	    else
-	      cerr<<" Too many alphas in side detector."<<endl;
-	  }
-	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
-	  {
-	    if(!Be12Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope("12Be");
-	      Be12Hit = csm->GetHit(y);
-	      Be12Flag = 1;
-	    }
-	    else
-	    {
-	      cerr<<" Too many Be12"<<endl;
-	    }
-	  }
-	}
-
-	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_4");
-	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-      }
-
-      if(hits[1]>0 && hits[2]>=2)
-      {
-	for(int y=0; y<csm->GetMultiplicity(); y++)
-	{
-	  if(csm->GetHit(y)->GetDetectorNumber()==3)
-	  {
-	    if(!Alpha1Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	Alpha1Hit = csm->GetHit(y);
-	Alpha1Flag = 1;
-	    }
-	    else if(!Alpha2Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(y);
-	      Alpha2Flag = 1;
-	    }
-	    else
-	      cerr<<" Too many alphas in side detector."<<endl;
-	  }
-	  else if(csm->GetHit(y)->GetDetectorNumber()==1 && csm->GetHit(y)->GetEnergy()>1)
-	  {
-	    if(!Be12Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope("12Be");
-	      Be12Hit = csm->GetHit(y);
-	      Be12Flag = 1;
-	    }
-	    else
-	    {
-	      cerr<<" Too many Be12"<<endl;
-	    }
-	  }
-	}
-
-	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-      }*/
-     
 //     if(IsInteresting)
 //       if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_Interesting")))
 //       {
