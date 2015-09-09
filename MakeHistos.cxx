@@ -410,6 +410,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
 
       int hits[4] = {0};
+      int Ahits[4] = {0};
+      int Bhits[4] = {0};
 
       for(int y=0; y<csm->GetMultiplicity(); y++)
       {
@@ -418,29 +420,50 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  cout<<"Be's Get Multiplicity()"<<endl;
 	}
 
-// 	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thickness_alpha_%i_1",csm->GetHit(y)->GetDetectorNumber()))))
-// 	{
-// 	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()) && csm->GetHit(y)->GetEEnergy() > 10)
-// 	  {
-// 	    if(!Alpha1Flag)
-// 	    {
-// 	      csm->GetHit(y)->SetIsotope(4,"He");
-// 	      Alpha1Hit = csm->GetHit(y);
-// 	      Alpha1Flag = 1;
-// 	    }
-// 	    else if(!Alpha2Flag)
-// 	    {
-// 	      csm->GetHit(y)->SetIsotope(4,"He");
-// 	      Alpha2Hit = csm->GetHit(y);
-// 	      Alpha2Flag = 1;
-// 	    }
-// 	    else
-// 	    {
-// 	      cout<<"Too Many Alphas!"<<endl;
-// 	      IsInteresting = 1;
-// 	    }
-// 	  }
-// 	}
+	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thickness_alpha_%i_1",csm->GetHit(y)->GetDetectorNumber()))))
+	{
+	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()) && csm->GetHit(y)->GetEEnergy() > 10)
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(y);
+	      Alpha1Flag = 1;
+	      Ahits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	      Ahits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+	    }
+	    else
+	    {
+	      cout<<"Too Many Alphas!"<<endl;
+	      //IsInteresting = 1;
+	    }
+	  }
+	}
+
+	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",csm->GetHit(y)->GetDetectorNumber()))))
+	{
+	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()) && csm->GetHit(y)->GetEEnergy() > 10)
+	  {
+	    if(!Be12Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(12,"Be");
+	      Be12Hit = csm->GetHit(y);
+	      Be12Flag = 1;
+	      Bhits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+	    }
+	    else
+	    {
+	      cout<<"Too Many Be!"<<endl;
+	      //IsInteresting = 1;
+	    }
+	  }
+	}
 
 	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
       }
@@ -471,22 +494,115 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-//       if(Alpha2Flag && Alpha1Hit->GetDetectorNumber()==Alpha2Hit->GetDetectorNumber())
+//       int AlphaSum = Ahits[0]+Ahits[1]+Ahits[2]+Ahits[3];
+//       int BeSum = Bhits[0]+Bhits[1]+Bhits[2]+Bhits[3];
+//       if(BeSum >=1)
 //       {
-// 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
-// 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-// 
-// 	// 	if(Alpha2Hit->GetEnergyMeV()>5.7 && Alpha2Hit->GetEnergyMeV()<6.8 && Alpha1Hit->GetEnergyMeV()>10)
-// 	// 	  IsInteresting = 1;
+// 	cout<<"Alpha Sum: "<<AlphaSum<<endl;
+// 	cout<<"Be12 Sum: "<<BeSum<<endl;
 //       }
-//       else if(Alpha2Flag)
-//       {
-// 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-// 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-//       }
-      //printf("   %2i %2i\n %2i     %2i\n",hits[0],hits[1],hits[2],hits[3]);
 
-      if(hits[0]>0 && hits[1]>=2)
+      if(Ahits[0]==2&&hits[1]==1)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
+	  {
+	    csm->GetHit(iter)->SetIsotope(12,"Be");
+	    Be12Hit = csm->GetHit(iter);
+	    Be12Flag = 1;
+	    break;
+	  } 
+	}
+      }
+      else if(Ahits[1]==2&&hits[0]==1)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
+	  {
+	    csm->GetHit(iter)->SetIsotope(12,"Be");
+	    Be12Hit = csm->GetHit(iter);
+	    Be12Flag = 1;
+	    break;
+	  }
+	}
+      }
+      else if(Bhits[0]==1&&hits[1]==2)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(iter);
+	      Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
+	    }
+	  }
+	}
+      }
+      else if(Bhits[1]==1&&hits[0]==2)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(iter);
+	      Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
+	    }
+	  }
+	}
+      }
+      else if(Ahits[0]==1&&hits[0]==2)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
+	  {
+	    if(csm->GetHit(iter)->GetIsotope()=="default")
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
+	    }
+	  }
+	}
+      }
+      else if(Ahits[1]==1&&hits[1]==2)
+      {
+	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
+	{
+	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
+	  {
+	    if(csm->GetHit(iter)->GetIsotope()=="default")
+	    {
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
+	    }
+	  }
+	}
+      }
+
+
+      /*if(hits[0]>0 && hits[1]>=2)
       {
 
 	for(int y=0; y<csm->GetMultiplicity(); y++)
@@ -687,10 +803,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-      }
+      }*/
      
-    //ofile<<IsInteresting<<",";
-
 //     if(IsInteresting)
 //       if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_Interesting")))
 //       {
@@ -706,6 +820,30 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	  }
 // 	}
 //       }	
+    }
+
+    if(Alpha2Flag && Alpha1Flag)
+    {
+      if(Alpha1Hit->GetDetectorNumber() == Alpha2Hit->GetDetectorNumber())
+      {
+	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
+	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("alphacone_%i_1",Alpha1Hit->GetDetectorNumber()))))
+	{
+	  if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+	  {
+	    double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
+	    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",Alpha1Hit->GetDetectorNumber()));
+	    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	    TH1D* alphaEXpointer = (TH1D*)outlist->FindObject(Form("AlphaEx%i",Alpha1Hit->GetDetectorNumber()));
+	    alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	  }
+	}
+      }
+      else
+      {
+	cout<<Alpha1Hit->GetDetectorNumber()<<"   "<<Alpha2Hit->GetDetectorNumber()<<endl;
+      }
     }
 
     for(int y=0; y<csm->GetMultiplicity(); y++)
