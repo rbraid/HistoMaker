@@ -534,12 +534,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_2");
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
-
-	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
-	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_2_BE8");
-	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-	  TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx2");
-	  alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_2_1")))
+	  {
+	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+	    {
+	      double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
+	      TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_2_BE8");
+	      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	      TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx2");
+	      alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	    }
+	  }
 	}
       }
 
@@ -590,11 +595,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_1");
 	    alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	  }
-	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
-	  TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_1_BE8");
-	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-	  TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx1");
-	  alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_1_1")))
+	  {
+	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+	    {
+	      double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
+	      TH2D* be8pointer = (TH2D*)outlist->FindObject("EvTheta_1_BE8");
+	      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	      TH1D* alphaEXpointer = (TH1D*)outlist->FindObject("AlphaEx1");
+	      alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	    }
+	  }
 	}
       }
 
