@@ -78,11 +78,6 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",id));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH1D(Form("AlphaEx%i",id),Form("AlphaEx Excitation Energy",id),350,-10,25));
-      temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",id));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
       
     outlist->Add(new TH2D(Form("pid_%i",id),Form("Particle ID, detector %i",id),700,0,70,700,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",id));
@@ -177,6 +172,11 @@ void SetupHistos(TList *outlist)
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+
+    outlist->Add(new TH1D(Form("AlphaEx%i",det),Form("AlphaEx Excitation Energy",det),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",det));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
 
     outlist->Add(new TH2D(Form("twohit_%i",det),Form("2 Hits in detector %i",det),200,0,20,200,0,20));//
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i",det));
@@ -600,7 +600,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-      else if(hits[0]==1&&hits[1]==2&&AlphaSum+BeSum==0)
+      else if(hits[0]==1&&hits[1]==2&&Bhits[1]==0&&Ahits[0]==0)
       {
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
@@ -636,7 +636,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-      else if(hits[0]==2&&hits[1]==1&&AlphaSum+BeSum==0)
+      else if(hits[0]==2&&hits[1]==1&&Bhits[0]==0&&Ahits[1]==0)
       {
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
@@ -672,6 +672,52 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
+      else if(hits[0]==1&&hits[3]==2&&Ahits[0]==0)
+      {
+	for(int y=0; y<csm->GetMultiplicity(); y++)
+	{
+	  if(csm->GetHit(y)->GetDetectorNumber()==3+1 && csm->GetHit(y)->GetEnergy()>1 )
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(y);
+	      Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	    }
+	    else
+	      cerr<<" Too many alphas"<<endl;
+	  }
+	}
+      }
+      else if(hits[1]==1&&hits[2]==2&&Ahits[1]==0)
+      {
+	for(int y=0; y<csm->GetMultiplicity(); y++)
+	{
+	  if(csm->GetHit(y)->GetDetectorNumber()==2+1 && csm->GetHit(y)->GetEnergy()>1 )
+	  {
+	    if(!Alpha1Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha1Hit = csm->GetHit(y);
+	      Alpha1Flag = 1;
+	    }
+	    else if(!Alpha2Flag)
+	    {
+	      csm->GetHit(y)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(y);
+	      Alpha2Flag = 1;
+	    }
+	    else
+	      cerr<<" Too many alphas"<<endl;
+	  }
+	}
+      }
 
 //     if(IsInteresting)
 //       if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_Interesting")))
@@ -696,22 +742,35 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("alphacone_%i_1",Alpha1Hit->GetDetectorNumber()))))
+	if(Alpha1Hit->GetDetectorNumber()<3)
 	{
-	  if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("alphacone_%i_1",Alpha1Hit->GetDetectorNumber()))))
 	  {
-	    double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
-	    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",Alpha1Hit->GetDetectorNumber()));
-	    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-	    TH1D* alphaEXpointer = (TH1D*)outlist->FindObject(Form("AlphaEx%i",Alpha1Hit->GetDetectorNumber()));
-	    alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+	    {
+	      double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
+	      TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",Alpha1Hit->GetDetectorNumber()));
+	      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	      TH1D* alphaEXpointer = (TH1D*)outlist->FindObject(Form("AlphaEx%i",Alpha1Hit->GetDetectorNumber()));
+	      alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	    }
 	  }
 	}
-      }
-      else
-      {
-	TH2D* alphaconepointer = (TH2D*)outlist->FindObject("Alphacone_3");
-	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
+	else
+	{
+	  double* Be8 = CalcBe8fromAlpha(Alpha1Hit, Alpha2Hit);
+	  
+	  int sidetostack=-1;
+	  if(Alpha1Hit->GetDetectorNumber()==3)
+	    sidetostack=2;
+	  else if(Alpha1Hit->GetDetectorNumber()==4)
+	    sidetostack=1;
+	  
+	  TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",sidetostack));
+	  be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+	  TH1D* alphaEXpointer = (TH1D*)outlist->FindObject(Form("AlphaEx%i",Alpha1Hit->GetDetectorNumber()));
+	  alphaEXpointer->Fill(GetExciteE_Light(Alpha1Hit,Alpha2Hit));
+	}
       }
     }
 
