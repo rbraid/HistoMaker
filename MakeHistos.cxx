@@ -743,20 +743,20 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
 	
-	if(Alpha1Hit->GetDetectorNumber()<3)
-	{
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("bad_doublecount%i",Alpha1Hit->GetDetectorNumber()))))
-	  {
-	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-	    {
-	      for(int iter=0;iter<csm->GetMultiplicity();iter++)
-	      {
-		csm->GetHit(iter)->Print();
-	      }
-	      cout<<GREEN<<"*******"<<RESET_COLOR<<endl;
-	    }
-	  }
-	}
+// 	if(Alpha1Hit->GetDetectorNumber()<3)
+// 	{
+// 	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("bad_doublecount%i",Alpha1Hit->GetDetectorNumber()))))
+// 	  {
+// 	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+// 	    {
+// 	      for(int iter=0;iter<csm->GetMultiplicity();iter++)
+// 	      {
+// 		csm->GetHit(iter)->Print();
+// 	      }
+// 	      cout<<GREEN<<"*******"<<RESET_COLOR<<endl;
+// 	    }
+// 	  }
+// 	}
 	
 	if(Alpha1Hit->GetDetectorNumber()<3)
 	{
