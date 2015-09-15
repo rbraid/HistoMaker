@@ -736,6 +736,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //       }	
     }
 
+    if(Alpha2Flag && Alpha1Flag)//This randomizes who is alpha1 and who is alpha 2
+    {
+      TRandom *rnd = new TRandom(x);
+      if(rnd->Uniform(1)>.5)
+      {
+	TCSMHit *temp;
+	temp = Alpha1Hit;
+	Alpha1Hit = Alpha2Hit;
+	Alpha2Hit = temp;
+      }
+    }
+
     if(Alpha2Flag && Alpha1Flag)
     {
       if(Alpha1Hit->GetDetectorNumber() == Alpha2Hit->GetDetectorNumber())
