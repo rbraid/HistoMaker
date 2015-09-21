@@ -68,6 +68,11 @@ void SetupHistos(TList *outlist)
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
     }
+
+    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),10000,5,95));
+    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),350,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
@@ -488,6 +493,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	  if(loc2!=-2)
 	  {
+	    TRandom *rnd = new TRandom(x);
+	    if(rnd->Uniform(1)>.5)
+	    {
+	      int temp;
+	      temp = loc1;
+	      loc1 = loc2;
+	      loc2 = temp;
+	    }
 	    TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
 	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
 	  }
@@ -1011,6 +1024,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  if(temp1) temp1->Fill(excite);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
 	  if(temp1) temp1->Fill(excite);
+	  if(excite<3.2 && excite>1.9)
+	  {
+	    for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	    {
+	      TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+	      
+	      temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",hit->GetDetectorNumber()));
+	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
 	  
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
 	  hit->SetIsotope("12Be");
