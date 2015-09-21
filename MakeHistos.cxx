@@ -69,7 +69,7 @@ void SetupHistos(TList *outlist)
       temp1->GetYaxis()->SetTitle("Counts");
     }
 
-    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),8000,0,80));
+    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
@@ -1029,9 +1029,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	    {
 	      TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-	      
-	      temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",hit->GetDetectorNumber()));
-	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+
+	      if(tigresshit->GetCore()->GetEnergy()>10)
+	      {
+		temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",hit->GetDetectorNumber()));
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      }
 	    }
 	  }
 	  
