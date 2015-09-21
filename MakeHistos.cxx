@@ -69,7 +69,7 @@ void SetupHistos(TList *outlist)
       temp1->GetYaxis()->SetTitle("Counts");
     }
 
-    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),10000,5,95));
+    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),8000,0,80));
     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
