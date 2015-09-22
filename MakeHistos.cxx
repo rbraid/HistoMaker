@@ -4,6 +4,13 @@
 #define TGTTHICKNESS 2.4
 #define BEAMENERGY 30.14
 
+#define MEVpNUC 931.494061;
+
+#define MASS_BE8 8*MEVpNUC+4.9416;
+#define MASS_BE12 12*MEVpNUC+25.0766;
+#define MASS_BE9 9*MEVpNUC+11.3484;
+#define MASS_BE11 11*MEVpNUC+20.1771;
+
 #include <cstdio>
 #include <fstream>
 
@@ -31,6 +38,8 @@
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
 TList *cutlist = new TList;
+
+double Doppler(TTigressHit* thit, TCSMHit* chit);
 
 void SetupHistos(TList *outlist)
 {
@@ -71,6 +80,11 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),Form("Gamma spectrum cut on Ex Spectrum, doppler corrected",id),3000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
@@ -255,13 +269,6 @@ double GetExciteE_Heavy(double be12E, double be12T)
   be12E=be12E/1000.;
   const double pi = TMath::Pi();
 
-  const double MEVpNUC = 931.494061;
-  
-  const double MASS_BE8 = 8*MEVpNUC+4.9416;
-  const double MASS_BE12 = 12*MEVpNUC+25.0766;
-  const double MASS_BE9 = 9*MEVpNUC+11.3484;
-  const double MASS_BE11 = 11*MEVpNUC+20.1771;
-
   const double M1 = MASS_BE11;
   const double M2 = MASS_BE9;
   const double M3 = MASS_BE8;
@@ -337,13 +344,6 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
   double *Be8Values = new double[3];
   
   Be8Values = CalcBe8fromAlpha(A1H,A2H);
-
-  const double MEVpNUC = 931.494061;
-
-  const double MASS_BE8 = 8*MEVpNUC+4.9416;
-  const double MASS_BE12 = 12*MEVpNUC+25.0766;
-  const double MASS_BE9 = 9*MEVpNUC+11.3484;
-  const double MASS_BE11 = 11*MEVpNUC+20.1771;
   
   //11Be(9Be,8Be)12Be*
   const double M1 = MASS_BE11;
@@ -1034,6 +1034,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      {
 		temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",hit->GetDetectorNumber()));
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+
+		temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",hit->GetDetectorNumber()));
+		temp1->Fill(Doppler(tigresshit, hit));
 	      }
 	    }
 	  }
@@ -1191,9 +1194,47 @@ int main(int argc, char **argv)
   return 0;
 }
 
+double Doppler(TTigressHit* thit, TCSMHit* chit)
+{
+  double pi = TMath::Pi();
+  double M4 = MASS_BE12;
+    
+  double LabEnergyHeavy = chit->GetEnergyMeV();
+  
+  double beta =  sqrt( (LabEnergyHeavy*(LabEnergyHeavy + 2.0*M4) )/( ( LabEnergyHeavy + M4 )*( LabEnergyHeavy + M4 ) ) );
+  
+  double CosTheta = cos( chit->GetPosition().Angle( thit->GetPosition() ) );
+    
+  double RelativisticCorr = (1.0 / ( sqrt( 1.0 - beta*beta ) ) );
+  
+  double EGammaDopplerCorr = ( (thit->GetCore()->GetEnergy()/1000. * RelativisticCorr) * ( (1.0 - beta*CosTheta) ) );
+    
+  return EGammaDopplerCorr;
+}
 
+double CalcCOMProductTheta(double theta, double energy)
+{
+  const double pi = TMath::Pi();
+  const double BeamE = BEAMENERGY;
 
-
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = MASS_BE8;
+  const double M4 = MASS_BE12;
+  
+  double COMVelBeam = sqrt(2*BeamE/M1);
+  double COMV = ( M1 / ( M1 + M2 ) ) * COMVelBeam;
+  double productVel = sqrt(2*energy/M3);//to get the 12Be COM theta
+  
+  double kPrime = COMV / productVel;
+  
+  double thetaCOM = atan( sin(theta) / ( cos(theta)-kPrime ) );
+  
+  if( thetaCOM < 0 )
+    thetaCOM += pi;
+  
+  return thetaCOM; //12Be
+}
 
 
 
