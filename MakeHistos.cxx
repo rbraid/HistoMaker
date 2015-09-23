@@ -153,16 +153,6 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_HE",id),Form("EvTheta %i, cut on He",id),100,0,100,700,0,70));
-      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",id));
-      temp2->GetXaxis()->SetTitle("Theta in Degrees");
-      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("EvTheta_%i_fvb",id),Form("EvTheta %i, cut on 1:1",id),100,0,100,700,0,70));
-      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_fvb",id));
-      temp2->GetXaxis()->SetTitle("Theta in Degrees");
-      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
     outlist->Add(new TH2D(Form("CheckCalE_%i",id),Form("Front Energy vs Back Energy, Detector %i E",id),600,0,60,600,0,60));
       temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",id));
       temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Front)");
@@ -213,6 +203,11 @@ void SetupHistos(TList *outlist)
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
@@ -299,6 +294,11 @@ double GetExciteE_Heavy(double be12E, double be12T)
   
   return(ExcitedState);
   
+}
+
+double GetExciteE_Heavy(TCSMHit* Hit)
+{
+  return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
@@ -460,7 +460,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    }
 	  }
 	}
-
+	//if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
+	//{
+	//  if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
+	 // {
+	  //}
+	//}
 	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v1",csm->GetHit(y)->GetDetectorNumber()))))
 	{
 	  if(cut->IsInside(csm->GetHit(y)->GetEnergyMeV(),csm->GetHit(y)->GetDdE_dx()) && csm->GetHit(y)->GetEEnergy() > 10)
@@ -802,27 +807,23 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
     }
 
+    if(Alpha1Flag && !Alpha2Flag)
+    {
+      TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",Alpha1Hit->GetDetectorNumber()));
+      evtpointer->Fill(Alpha1Hit->GetThetaDeg(),Alpha1Hit->GetEnergyMeV());
+    }
+
     if(Alpha2Flag && Alpha1Flag)
     {
+      TH2D* evtpointer = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",Alpha1Hit->GetDetectorNumber()));
+      evtpointer->Fill(Alpha1Hit->GetThetaDeg(),Alpha1Hit->GetEnergyMeV());
+      TH2D* evtpointer2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",Alpha2Hit->GetDetectorNumber()));
+      evtpointer2->Fill(Alpha2Hit->GetThetaDeg(),Alpha2Hit->GetEnergyMeV());
+
       if(Alpha1Hit->GetDetectorNumber() == Alpha2Hit->GetDetectorNumber())
       {
 	TH2D* alphaconepointer = (TH2D*)outlist->FindObject(Form("Alphacone_%i",Alpha1Hit->GetDetectorNumber()));
 	alphaconepointer->Fill(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV());
-	
-// 	if(Alpha1Hit->GetDetectorNumber()<3)
-// 	{
-// 	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("bad_doublecount%i",Alpha1Hit->GetDetectorNumber()))))
-// 	  {
-// 	    if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-// 	    {
-// 	      for(int iter=0;iter<csm->GetMultiplicity();iter++)
-// 	      {
-// 		csm->GetHit(iter)->Print();
-// 	      }
-// 	      cout<<GREEN<<"*******"<<RESET_COLOR<<endl;
-// 	    }
-// 	  }
-// 	}
 	
 	if(Alpha1Hit->GetDetectorNumber()<3)
 	{
@@ -856,6 +857,60 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
     }
 
+    if(Be12Flag)
+    {
+      TH1D *temp1 = 0;
+      TH2D *temp2 = 0;
+
+      double excite = GetExciteE_Heavy(Be12Hit);
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",Be12Hit->GetDetectorNumber()));
+      if(temp1) temp1->Fill(excite);
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",Be12Hit->GetDetectorNumber(),int(Be12Hit->GetThetaDeg())));
+      if(temp1) temp1->Fill(excite);
+      if(excite<3.2 && excite>1.9)
+      {
+	for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	{
+	  TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	  if(tigresshit->GetCore()->GetEnergy()>10)
+	  {
+	    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",Be12Hit->GetDetectorNumber()));
+	    temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+
+	    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",Be12Hit->GetDetectorNumber()));
+	    temp1->Fill(Doppler(tigresshit, Be12Hit));
+	  }
+	}
+      }
+
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",Be12Hit->GetDetectorNumber(),int(Be12Hit->GetThetaDeg())));
+      double excite2 = GetExciteE_Heavy(Be12Hit->GetCorrectedEnergy(),Be12Hit->GetDPosition().Theta());
+      if(temp1) temp1->Fill(excite2);
+      temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",Be12Hit->GetDetectorNumber()));
+      if(temp1) temp1->Fill(excite2);
+
+      if(excite<3.8 && excite>1.8)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",Be12Hit->GetDetectorNumber()));
+	if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
+      }
+      if(excite<1.3 && excite>0)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",Be12Hit->GetDetectorNumber()));
+	if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
+      }
+      if(excite<5)
+      {
+	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",Be12Hit->GetDetectorNumber()));
+	if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
+      }
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",Be12Hit->GetDetectorNumber()));
+      if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",Be12Hit->GetDetectorNumber(),Be12Hit->GetDVerticalStrip()));
+      if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
+    }
+
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
       if(DEBUG)
@@ -865,8 +920,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //***********************
 //        General
 //***********************
-
-      //myFriend->Reset();
 
       TH1D *temp1 = 0;
       TH2D *temp2 = 0;
@@ -945,11 +998,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	temp2->Fill(hit->GetDPosition().Z(),hit->GetDPosition().X());
 	if(hit->GetEEnergy()>1)
 	  temp2->Fill(hit->GetEPosition().Z(),hit->GetEPosition().X());
+
+	temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
+	temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
       }
 
-      temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
-      temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
-      
       if(DEBUG) cout<<"EVTheta"<<endl;
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iD",hit->GetDetectorNumber()));
       temp2->Fill(hit->GetThetaDeg(),hit->GetDEnergy()/1000.);
@@ -1029,87 +1082,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
       if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-
-      //Particle cut plots
-
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid%i_Alphas_high_1",hit->GetDetectorNumber()))))
-      {
-	if(!cut) cerr<<"Error: Alpha high energy cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetEEnergy()/1000., hit->GetDEnergy()/1000. ) )
-	{
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-	}
-      }
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject("d1_good_fvb")))
-      {
-	if(!cut) cerr<<"Error: Front vs Back good cut not found!"<<endl;
-	else if(cut->IsInside(hit->GetDVerticalEnergy()/1000., hit->GetDHorizontalEnergy()/1000. ) )
-	{
-	  if(hit->GetEEnergy()>10.)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_fvb",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-	    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-	  }
-	}
-      }
-
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("theta_Be_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
-      {	
-	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
-	{
-	  double excite = GetExciteE_Heavy(hit->GetEnergy(),hit->GetDPosition().Theta());
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(excite);
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
-	  if(temp1) temp1->Fill(excite);
-	  if(excite<3.2 && excite>1.9)
-	  {
-	    for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-	    {
-	      TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-
-	      if(tigresshit->GetCore()->GetEnergy()>10)
-	      {
-		temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",hit->GetDetectorNumber()));
-		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-
-		temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",hit->GetDetectorNumber()));
-		temp1->Fill(Doppler(tigresshit, hit));
-	      }
-	    }
-	  }
-	  
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",hit->GetDetectorNumber(),int(hit->GetThetaDeg())));
-	  hit->SetIsotope("12Be");
-	  double excite2 = GetExciteE_Heavy(hit->GetCorrectedEnergy(),hit->GetDPosition().Theta());
-	  if(temp1) temp1->Fill(excite2);
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(excite2);
-	  
-	  if(excite<3.8 && excite>1.8)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-	  }
-	  if(excite<1.3 && excite>0)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-	  }
-	  if(excite<5)
-	  {
-	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",hit->GetDetectorNumber()));
-	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-	  }
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",hit->GetDetectorNumber()));
-	  if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
-	  if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-	}
-      }
 
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
       {
