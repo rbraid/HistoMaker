@@ -167,7 +167,17 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",id));
       temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Front)");
       temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Back)");
-    
+
+    outlist->Add(new TH2D(Form("twohitEVT_%i_side",id),Form("Corresponding hit from TwoHit in detector %i",id),400,0,100,1400,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("twohitEVT_%i_telescope",id),Form("Corresponding hit from TwoHit in detector %i",id),400,0,100,1400,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+      
     for(int mid = 1; mid<=4;mid++)
     {
       outlist->Add(new TH2D(Form("pid_%i_mult%i",id,mid),Form("Particle ID, detector %i with Multiplicity %i",id,mid),700,0,70,700,0,70));
@@ -475,10 +485,24 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       for(int det=0;det<4;det++)
       {
+	int corrdet;
+	if(det==0)
+	  corrdet=1;
+	else if(det==1)
+	  corrdet=0;
+	else if(det==2)
+	  corrdet=1;
+	else if(det==3)
+	  corrdet=0;
+	else
+	  corrdet=-1;
+	
 	if(hits[det]>=2)
 	{
 	  int loc1 = -1;
 	  int loc2 = -1;
+	  int corrloc = -1;
+	  
 	  for(int search=0; search<csm->GetMultiplicity();search++)
 	  {
 	    if(csm->GetHit(search)->GetDetectorNumber() == det+1)
@@ -489,6 +513,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		loc2=search;
 	      else
 		cerr<<"Too many hits in one detector"<<endl;
+	    }
+	    if(csm->GetHit(search)->GetDetectorNumber() == corrdet+1)
+	    {
+	      if(corrloc == -1)
+		corrloc = search;
+	      else
+		cerr<<"Too many correlated location hits"<<endl;
 	    }
 	  }
 	  if(loc2!=-2)
@@ -503,6 +534,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    }
 	    TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
 	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+	  }
+	  if(corrloc != -1)
+	  {
+	    TH2D* evtpointer;
+	    if(det<2)
+	      evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",det+1));
+	    else
+	      evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",det-1));
+	    
+	    evtpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
 	  }
 	}
       }
