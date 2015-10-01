@@ -4,12 +4,16 @@
 #define TGTTHICKNESS 2.4
 #define BEAMENERGY 30.14
 
-#define MEVpNUC 931.494061;
+#define MEVpNUC 931.494061
 
-#define MASS_BE8 8*MEVpNUC+4.9416;
-#define MASS_BE12 12*MEVpNUC+25.0766;
-#define MASS_BE9 9*MEVpNUC+11.3484;
-#define MASS_BE11 11*MEVpNUC+20.1771;
+#define MASS_BE8 8*MEVpNUC+4.9416
+#define MASS_BE12 12*MEVpNUC+25.0766
+#define MASS_BE9 9*MEVpNUC+11.3484
+#define MASS_BE11 11*MEVpNUC+20.1771
+#define MASS_HE4 4*MEVpNUC+2.4249
+#define MASS_C12 12*MEVpNUC
+#define MASS_C13 13*MEVpNUC+3.1250
+#define MASS_BE10 10*MEVpNUC+12.6074
 
 #include <cstdio>
 #include <fstream>
@@ -40,6 +44,8 @@ TCSM *csm =  new TCSM;
 TList *cutlist = new TList;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit);
+double* CorrParticle(double E, double Theta, double Phi, double Mass);
+double* CorrParticle(TCSMHit*);
 
 void SetupHistos(TList *outlist)
 {
@@ -135,6 +141,11 @@ void SetupHistos(TList *outlist)
       
     outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+      outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),360,0,360,700,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_correlated",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
@@ -884,6 +895,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_correlated",Be12Hit->GetDetectorNumber()));
+      double *tmpValues = CorrParticle(Be12Hit);
+      temp2->Fill(tmpValues[1]*180/3.14159,tmpValues[0]/1000.);
+
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",Be12Hit->GetDetectorNumber(),int(Be12Hit->GetThetaDeg())));
       double excite2 = GetExciteE_Heavy(Be12Hit->GetCorrectedEnergy(),Be12Hit->GetDPosition().Theta());
       if(temp1) temp1->Fill(excite2);
@@ -1249,8 +1264,60 @@ double CalcCOMProductTheta(double theta, double energy)
   return thetaCOM; //12Be
 }
 
+double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
+{
+  bool debug = 0;
+  const double pi = TMath::Pi();
 
+  if(debug)
+    cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<endl;
 
+  Energy = Energy/1000.;
+  
+  double *Values = new double[3];
+  
+  double pParticleMag = sqrt( 2. * Mass * Energy);
+
+  TVector3 pParticle = TVector3(pParticleMag,0.,0.);
+  pParticle.SetTheta(Theta);
+  pParticle.SetPhi(Phi);
+
+  double pBeam = sqrt( 2. * MASS_BE11 * BEAMENERGY); //This is all in the x direction
+
+  double CorrMass = 1.;
+
+  if(int(Mass) == int(MASS_BE12))
+    CorrMass = MASS_BE8;
+  else if(int(Mass) == int(MASS_BE8))
+    CorrMass = MASS_BE12;
+  else if(int(Mass) == int(MASS_HE4))
+    cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
+  else
+    cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
+
+  TVector3 pCorr = TVector3(0.,0.,pBeam);
+  pCorr = pCorr - pParticle;
+
+  Values[0] = pCorr.Mag2() / (2.*CorrMass )*1000.;  //Energy, from E=p^2/2m
+  Values[1] = pCorr.Theta();
+  Values[2] = pCorr.Phi();
+
+  if(debug)
+    cout<<"Energy: "<<Values[0]<<" Theta: "<<Values[1]*180/pi<<" Phi: "<<Values[2]*180/pi<<endl;
+
+  if(debug)
+    cout<<"Checking energy: "<<"Particle E: "<<Energy*1000<<", Corresponding Energy: "<<Values[0]<<", 30 MeV - those two: "<<BEAMENERGY - (Energy + Values[0]/1000)<<endl;
+
+  if(debug)
+    cout<<endl;
+  
+  return Values;
+}
+
+double* CorrParticle(TCSMHit* Hit)
+{
+  return CorrParticle(Hit->GetEnergy(),Hit->GetDPosition().Theta(),Hit->GetDPosition().Phi(),Hit->GetMassMeV());
+}
 
 
 
