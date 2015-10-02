@@ -1342,7 +1342,7 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
       cout<<"Energies from Mag  Particle: "<<pParticle.Mag2()/(2*Mass)<<", Beam: "<<pBeamMag*pBeamMag/(2*MASS_BE11)<<", Corr: "<<pCorr.Mag2()/(2*CorrMass)<<endl;
     }
     
-    Values[0] = pCorr.Mag2() / (2.*CorrMass );  //Energy, from E=p^2/2m
+    Values[0] = pCorr.Mag2() / (2.*CorrMass )*1000.;  //Energy, from E=p^2/2m
     Values[1] = pCorr.Theta();
     Values[2] = pCorr.Phi();
     
