@@ -1,19 +1,6 @@
 // g++ MakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #define DEBUG 0
-#define TGTTHICKNESS 2.4
-#define BEAMENERGY 30.14
-
-#define MEVpNUC 931.494061
-
-#define MASS_BE8 8*MEVpNUC+4.9416
-#define MASS_BE12 12*MEVpNUC+25.0766
-#define MASS_BE9 9*MEVpNUC+11.3484
-#define MASS_BE11 11*MEVpNUC+20.1771
-#define MASS_HE4 4*MEVpNUC+2.4249
-#define MASS_C12 12*MEVpNUC
-#define MASS_C13 13*MEVpNUC+3.1250
-#define MASS_BE10 10*MEVpNUC+12.6074
 
 #include <cstdio>
 #include <fstream>
@@ -38,6 +25,7 @@
 #include "Globals.h"
 #include "TTigress.h"
 #include "TCSM.h"
+#include "GlobalSettings.hh"
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -270,6 +258,8 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
     temp2->GetXaxis()->SetTitle("Strip Number");
     temp2->GetYaxis()->SetTitle("Charge");
+
+  outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
     
   if(DEBUG)
   {
@@ -291,12 +281,12 @@ double GetExciteE_Heavy(double be12E, double be12T)
   const double M4 = MASS_BE12;
   double mQ = M1+M2-M3-M4;
   
-  double V1 = sqrt(2*BEAMENERGY/M1);
+  double V1 = sqrt(2*BEAM_ENERGY/M1);
   double COMV = ( M1 / ( M1 + M2 ) ) * V1;
   double V4 = sqrt(2*be12E/M4);
   double kPrimeM4 = COMV / V4;
   
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAMENERGY;
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
   double COMEnergyM4 = be12E * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( be12T ) );
   double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
   double ExcitedState = mQ - QVal;
@@ -373,12 +363,12 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
   const double M4 = MASS_BE12;
   double mQ = M1+M2-M3-M4;
   
-  double VelBeam = sqrt(2*BEAMENERGY/M1);
+  double VelBeam = sqrt(2*BEAM_ENERGY/M1);
   double COMV = ( M1 / ( M1 + M2 ) ) * VelBeam;
   double VelocityM3 = sqrt(2 * (Be8Values[0]) / M3);
   double kPrimeM3 = COMV / VelocityM3;
   
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAMENERGY;
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
   double COMEnergyM3 = Be8Values[0] * ( 1 + kPrimeM3*kPrimeM3 - 2*kPrimeM3*cos( Be8Values[1] ) );
   double QVal =  ( COMEnergyM3*( M3 + M4 ) ) / M4 - COMTotalE;
   double ExcitedState = mQ - QVal;
@@ -572,8 +562,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	cout<<"Be12 Sum: "<<BeSum<<endl;
 //       }
 
+      double be8thetawindow = 15./180*TMath::Pi();//Simulations indicate the max spread of the Be8 should be 15 degrees.
+
       if(Ahits[0]==2&&hits[1]==1)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(2);
+	
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
@@ -587,6 +581,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(Ahits[1]==2&&hits[0]==1)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(3);
+	
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
@@ -600,48 +596,62 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(Bhits[0]==1&&hits[1]==2)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(4);
+	int loc1=-1;
+	int loc2=-1;
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
 	  {
-	    if(!Alpha1Flag)
-	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha1Hit = csm->GetHit(iter);
-	      Alpha1Flag = 1;
-	    }
-	    else if(!Alpha2Flag)
-	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(iter);
-	      Alpha2Flag = 1;
-	    }
+	    if(loc1==-1)
+	      loc1=iter;
+	    else if(loc2==-1)
+	      loc2=iter;
+	    else
+	      cerr<<"Too many alphas!"<<endl;
 	  }
+	}
+	if(abs(csm->GetHit(loc1)->GetDPosition().Theta()-csm->GetHit(loc2)->GetDPosition().Theta()) < be8thetawindow)
+	{
+	  csm->GetHit(loc1)->SetIsotope(4,"He");
+	  Alpha1Hit = csm->GetHit(loc1);
+	  Alpha1Flag = 1;
+	  csm->GetHit(loc2)->SetIsotope(4,"He");
+	  Alpha2Hit = csm->GetHit(loc2);
+	  Alpha2Flag = 1;
 	}
       }
       else if(Bhits[1]==1&&hits[0]==2)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(5);
+	int loc1=-1;
+	int loc2=-1;
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
 	  {
-	    if(!Alpha1Flag)
-	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha1Hit = csm->GetHit(iter);
-	      Alpha1Flag = 1;
-	    }
-	    else if(!Alpha2Flag)
-	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(iter);
-	      Alpha2Flag = 1;
-	    }
+	    if(loc1==-1)
+	      loc1=iter;
+	    else if(loc2==-1)
+	      loc2=iter;
+	    else
+	      cerr<<"Too many alphas!"<<endl;
 	  }
+	}
+	if(abs(csm->GetHit(loc1)->GetDPosition().Theta()-csm->GetHit(loc2)->GetDPosition().Theta()) < be8thetawindow)
+	{
+	  csm->GetHit(loc1)->SetIsotope(4,"He");
+	  Alpha1Hit = csm->GetHit(loc1);
+	  Alpha1Flag = 1;
+	  csm->GetHit(loc2)->SetIsotope(4,"He");
+	  Alpha2Hit = csm->GetHit(loc2);
+	  Alpha2Flag = 1;
 	}
       }
       else if(Ahits[0]==1&&hits[0]==2)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(6);
+	
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==0+1)
@@ -657,6 +667,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(Ahits[1]==1&&hits[1]==2)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(7);
+	
 	for(int iter=0; iter<csm->GetMultiplicity(); iter++)
 	{
 	  if(csm->GetHit(iter)->GetDetectorNumber()==1+1)
@@ -672,6 +684,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(hits[0]==1&&hits[1]==2&&Bhits[1]==0&&Ahits[0]==0)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(8);
+	
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
 	  if(csm->GetHit(y)->GetDetectorNumber()==1+1 && csm->GetHit(y)->GetEnergy()>1 )
@@ -708,6 +722,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(hits[0]==2&&hits[1]==1&&Bhits[0]==0&&Ahits[1]==0)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(9);
+	
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
 	  if(csm->GetHit(y)->GetDetectorNumber()==0+1 && csm->GetHit(y)->GetEnergy()>1 )
@@ -744,6 +760,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(hits[0]==1&&hits[3]==2&&Ahits[0]==0)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(10);
+	
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
 	  if(csm->GetHit(y)->GetDetectorNumber()==3+1 && csm->GetHit(y)->GetEnergy()>1 )
@@ -767,6 +785,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       else if(hits[1]==1&&hits[2]==2&&Ahits[1]==0)
       {
+	((TH1I *)outlist->FindObject("StatCheck"))->Fill(11);
+	
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
 	  if(csm->GetHit(y)->GetDetectorNumber()==2+1 && csm->GetHit(y)->GetEnergy()>1 )
@@ -1243,7 +1263,7 @@ double Doppler(TTigressHit* thit, TCSMHit* chit)
 double CalcCOMProductTheta(double theta, double energy)
 {
   const double pi = TMath::Pi();
-  const double BeamE = BEAMENERGY;
+  const double BeamE = BEAM_ENERGY;
 
   const double M1 = MASS_BE11;
   const double M2 = MASS_BE9;
@@ -1266,52 +1286,77 @@ double CalcCOMProductTheta(double theta, double energy)
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {
-  bool debug = 0;
+  bool debug = 1;
   const double pi = TMath::Pi();
-
+  const double QVal = 1.50619;//from http://www.nndc.bnl.gov/qcalc/
+  
   if(debug)
     cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<endl;
-
+  
   Energy = Energy/1000.;
-  
-  double *Values = new double[3];
-  
-  double pParticleMag = sqrt( 2. * Mass * Energy);
+    
+    double *Values = new double[3];
+    
+    double pParticleMag = sqrt( 2. * Mass * Energy);
+    
+    TVector3 pParticle = TVector3(pParticleMag,0.,0.);
+    pParticle.SetTheta(Theta);
+    pParticle.SetPhi(Phi);
 
-  TVector3 pParticle = TVector3(pParticleMag,0.,0.);
-  pParticle.SetTheta(Theta);
-  pParticle.SetPhi(Phi);
+    if(debug)
+      cout<<"MASS_BE11: "<<MASS_BE11<<", BEAM_ENERGY: "<<BEAM_ENERGY<<" sqrt: "<<sqrt( 2. * MASS_BE11 * BEAM_ENERGY)<<", prod: "<<double(MASS_BE11) * double(BEAM_ENERGY)<<endl;
+    double pBeamMag = sqrt( 2. * MASS_BE11 * BEAM_ENERGY); //This is all in the z direction
 
-  double pBeam = sqrt( 2. * MASS_BE11 * BEAMENERGY); //This is all in the x direction
-
-  double CorrMass = 1.;
-
-  if(int(Mass) == int(MASS_BE12))
-    CorrMass = MASS_BE8;
-  else if(int(Mass) == int(MASS_BE8))
-    CorrMass = MASS_BE12;
-  else if(int(Mass) == int(MASS_HE4))
-    cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
-  else
-    cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
-
-  TVector3 pCorr = TVector3(0.,0.,pBeam);
-  pCorr = pCorr - pParticle;
-
-  Values[0] = pCorr.Mag2() / (2.*CorrMass )*1000.;  //Energy, from E=p^2/2m
-  Values[1] = pCorr.Theta();
-  Values[2] = pCorr.Phi();
-
-  if(debug)
-    cout<<"Energy: "<<Values[0]<<" Theta: "<<Values[1]*180/pi<<" Phi: "<<Values[2]*180/pi<<endl;
-
-  if(debug)
-    cout<<"Checking energy: "<<"Particle E: "<<Energy*1000<<", Corresponding Energy: "<<Values[0]<<", 30 MeV - those two: "<<BEAMENERGY - (Energy + Values[0]/1000)<<endl;
-
-  if(debug)
-    cout<<endl;
-  
-  return Values;
+    if(debug)
+      cout<<"MASS_BE11: "<<MASS_BE11<<", BEAM_ENERGY: "<<BEAM_ENERGY<<", pBeamMag: "<<pBeamMag<<endl;
+    
+    if(debug)
+    {
+      cout<<"PARTICLE X: "<<pParticle.X()<<" Y: "<<pParticle.Y()<<" Z: "<<pParticle.Z()<<endl;
+    }
+    
+    double CorrMass = 1.;
+    
+    if(int(Mass) == int(MASS_BE12))
+      CorrMass = MASS_BE8;
+    else if(int(Mass) == int(MASS_BE8))
+      CorrMass = MASS_BE12;
+    else if(int(Mass) == int(MASS_HE4))
+      cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
+    else
+      cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
+    
+    double ECorr = BEAM_ENERGY - Energy;
+    
+    double pCorrMag = pBeamMag*pBeamMag/MASS_BE11 - pParticle.Mag2()/Mass;
+    
+    TVector3 pCorr;
+    pCorr.SetX(-pParticle.X());
+    pCorr.SetY(-pParticle.Y());
+    pCorr.SetZ(pBeamMag-pParticle.Z());
+        
+    if(debug)
+    {
+      cout<<"CORR X: "<<pCorr.X()<<" Y: "<<pCorr.Y()<<" Z: "<<pCorr.Z()<<endl;
+      cout<<"Magnitudes    Particle: "<<pParticle.Mag()<<", Beam: "<<pBeamMag<<", Corr: "<<pCorr.Mag()<<", other way: "<<pCorrMag*pCorrMag<<endl;
+      cout<<"Energies from Mag  Particle: "<<pParticle.Mag2()/(2*Mass)<<", Beam: "<<pBeamMag*pBeamMag/(2*MASS_BE11)<<", Corr: "<<pCorr.Mag2()/(2*CorrMass)<<endl;
+    }
+    
+    Values[0] = pCorr.Mag2() / (2.*CorrMass );  //Energy, from E=p^2/2m
+    Values[1] = pCorr.Theta();
+    Values[2] = pCorr.Phi();
+    
+    if(debug)
+      cout<<"Energy: "<<Values[0]<<" Theta: "<<Values[1]*180/pi<<" Phi: "<<Values[2]*180/pi<<endl;
+    
+    if(debug)
+      cout<<"Checking energy: "<<"Particle E: "<<Energy<<", Corresponding Energy: "<<Values[0]<<", "<<BEAM_ENERGY<<" MeV - those two: "<<BEAM_ENERGY - (Energy + Values[0])<<endl;
+    
+    if(debug)
+      cout<<endl;
+    
+    return Values;
+    
 }
 
 double* CorrParticle(TCSMHit* Hit)
