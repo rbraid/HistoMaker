@@ -1286,7 +1286,7 @@ double CalcCOMProductTheta(double theta, double energy)
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {
-  bool debug = 1;
+  bool debug = 0;
   const double pi = TMath::Pi();
   const double QVal = 1.50619;//from http://www.nndc.bnl.gov/qcalc/
   
