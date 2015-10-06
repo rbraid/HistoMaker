@@ -134,7 +134,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-      outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),360,0,360,700,0,70));
+      outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_correlated",id));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -662,9 +662,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    if(csm->GetHit(iter)->GetIsotope()=="default" && abs(csm->GetHit(iter)->GetDPosition().Theta() - Alpha1Hit->GetDPosition().Theta()) < be8thetawindow)
 	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(iter);
-	      Alpha2Flag = 1;
+	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_1_2")))
+	      {
+		if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+		{
+		  csm->GetHit(iter)->SetIsotope(4,"He");
+		  Alpha2Hit = csm->GetHit(iter);
+		  Alpha2Flag = 1;
+		}
+	      }
 	    }
 	  }
 	}
@@ -679,9 +685,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    if(csm->GetHit(iter)->GetIsotope()=="default" && abs(csm->GetHit(iter)->GetDPosition().Theta() - Alpha1Hit->GetDPosition().Theta()) < be8thetawindow)
 	    {
-	      csm->GetHit(iter)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(iter);
-	      Alpha2Flag = 1;
+	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_2_2")))
+	      {
+		if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
+		{
+		  csm->GetHit(iter)->SetIsotope(4,"He");
+		  Alpha2Hit = csm->GetHit(iter);
+		  Alpha2Flag = 1;
+		}
+	      }
 	    }
 	  }
 	}
@@ -719,8 +731,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      cerr<<" Error, Be overflow exceeded.  You should probably write a vector-based version of this..."<<endl;
 	  }
 	}
-
-	if(aloc2!=-1 && abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(aloc2)->GetDPosition().Theta()) < be8thetawindow)
+	TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_2_2"));
+	  
+	if(aloc2!=-1 &&
+	  abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(aloc2)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc1)->GetEnergyMeV(),csm->GetHit(aloc2)->GetEnergyMeV()))
 	{
 	  csm->GetHit(aloc1)->SetIsotope(4,"He");
 	  Alpha1Hit = csm->GetHit(aloc1);
@@ -730,7 +745,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  Alpha2Flag = 1;
 	}
 
-	else if(alocOverflow!=-1 && abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow)
+	else if(alocOverflow!=-1 &&
+	  abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc1)->GetEnergyMeV(),csm->GetHit(alocOverflow)->GetEnergyMeV()))
 	{
 	  csm->GetHit(aloc1)->SetIsotope(4,"He");
 	  Alpha1Hit = csm->GetHit(aloc1);
@@ -740,7 +757,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  Alpha2Flag = 1;
 	}
 
-	else if(aloc2!=-1 && alocOverflow!=-1 && abs(csm->GetHit(aloc2)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow)
+	else if(aloc2!=-1 && alocOverflow!=-1 &&
+	  abs(csm->GetHit(aloc2)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc2)->GetEnergyMeV(),csm->GetHit(alocOverflow)->GetEnergyMeV()))
 	{
 	  csm->GetHit(aloc2)->SetIsotope(4,"He");
 	  Alpha1Hit = csm->GetHit(aloc2);
@@ -767,44 +786,93 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    Be12Flag = 1;
 	  }
 	}
-
-
       }
-      else if(hits[0]==2&&hits[1]==1&&Bhits[0]==0&&Ahits[1]==0)
+      else if(hits[1]>=1&&hits[0]>=2&&Bhits[0]==0&&Ahits[1]==0)
       {
 	((TH1I *)outlist->FindObject("StatCheck"))->Fill(9);
+	
+	int aloc1 = -1;
+	int aloc2 = -1;
+	int alocOverflow = -1;
+	int beloc = -1;
+	int belocOverflow = -1;
 	
 	for(int y=0; y<csm->GetMultiplicity(); y++)
 	{
 	  if(csm->GetHit(y)->GetDetectorNumber()==0+1 && csm->GetHit(y)->GetEnergy()>1 )
 	  {
-	    if(!Alpha1Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	      Alpha1Hit = csm->GetHit(y);
-	      Alpha1Flag = 1;
-	    }
-	    else if(!Alpha2Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope(4,"He");
-	      Alpha2Hit = csm->GetHit(y);
-	      Alpha2Flag = 1;
-	    }
+	    if(aloc1==-1)
+	      aloc1=y;
+	    else if(aloc2==-1)
+	      aloc2=y;
+	    else if(alocOverflow==-1)
+	      alocOverflow=y;
 	    else
-	      cerr<<" Too many alphas"<<endl;
+	      cerr<<" Error, alpha overflow exceeded.  You should probably write a vector-based version of this..."<<endl;
 	  }
 	  else if(csm->GetHit(y)->GetDetectorNumber()==1+1 && csm->GetHit(y)->GetEnergy()>1)
 	  {
-	    if(!Be12Flag)
-	    {
-	      csm->GetHit(y)->SetIsotope("12Be");
-	      Be12Hit = csm->GetHit(y);
-	      Be12Flag = 1;
-	    }
+	    if(beloc = -1)
+	      beloc=y;
+	    else if(belocOverflow = -1)
+	      belocOverflow=y;
 	    else
-	    {
-	      cerr<<" Too many Be12"<<endl;
-	    }
+	      cerr<<" Error, Be overflow exceeded.  You should probably write a vector-based version of this..."<<endl;
+	  }
+	}
+	TCutG *cut = (TCutG*)(cutlist->FindObject("alphacone_1_2"));
+	
+	if(aloc2!=-1 &&
+	  abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(aloc2)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc1)->GetEnergyMeV(),csm->GetHit(aloc2)->GetEnergyMeV()))
+	{
+	  csm->GetHit(aloc1)->SetIsotope(4,"He");
+	  Alpha1Hit = csm->GetHit(aloc1);
+	  Alpha1Flag = 1;
+	  csm->GetHit(aloc2)->SetIsotope(4,"He");
+	  Alpha2Hit = csm->GetHit(aloc2);
+	  Alpha2Flag = 1;
+	}
+	
+	else if(alocOverflow!=-1 &&
+	  abs(csm->GetHit(aloc1)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc1)->GetEnergyMeV(),csm->GetHit(alocOverflow)->GetEnergyMeV()))
+	{
+	  csm->GetHit(aloc1)->SetIsotope(4,"He");
+	  Alpha1Hit = csm->GetHit(aloc1);
+	  Alpha1Flag = 1;
+	  csm->GetHit(alocOverflow)->SetIsotope(4,"He");
+	  Alpha2Hit = csm->GetHit(alocOverflow);
+	  Alpha2Flag = 1;
+	}
+	
+	else if(aloc2!=-1 && alocOverflow!=-1 &&
+	  abs(csm->GetHit(aloc2)->GetDPosition().Theta() - csm->GetHit(alocOverflow)->GetDPosition().Theta()) < be8thetawindow &&
+	  cut->IsInside(csm->GetHit(aloc2)->GetEnergyMeV(),csm->GetHit(alocOverflow)->GetEnergyMeV()))
+	{
+	  csm->GetHit(aloc2)->SetIsotope(4,"He");
+	  Alpha1Hit = csm->GetHit(aloc2);
+	  Alpha1Flag = 1;
+	  csm->GetHit(alocOverflow)->SetIsotope(4,"He");
+	  Alpha2Hit = csm->GetHit(alocOverflow);
+	  Alpha2Flag = 1;
+	}
+	
+	if(Alpha2Flag && Alpha1Flag)
+	{
+	  double* corvals;
+	  corvals = CorrParticleFromAlphas(Alpha1Hit,Alpha2Hit);
+	  if(beloc!=-1 && abs(csm->GetHit(beloc)->GetPosition().Theta() - corvals[1]) < be12thetawindow && abs(csm->GetHit(beloc)->GetEnergy() - corvals[0]) < be12energywindow)
+	  {
+	    csm->GetHit(beloc)->SetIsotope("12Be");
+	    Be12Hit = csm->GetHit(beloc);
+	    Be12Flag = 1;
+	  }
+	  else if(belocOverflow!=-1 && abs(csm->GetHit(belocOverflow)->GetPosition().Theta() - corvals[1]) < be12thetawindow && abs(csm->GetHit(belocOverflow)->GetEnergy() - corvals[0]) < be12energywindow)
+	  {
+	    csm->GetHit(belocOverflow)->SetIsotope("12Be");
+	    Be12Hit = csm->GetHit(belocOverflow);
+	    Be12Flag = 1;
 	  }
 	}
       }
