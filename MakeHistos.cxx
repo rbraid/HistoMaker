@@ -289,15 +289,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    if(csm->GetHit(iter)->GetIsotope()=="default" && abs(csm->GetHit(iter)->GetDPosition().Theta() - Alpha1Hit->GetDPosition().Theta()) < be8thetawindow)
 	    {
-	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_1_2")))
-	      {
-		if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-		{
-		  csm->GetHit(iter)->SetIsotope(4,"He");
-		  Alpha2Hit = csm->GetHit(iter);
-		  Alpha2Flag = 1;
-		}
-	      }
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
 	    }
 	  }
 	}
@@ -312,15 +306,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  {
 	    if(csm->GetHit(iter)->GetIsotope()=="default" && abs(csm->GetHit(iter)->GetDPosition().Theta() - Alpha1Hit->GetDPosition().Theta()) < be8thetawindow)
 	    {
-	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("alphaCone_2_2")))
-	      {
-		if(cut->IsInside(Alpha1Hit->GetEnergyMeV(),Alpha2Hit->GetEnergyMeV()))
-		{
-		  csm->GetHit(iter)->SetIsotope(4,"He");
-		  Alpha2Hit = csm->GetHit(iter);
-		  Alpha2Flag = 1;
-		}
-	      }
+	      csm->GetHit(iter)->SetIsotope(4,"He");
+	      Alpha2Hit = csm->GetHit(iter);
+	      Alpha2Flag = 1;
 	    }
 	  }
 	}
