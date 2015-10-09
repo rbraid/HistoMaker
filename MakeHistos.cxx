@@ -140,7 +140,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  
 	  for(int search=0; search<csm->GetMultiplicity();search++)
 	  {
-	    if(csm->GetHit(search)->GetDetectorNumber() == det+1)
+	    if(csm->GetHit(search)->GetDetectorNumber() == det+1 &&
+	      csm->GetHit(search)->GetDEnergy()>1)
 	    {
 	      if(loc1==-1)
 		loc1=search;
@@ -149,7 +150,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      else
 		cerr<<"Too many hits in one detector"<<endl;
 	    }
-	    if(csm->GetHit(search)->GetDetectorNumber() == corrdet+1)
+	    if(csm->GetHit(search)->GetDetectorNumber() == corrdet+1 &&
+	      csm->GetHit(search)->GetDEnergy()>1)
 	    {
 	      if(corrloc == -1)
 		corrloc = search;
@@ -157,7 +159,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		cerr<<"Too many correlated location hits"<<endl;
 	    }
 	  }
-	  if(loc2!=-2)
+	  if(loc2!=-1)
 	  {
 	    TRandom *rnd = new TRandom(x);
 	    if(rnd->Uniform(1)>.5)
@@ -171,6 +173,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
 	    TH2D* diffpointer =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det+1));
 	    diffpointer->Fill(csm->GetHit(loc1)->GetThetaDeg()-csm->GetHit(loc2)->GetThetaDeg(),csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
+
+	    if(csm->GetHit(loc1)->GetThetaDeg()==csm->GetHit(loc2)->GetThetaDeg())
+	    {
+	      cout<<csm->GetMultiplicity()<<" "<<loc1<<" "<<loc2<<endl;
+	      csm->GetHit(loc1)->Print();
+	      csm->GetHit(loc2)->Print();
+	      cout<<endl;
+	    }
 	  }
 	  if(corrloc != -1)
 	  {
