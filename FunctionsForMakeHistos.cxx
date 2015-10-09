@@ -167,6 +167,13 @@ void SetupHistos(TList *outlist)
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("twohit_%i_thetadiff",det),Form("2 Hits in detector %i",det),4000,-20,20,1200,0,60));//
+    temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det));
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Difference in Angle in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,700,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));

@@ -169,6 +169,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    }
 	    TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
 	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+	    TH2D* diffpointer =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det+1));
+	    diffpointer->Fill(csm->GetHit(loc1)->GetThetaDeg()-csm->GetHit(loc2)->GetThetaDeg(),csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
 	  }
 	  if(corrloc != -1)
 	  {
