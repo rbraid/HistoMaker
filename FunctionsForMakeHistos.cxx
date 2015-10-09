@@ -226,7 +226,7 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH1D("Multiplicity","Multiplicity",10,0,10));//
 
-  outlist->Add(new TH1I("counts","counts",2,1,2);
+  outlist->Add(new TH1I("counts","counts",2,1,2));
   
   outlist->Add(new TH1D("GammaSum","Gamma Spectrum",2000,0,200));
   temp1 = (TH1D*)outlist->FindObject("GammaSum");

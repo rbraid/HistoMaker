@@ -790,7 +790,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
-	  stat = (TH1I*)outlist->FindObject("counts");
+	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 	  stat->Fill(hit->GetDetectorNumber());
 	  
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
