@@ -783,12 +783,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v2",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v3",hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+	  stat = (TH1I*)outlist->FindObject("counts");
+	  stat->Fill(hit->GetDetectorNumber());
 	  
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
