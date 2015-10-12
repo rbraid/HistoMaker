@@ -181,6 +181,29 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      csm->GetHit(loc2)->Print();
 	      cout<<endl;
 	    }
+	    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("twohit_cone_%i_v1",csm->GetHit(loc1)->GetDetectorNumber()))))
+	    {
+	      if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
+	      {
+		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(Form("twohit_angle_%i_v1",csm->GetHit(loc1)->GetDetectorNumber()))))
+		{		  
+		  if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
+		    csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
+		  {
+		    TH2D* twocutpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i",csm->GetHit(loc1)->GetDetectorNumber()));
+		    twocutpointer->Fill( csm->GetHit(loc1)->GetThetaDeg(), csm->GetHit(loc1)->GetEnergyMeV());
+		    twocutpointer->Fill( csm->GetHit(loc2)->GetThetaDeg(), csm->GetHit(loc2)->GetEnergyMeV());
+
+		    double* Be8 = CalcBe8fromAlpha(csm->GetHit(loc1), csm->GetHit(loc2));
+		    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",csm->GetHit(loc1)->GetDetectorNumber()));
+		    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+		  }
+		}
+	      }
+	    }
+	      
+	    
+	    
 	  }
 	  if(corrloc != -1)
 	  {
