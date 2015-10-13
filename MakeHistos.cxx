@@ -197,6 +197,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		    double* Be8 = CalcBe8fromAlpha(csm->GetHit(loc1), csm->GetHit(loc2));
 		    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",csm->GetHit(loc1)->GetDetectorNumber()));
 		    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+		    
+		    if(corrloc != -1)
+		    {
+		      TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
+		      corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
+		    }
 		  }
 		}
 	      }
