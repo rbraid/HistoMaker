@@ -181,11 +181,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      csm->GetHit(loc2)->Print();
 	      cout<<endl;
 	    }
-	    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("twohit_cone_%i_v1",csm->GetHit(loc1)->GetDetectorNumber()))))
+	    if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone")))
 	    {
 	      if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
 	      {
-		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(Form("twohit_angle_%i_v1",csm->GetHit(loc1)->GetDetectorNumber()))))
+		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle")))
 		{		  
 		  if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
 		    csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
