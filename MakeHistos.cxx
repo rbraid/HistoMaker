@@ -201,7 +201,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		    if(corrloc != -1)
 		    {
 		      TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
-		      corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
+		      corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetCorrectedEnergyMeV("12be"));
 		    }
 		  }
 		}
