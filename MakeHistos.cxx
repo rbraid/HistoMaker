@@ -185,6 +185,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
 	      {
+		TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
+		diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
 		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle")))
 		{		  
 		  if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
