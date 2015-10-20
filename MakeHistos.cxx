@@ -181,13 +181,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      csm->GetHit(loc2)->Print();
 	      cout<<endl;
 	    }
-	    if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone")))
+	    if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone_high")))
 	    {
 	      if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
 	      {
 		TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
 		diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
-		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle")))
+		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle_high")))
 		{		  
 		  if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
 		    csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
@@ -832,6 +832,25 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+
+	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
+	      {
+		TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
+		delta->Fill(hit->GetTime()-tigresshit->GetTime());
+
+// 		cout<<"TIGRESS TIME: "<<tigresshit->GetTime()<<endl;
+// 		cout<<"TIGRESS CFD:  "<<tigresshit->GetTimeCFD()<<endl;
+// 
+// 		cout<<"GetDHorizontalTime: "<<hit->GetDHorizontalTime()<<endl;
+// 		cout<<"GetDVerticalTime: "<<hit->GetDVerticalTime()<<endl;
+// 		cout<<"GetDHorizontalCFD: "<<hit->GetDHorizontalCFD()<<endl;
+// 		cout<<"GetDVerticalCFD: "<<hit->GetDVerticalCFD()<<endl;
+// 
+// 		cout<<"GetEHorizontalTime: "<<hit->GetEHorizontalTime()<<endl;
+// 		cout<<"GetEVerticalTime: "<<hit->GetEVerticalTime()<<endl;
+// 		cout<<"GetEHorizontalCFD: "<<hit->GetEHorizontalCFD()<<endl;
+// 		cout<<"GetEVerticalCFD: "<<hit->GetEVerticalCFD()<<endl;
+	      }
 	    }
 	  }
 	}

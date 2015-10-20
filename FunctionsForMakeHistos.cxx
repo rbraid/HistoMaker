@@ -252,6 +252,8 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH1D("Multiplicity","Multiplicity",10,0,10));//
 
+  outlist->Add(new TH1D("deltaGamma","Time difference between 12Be and 2.12 Gamma",1000,0,1000));
+
   outlist->Add(new TH1I("counts","counts",2,1,2));
   
   outlist->Add(new TH1D("GammaSum","Gamma Spectrum",2000,0,200));
