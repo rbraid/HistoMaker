@@ -159,7 +159,7 @@ void SetupHistos(TList *outlist)
   for(int det=1;det<=4;det++)
   {
     
-    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),200,0,20,200,0,20));//
+    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
     temp2->SetContour(666);
     temp2->SetOption("colz");
@@ -171,13 +171,20 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2D(Form("twohit_%i",det),Form("2 Hits in detector %i",det),200,0,20,200,0,20));//
+    outlist->Add(new TH2D(Form("twohit_%i",det),Form("2 Hits in detector %i",det),400,0,40,400,0,40));//
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i",det));
     temp2->SetContour(666);
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
 
+    outlist->Add(new TH2D(Form("twohit_twocut_cone_%i",det),Form("2 Hits in detector %i",det),400,0,40,400,0,40));//
+    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",det));
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+    
     outlist->Add(new TH2D(Form("twohit_%i_thetadiff",det),Form("2 Hits in detector %i",det),200,-100,100,120,0,60));//
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det));
     temp2->SetContour(666);

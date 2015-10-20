@@ -196,6 +196,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		    twocutpointer->Fill( csm->GetHit(loc1)->GetThetaDeg(), csm->GetHit(loc1)->GetEnergyMeV());
 		    twocutpointer->Fill( csm->GetHit(loc2)->GetThetaDeg(), csm->GetHit(loc2)->GetEnergyMeV());
 
+		    TH2D* twocone = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",csm->GetHit(loc1)->GetDetectorNumber()));
+		    twocone->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+
 		    double* Be8 = CalcBe8fromAlpha(csm->GetHit(loc1), csm->GetHit(loc2));
 		    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",csm->GetHit(loc1)->GetDetectorNumber()));
 		    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
