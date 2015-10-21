@@ -1,6 +1,6 @@
 #ifndef GLOBAL
 #define GLOBAL
-const double BEAM_ENERGY = 55;
+const double BEAM_ENERGY = 30.14;
 const double TARGET_THICKNESS = 444.;
 const double TGTTHICKNESS = 2.4;
 
