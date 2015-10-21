@@ -91,7 +91,6 @@ void SetupHistos(TList *outlist)
     temp2->GetYaxis()->SetTitleOffset(1.5);
     temp2->SetContour(666);
     temp2->SetOption("colz");
-    temp2->SetOptStat(0);
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
@@ -182,14 +181,14 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_cone_%i",det),Form("2 Hits in detector %i",det),400,0,40,400,0,40));//
+    outlist->Add(new TH2D(Form("twohit_twocut_cone_%i",det),Form("2 Hits in detector %i, cut on both Cone and Angle",det),400,0,40,400,0,40));//
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",det));
     temp2->SetContour(666);
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("twohit_%i_thetadiff",det),Form("2 Hits in detector %i",det),200,-100,100,120,0,60));//
+    outlist->Add(new TH2D(Form("twohit_%i_thetadiff",det),Form("Angle difference vs total energy for 2 hits in detector %i",det),200,-100,100,120,0,60));//
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det));
     temp2->SetContour(666);
     temp2->SetOption("colz");
@@ -215,7 +214,7 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr",det),Form("2 Hits in detector %i, cut on cone and angle, corresponding particle",det),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr",det),Form("Correpsonding particle of 2 hits in detector %i",det),100,0,100,700,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",det));
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Theta in Degrees");

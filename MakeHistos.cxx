@@ -815,7 +815,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
 	if(hit->GetDEnergy()>1)
-	  temp2->Fill(hit->GetDPosition().Theta()*180/TMath::Pi(),hit->getDPosition().Phi()*180/TMath::Pi());
+	  temp2->Fill(hit->GetDPosition().Theta()*180/TMath::Pi(),hit->GetDPosition().Phi()*180/TMath::Pi());
 	if(hit->GetEEnergy()>1)
 	  temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEPosition().Phi()*180/TMath::Pi());
       }
