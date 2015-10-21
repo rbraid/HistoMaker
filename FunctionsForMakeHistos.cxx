@@ -87,12 +87,16 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID, detector %i, summed, with thickness correction",id),3200,0,160,800,0,2000));//
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID for Detector %i",id),3200,0,160,800,0,2000));//
+    temp2->GetYaxis()->SetTitleOffset(1.5);
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->SetOptStat(0);
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
-    outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("EvTheta %i",id),400,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("Energy vs Theta for Detector %i",id),480,0,120,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -246,13 +250,13 @@ void SetupHistos(TList *outlist)
   
   
   outlist->Add(new TH3D("positions","positions",200,0,100,120,-30,30,400,-100,100));
-  outlist->Add(new TH2D("positions_proj","positions_proj",200,0,100,400,-100,100));
+  outlist->Add(new TH2D("positions_proj","positions_proj",220,-20,100,400,-100,100));
   temp2 = (TH2D*)outlist->FindObject("positions_proj");
   temp2->SetOption("colz");
   temp2->GetXaxis()->SetTitle("Z");
   temp2->GetYaxis()->SetTitle("X");
   
-  outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map",45,0,90,90,-180,180));
+  outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map of Silicon Detectors",120,0,120,360,-180,180));
   temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
   temp2->GetXaxis()->SetTitle("Theta (Degrees)");
   temp2->GetYaxis()->SetTitle("Phi (Degrees)");
