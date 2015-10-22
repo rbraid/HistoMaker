@@ -207,6 +207,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		    {
 		      TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
 		      corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetCorrectedEnergyMeV("12be"));
+
+		      if(csm->GetHit(corrloc)->GetEEnergy() > 1)
+		      {
+			TH2D* pidpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_PID",csm->GetHit(loc1)->GetDetectorNumber()));
+			pidpointer->Fill(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx());
+		      }
 		    }
 		  }
 		}
