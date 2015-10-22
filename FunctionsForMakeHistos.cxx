@@ -220,9 +220,13 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
+    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_cut",det),Form("Correpsonding particle of 2 hits in detector %i, cut on PID",det),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_cut",det));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
     outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_PID",det),Form("Correpsonding particle of 2 hits in detector %i, PID",det),3200,0,160,800,0,2000));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_PID",det));
-    temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
