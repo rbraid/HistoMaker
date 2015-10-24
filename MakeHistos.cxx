@@ -841,6 +841,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+	    
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",hit->GetDetectorNumber()));
+	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
 	}
       }
 
