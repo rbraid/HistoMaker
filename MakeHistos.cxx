@@ -195,13 +195,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		csm->GetHit(loc2)->Print();
 		cout<<endl;
 	      }
-	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone_high")))
+	      
+	      TString cut1;
+	      if(int(BEAM_ENERGY) == 55)
+		cut1 = "sim_cone_high";
+	      else if(int(BEAM_ENERGY) == 30)
+		cut1 = "sim_cone";
+	      
+	      if(TCutG *cut = (TCutG*)(cutlist->FindObject(cut1)))
 	      {
 		if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
 		{
 		  TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
 		  diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
-		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle_high")))
+
+		  TString cut2;
+		  if(int(BEAM_ENERGY) == 55)
+		    cut2 = "sim_cone_high";
+		  else if(int(BEAM_ENERGY) == 30)
+		    cut2 = "sim_cone";
+		  
+		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(cut2)))
 		  {
 		    if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
 		      csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
@@ -1109,7 +1123,12 @@ int main(int argc, char **argv)
     ncuts++;
   }
 
-  cout<<"Found "<<ncuts<<" cuts."<<endl;
+  if(ncuts==0)
+    cout<<RED;
+  else
+    cout<<DGREEN;
+  
+  cout<<"Found "<<ncuts<<" cuts."<<RESET_COLOR<<endl;
   
   TChain *chain = new TChain("AnalysisTree");
 
@@ -1133,7 +1152,16 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
 
-  TFile f("output.root","recreate");
+  TString outputname;
+
+  if(int(BEAM_ENERGY) == 30)
+    outputname = "outputlow.root";
+  else if(int(BEAM_ENERGY) == 55)
+    outputname = "outputhigh.root";
+  else
+    outputname = "output.root";
+
+  TFile f(outputname,"recreate");
   f.cd();
   outlist->Write();
   f.Close();
