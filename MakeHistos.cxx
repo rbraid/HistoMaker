@@ -891,7 +891,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-
+	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
+	      temp1->Fill(Doppler(tigresshit,hit));
+	      
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
 	      {
 		TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
