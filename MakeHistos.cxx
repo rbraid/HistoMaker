@@ -211,9 +211,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 		  TString cut2;
 		  if(int(BEAM_ENERGY) == 55)
-		    cut2 = "sim_cone_high";
+		    cut2 = "sim_angle_high";
 		  else if(int(BEAM_ENERGY) == 30)
-		    cut2 = "sim_cone";
+		    cut2 = "sim_angle";
 		  
 		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(cut2)))
 		  {
