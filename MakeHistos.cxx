@@ -196,26 +196,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		cout<<endl;
 	      }
 	      
-	      TString cut1;
+	      TString cut1name;
 	      if(int(BEAM_ENERGY) == 55)
-		cut1 = "sim_cone_high";
+		cut1name = "sim_cone_high";
 	      else if(int(BEAM_ENERGY) == 30)
-		cut1 = "sim_cone";
+		cut1name = "sim_cone";
 	      
-	      if(TCutG *cut = (TCutG*)(cutlist->FindObject(cut1)))
+	      if(TCutG *cut = (TCutG*)(cutlist->FindObject(cut1name)))
 	      {
 		if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
 		{
 		  TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
 		  diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
 
-		  TString cut2;
+		  TString cut2name;
 		  if(int(BEAM_ENERGY) == 55)
-		    cut2 = "sim_angle_high";
+		    cut2name = "sim_angle_high";
 		  else if(int(BEAM_ENERGY) == 30)
-		    cut2 = "sim_angle";
+		    cut2name = "sim_angle";
 		  
-		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(cut2)))
+		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject(cut2name)))
 		  {
 		    if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
 		      csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
