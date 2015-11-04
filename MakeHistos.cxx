@@ -2,6 +2,8 @@
 
 #include "FunctionsForMakeHistos.hh"
 
+double BEAM_ENERGY;
+
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
 TList *cutlist = new TList;
@@ -118,99 +120,112 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
       }
 
-      for(int det=0;det<4;det++)
+
+      if(hits[0]==2 && hits[1]==2)
       {
-	int corrdet;
-	if(det==0)
-	  corrdet=1;
-	else if(det==1)
-	  corrdet=0;
-	else if(det==2)
-	  corrdet=1;
-	else if(det==3)
-	  corrdet=0;
-	else
-	  corrdet=-1;
-	
-	if(hits[det]>=2)
+	continue;
+      }
+
+      else
+      {
+	for(int det=0;det<4;det++)
 	{
-	  int loc1 = -1;
-	  int loc2 = -1;
-	  int corrloc = -1;
-	  
-	  for(int search=0; search<csm->GetMultiplicity();search++)
-	  {
-	    if(csm->GetHit(search)->GetDetectorNumber() == det+1 &&
-	      csm->GetHit(search)->GetDEnergy()>1)
-	    {
-	      if(loc1==-1)
-		loc1=search;
-	      else if(loc2==-1)
-		loc2=search;
-	      else
-		cerr<<"Too many hits in one detector"<<endl;
-	    }
-	    if(csm->GetHit(search)->GetDetectorNumber() == corrdet+1 &&
-	      csm->GetHit(search)->GetDEnergy()>1)
-	    {
-	      if(corrloc == -1)
-		corrloc = search;
-	      else
-		cerr<<"Too many correlated location hits"<<endl;
-	    }
-	  }
-	  if(loc2!=-1)
-	  {
-	    TRandom *rnd = new TRandom(x);
-	    if(rnd->Uniform(1)>.5)
-	    {
-	      int temp;
-	      temp = loc1;
-	      loc1 = loc2;
-	      loc2 = temp;
-	    }
-	    TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
-	    conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
-	    TH2D* diffpointer =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det+1));
-	    diffpointer->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
+	  int corrdet;
+	  if(det==0)
+	    corrdet=1;
+	  else if(det==1)
+	    corrdet=0;
+	  else if(det==2)
+	    corrdet=1;
+	  else if(det==3)
+	    corrdet=0;
+	  else
+	    corrdet=-1;
 
-	    if(csm->GetHit(loc1)->GetThetaDeg()==csm->GetHit(loc2)->GetThetaDeg())
+	  if(hits[det]>=2)
+	  {
+	    int loc1 = -1;
+	    int loc2 = -1;
+	    int corrloc = -1;
+
+	    for(int search=0; search<csm->GetMultiplicity();search++)
 	    {
-	      cout<<csm->GetMultiplicity()<<" "<<loc1<<" "<<loc2<<endl;
-	      csm->GetHit(loc1)->Print();
-	      csm->GetHit(loc2)->Print();
-	      cout<<endl;
-	    }
-	    if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone_high")))
-	    {
-	      if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
+	      if(csm->GetHit(search)->GetDetectorNumber() == det+1 &&
+		csm->GetHit(search)->GetDEnergy()>1)
 	      {
-		TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
-		diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
-		if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle_high")))
-		{		  
-		  if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
-		    csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
+		if(loc1==-1)
+		  loc1=search;
+		else if(loc2==-1)
+		  loc2=search;
+		else
+		  cerr<<"Too many hits in one detector"<<endl;
+	      }
+	      if(csm->GetHit(search)->GetDetectorNumber() == corrdet+1 &&
+		csm->GetHit(search)->GetDEnergy()>1)
+	      {
+		if(corrloc == -1)
+		  corrloc = search;
+		else
+		{
+		  cerr<<"Too many correlated location hits"<<endl;
+		  cout<<"  "<<hits[0]<<" "<<hits[1]<<endl;
+		  cout<<" "<<hits[2]<<"   "<<hits[3]<<endl;
+		}
+	      }
+	    }
+	    if(loc2!=-1)
+	    {
+	      TRandom *rnd = new TRandom(x);
+	      if(rnd->Uniform(1)>.5)
+	      {
+		int temp;
+		temp = loc1;
+		loc1 = loc2;
+		loc2 = temp;
+	      }
+	      TH2D* conepointer = (TH2D*)outlist->FindObject(Form("twohit_%i",det+1));
+	      conepointer->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+	      TH2D* diffpointer =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det+1));
+	      diffpointer->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
+
+	      if(csm->GetHit(loc1)->GetThetaDeg()==csm->GetHit(loc2)->GetThetaDeg())
+	      {
+		cout<<csm->GetMultiplicity()<<" "<<loc1<<" "<<loc2<<endl;
+		csm->GetHit(loc1)->Print();
+		csm->GetHit(loc2)->Print();
+		cout<<endl;
+	      }
+	      if(TCutG *cut = (TCutG*)(cutlist->FindObject("sim_cone_high")))
+	      {
+		if(cut->IsInside(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV()))
+		{
+		  TH2D* diffpointer2 =(TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det+1));
+		  diffpointer2->Fill(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
+		  if(TCutG *cut2 = (TCutG*)(cutlist->FindObject("sim_angle_high")))
 		  {
-		    TH2D* twocutpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i",csm->GetHit(loc1)->GetDetectorNumber()));
-		    twocutpointer->Fill( csm->GetHit(loc1)->GetThetaDeg(), csm->GetHit(loc1)->GetEnergyMeV());
-		    twocutpointer->Fill( csm->GetHit(loc2)->GetThetaDeg(), csm->GetHit(loc2)->GetEnergyMeV());
-
-		    TH2D* twocone = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",csm->GetHit(loc1)->GetDetectorNumber()));
-		    twocone->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
-
-		    double* Be8 = CalcBe8fromAlpha(csm->GetHit(loc1), csm->GetHit(loc2));
-		    TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",csm->GetHit(loc1)->GetDetectorNumber()));
-		    be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
-		    
-		    if(corrloc != -1)
+		    if(cut2->IsInside(csm->GetHit(loc1)->GetDPosition().Angle(csm->GetHit(loc2)->GetDPosition())*180/3.14159,
+		      csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV()))
 		    {
-		      TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
-		      corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetCorrectedEnergyMeV("12be"));
+		      TH2D* twocutpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i",csm->GetHit(loc1)->GetDetectorNumber()));
+		      twocutpointer->Fill( csm->GetHit(loc1)->GetThetaDeg(), csm->GetHit(loc1)->GetEnergyMeV());
+		      twocutpointer->Fill( csm->GetHit(loc2)->GetThetaDeg(), csm->GetHit(loc2)->GetEnergyMeV());
 
-		      if(csm->GetHit(corrloc)->GetEEnergy() > 1)
+		      TH2D* twocone = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",csm->GetHit(loc1)->GetDetectorNumber()));
+		      twocone->Fill(csm->GetHit(loc1)->GetEnergyMeV(),csm->GetHit(loc2)->GetEnergyMeV());
+
+		      double* Be8 = CalcBe8fromAlpha(csm->GetHit(loc1), csm->GetHit(loc2));
+		      TH2D* be8pointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",csm->GetHit(loc1)->GetDetectorNumber()));
+		      be8pointer->Fill(Be8[1]*180/3.14159,Be8[0]);
+
+		      if(corrloc != -1)
 		      {
-			TH2D* pidpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_PID",csm->GetHit(loc1)->GetDetectorNumber()));
+			TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
+			corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetCorrectedEnergyMeV("12be"));
+
+			if(csm->GetHit(corrloc)->GetEEnergy() > 1)
+			{
+			  bool lock = false;
+			  TH2D* pidpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_PID",csm->GetHit(loc1)->GetDetectorNumber()));
 			pidpointer->Fill(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx());
 
 			if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("twohit_PID_%i_v1",csm->GetHit(loc1)->GetDetectorNumber()))))
@@ -221,25 +236,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 			    evtpointercut->Fill( csm->GetHit(corrloc)->GetThetaDeg(), csm->GetHit(corrloc)->GetEnergyMeV());
 			  }
 			}
+			}
 		      }
 		    }
 		  }
 		}
 	      }
+
+
+
 	    }
-	      
-	    
-	    
-	  }
-	  if(corrloc != -1)
-	  {
-	    TH2D* evtpointer;
-	    if(det<2)
-	      evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",det+1));
-	    else
-	      evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",det-1));
-	    
-	    evtpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
+	    if(corrloc != -1)
+	    {
+	      TH2D* evtpointer;
+	      if(det<2)
+		evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",det+1));
+	      else
+		evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",det-1));
+
+	      evtpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
+	    }
 	  }
 	}
       }
@@ -850,6 +866,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
+	      temp1->Fill(Doppler(tigresshit,hit));
 	    }
 	  }
 	}
@@ -1031,9 +1049,29 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  int i;
+
+  if(strcmp(argv[1], "--low") == 0 || strcmp(argv[1], "-l") == 0)
+  {
+    i = 2;
+    BEAM_ENERGY = 30.14;
+  }
+  else if(strcmp(argv[1], "--high") == 0 || strcmp(argv[1], "-h") == 0)
+  {
+    i = 2;
+    BEAM_ENERGY = 55;
+  }
+  else
+  {
+    cerr<<"Undefined beam energy.  There will be strange behavior in energy dependent functions."<<endl;
+  }
+  
+  
   TApplication *app = new TApplication("app",0,0);
   TFile cf("cuts.root");
   TIter *iter = new TIter(cf.GetListOfKeys());
+
+  int ncuts = 0;
 
   while(TObject *obj = iter->Next())
   {
@@ -1046,8 +1084,10 @@ int main(int argc, char **argv)
     }
 
     cutlist->Add(obj);
-    printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+    //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+    ncuts++;
   }
+
 
   TFile cf2("thetacuts.root");
   TIter *iter2 = new TIter(cf2.GetListOfKeys());
@@ -1063,11 +1103,13 @@ int main(int argc, char **argv)
     }
 
     cutlist->Add(obj);
-    printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+    //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+    ncuts++;
   }
+
+  cout<<"Found "<<ncuts<<" cuts."<<endl;
   
   TChain *chain = new TChain("AnalysisTree");
-  int i =1;
 
   while(i<argc)
   {
@@ -1075,7 +1117,7 @@ int main(int argc, char **argv)
   }
 
 
-  printf("%i analysis trees added to chain.\n",i-1);
+  printf("%i analysis trees added to chain.\n",i-2);
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
   

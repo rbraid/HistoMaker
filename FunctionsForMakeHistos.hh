@@ -28,6 +28,8 @@
 
 #define DEBUG 0
 
+extern double BEAM_ENERGY;
+
 double Doppler(TTigressHit* thit, TCSMHit* chit);
 double* CorrParticle(double E, double Theta, double Phi, double Mass);
 double* CorrParticle(TCSMHit*);

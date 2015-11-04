@@ -42,12 +42,17 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i",id),Form("Gamma spectrum",id),3000,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i",id),Form("Gamma spectrum",id),6000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),Form("Gamma spectrum",id),3000,0,30));
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),Form("Gamma spectrum",id),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),Form("Gamma spectrum",id),6000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
