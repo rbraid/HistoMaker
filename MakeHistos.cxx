@@ -1031,6 +1031,40 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
 
 //***********************
+//      Fancy dE v E
+//***********************
+
+    if(csm->GetMultiplicity()>=2)
+    {
+      for(int aa=0;aa<csm->GetMultiplicity();aa++)
+      {
+	TCSMHit *hita = csm->GetHit(aa);
+	if(hita->GetEEnergy()>0.)
+	{
+	  for(int bb=aa+1;bb<csm->GetMultiplicity();bb++)
+	  {
+	    TCSMHit *hitb = csm->GetHit(bb);
+	    if(hitb->GetEEnergy()>0.)
+	    {
+	      if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
+	      {
+		TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit",hita->GetDetectorNumber()));
+		hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
+		hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+		if(hita->GetDVerticalStrip()==hitb->GetDVerticalStrip() && hita->GetDHorizontalStrip() == hitb->GetDHorizontalStrip())
+		{
+		  TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit_samepix",hita->GetDetectorNumber()));
+		  hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
+		  hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+//***********************
 //        Gammas
 //***********************
     for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
