@@ -311,6 +311,10 @@ void SetupHistos(TList *outlist)
   temp2->GetYaxis()->SetTitle("Charge");
   
   outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
+
+  outlist->Add(new TH1I("Be10Mult","Multiplicity of an identified 10Be",20,0,20));
+  outlist->Add(new TH1I("Be12Mult","Multiplicity of an identified 12Be",20,0,20));
+  
   
   if(DEBUG)
   {

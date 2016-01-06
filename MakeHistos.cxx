@@ -872,6 +872,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
+	  TH1I* multpointer = (TH1I*)outlist->FindObject("Be10Mult");
+	  multpointer->Fill(csm->GetMultiplicity());
+
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
 	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -894,6 +897,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
+	  TH1I* multpointer = (TH1I*)outlist->FindObject("Be12Mult");
+	  multpointer->Fill(csm->GetMultiplicity());
+
 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 	  stat->Fill(hit->GetDetectorNumber()+1);
 
@@ -913,18 +919,20 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
 		delta->Fill(hit->GetTime()-tigresshit->GetTime());
 
-// 		cout<<"TIGRESS TIME: "<<tigresshit->GetTime()<<endl;
-// 		cout<<"TIGRESS CFD:  "<<tigresshit->GetTimeCFD()<<endl;
-// 
-// 		cout<<"GetDHorizontalTime: "<<hit->GetDHorizontalTime()<<endl;
-// 		cout<<"GetDVerticalTime: "<<hit->GetDVerticalTime()<<endl;
-// 		cout<<"GetDHorizontalCFD: "<<hit->GetDHorizontalCFD()<<endl;
-// 		cout<<"GetDVerticalCFD: "<<hit->GetDVerticalCFD()<<endl;
-// 
-// 		cout<<"GetEHorizontalTime: "<<hit->GetEHorizontalTime()<<endl;
-// 		cout<<"GetEVerticalTime: "<<hit->GetEVerticalTime()<<endl;
-// 		cout<<"GetEHorizontalCFD: "<<hit->GetEHorizontalCFD()<<endl;
-// 		cout<<"GetEVerticalCFD: "<<hit->GetEVerticalCFD()<<endl;
+		cout<<endl;
+		cout<<"TIGRESS TIME: "<<tigresshit->GetTime()<<endl;
+		cout<<"TIGRESS CFD:  "<<tigresshit->GetTimeCFD()<<endl;
+
+		cout<<"GetDHorizontalTime: "<<hit->GetDHorizontalTime()<<endl;
+		cout<<"GetDVerticalTime: "<<hit->GetDVerticalTime()<<endl;
+		cout<<"GetDHorizontalCFD: "<<hit->GetDHorizontalCFD()<<endl;
+		cout<<"GetDVerticalCFD: "<<hit->GetDVerticalCFD()<<endl;
+
+		cout<<"GetEHorizontalTime: "<<hit->GetEHorizontalTime()<<endl;
+		cout<<"GetEVerticalTime: "<<hit->GetEVerticalTime()<<endl;
+		cout<<"GetEHorizontalCFD: "<<hit->GetEHorizontalCFD()<<endl;
+		cout<<"GetEVerticalCFD: "<<hit->GetEVerticalCFD()<<endl;
+		cout<<endl<<endl;
 	      }
 	    }
 	  }
@@ -1080,6 +1088,7 @@ int main(int argc, char **argv)
   else
   {
     cerr<<"Undefined beam energy.  There will be strange behavior in energy dependent functions."<<endl;
+    BEAM_ENERGY = 1;
   }
   
   
