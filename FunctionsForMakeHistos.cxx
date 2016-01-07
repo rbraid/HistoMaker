@@ -326,6 +326,8 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1I("Be10Mult","Multiplicity of an identified 10Be",20,0,20));
   outlist->Add(new TH1I("Be12Mult","Multiplicity of an identified 12Be",20,0,20));
+  outlist->Add(new TH1I("MultBlobHigh","Multiplicity of the high energy blob in the dEve",20,0,20));
+  outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));
   
   
   if(DEBUG)

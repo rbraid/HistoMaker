@@ -1034,6 +1034,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //      Fancy dE v E
 //***********************
 
+    for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+    {
+      TCSMHit *hit = csm->GetHit(xx);
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("highblob_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobHigh");
+	  blobpointer->Fill(csm->GetMultiplicity());
+	}
+      }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("lowblob_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobLow");
+	  blobpointer->Fill(csm->GetMultiplicity());
+	}
+      }
+    }
+
     if(csm->GetMultiplicity()>=2)
     {
       for(int aa=0;aa<csm->GetMultiplicity();aa++)
