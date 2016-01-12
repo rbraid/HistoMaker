@@ -236,6 +236,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 			TH2D* corrpointer = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",csm->GetHit(loc1)->GetDetectorNumber()));
 			corrpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetCorrectedEnergyMeV("12be"));
 
+			TH1D* etotpointer = (TH1D*)outlist->FindObject(Form("twohit_twocut_%i_corr_Etot",csm->GetHit(loc1)->GetDetectorNumber()));
+			etotpointer->Fill(csm->GetHit(corrloc)->GetEnergyMeV()+csm->GetHit(loc1)->GetEnergyMeV()+csm->GetHit(loc2)->GetEnergyMeV());
+
 			if(csm->GetHit(corrloc)->GetEEnergy() > 1)
 			{
 			  bool lock = false;
