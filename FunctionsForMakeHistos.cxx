@@ -176,6 +176,8 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH1D(Form("TotalEnergy_%i_12Be",id),Form("Total energy of an event with 12Be in detector %i",id),100,0,100));
     
     for(int mid = 1; mid<=4;mid++)
     {

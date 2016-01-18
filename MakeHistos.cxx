@@ -941,6 +941,28 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
+      TString totcutname;
+      if(int(BEAM_ENERGY) == 55)
+	totcutname = Form("Be12_all_high_%i_v1",hit->GetDetectorNumber());
+      else if(int(BEAM_ENERGY) == 30)
+      {
+	totcutname = Form("Be12_all_high_%i_v1",hit->GetDetectorNumber());
+	cerr<<DRED<<"Error: total 12Be cut not implemeted yet, reverting to high energy cut"<<RESET_COLOR<<endl;
+      }
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(totcutname)))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && csm->GetMultiplicity()>=3)
+	{
+	  TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
+	  double TotalE = 0;
+	  for(int asdf=0;asdf<csm->GetMultiplicity();asdf++)
+	  {
+	    TotalE+=csm->GetHit(asdf)->GetEnergyMeV();
+	  }
+	  totalenergypointer->Fill(TotalE);
+	}
+      }
 	  
 
       if(DEBUG) cout<<"EVTheta"<<endl;
