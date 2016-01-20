@@ -179,6 +179,7 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH1D(Form("TotalEnergy_%i_12Be",id),Form("Total energy of an event with 12Be in detector %i",id),100,0,100));
     
+    
     for(int mid = 1; mid<=4;mid++)
     {
       outlist->Add(new TH2D(Form("pid_%i_mult%i",id,mid),Form("Particle ID, detector %i with Multiplicity %i",id,mid),700,0,70,700,0,70));
@@ -195,6 +196,9 @@ void SetupHistos(TList *outlist)
   
   for(int det=1;det<=4;det++)
   {
+    outlist->Add(new TH1D(Form("fred1_%i",det),Form("Total energy of multiplicity 3, detector %i",det),100,0,100));
+    outlist->Add(new TH1D(Form("fred2_%i",det),Form("Total energy of multiplicity 3, detector %i, 2 hits in side",det),100,0,100));
+    outlist->Add(new TH1D(Form("fred3_%i",det),Form("Total energy of multiplicity 3, detector %i, 2 hits in side and 12Be identified",det),100,0,100));
     
     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));

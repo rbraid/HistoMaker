@@ -53,7 +53,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     bool Alpha2Flag = 0;
     bool Be12Flag = 0;
 
-    if(csm->GetMultiplicity()>=2)
+    if(csm->GetMultiplicity()==3)
     {
 
       int hits[4] = {0};
@@ -128,6 +128,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       else
       {
+	double TotalEMeV = 0.;
+	for(int eiter = 0; eiter<csm->GetMultiplicity();eiter++)
+	{
+	  TotalEMeV += csm->GetHit(eiter)->GetEnergyMeV();
+	}
+
+	TH1D* fredpointer;
+
+	fredpointer = (TH1D*)outlist->FindObject(Form("fred1_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
+	fredpointer->Fill(TotalEMeV);
+	
 	for(int det=0;det<4;det++)
 	{
 	  int corrdet;
@@ -272,6 +283,24 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		evtpointer = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",det-1));
 
 	      evtpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
+	    }
+
+	    if(corrloc != -1 && loc2 != -1)
+	    {
+	      if(csm->GetHit(loc2)->GetDetectorNumber()>2)
+	      {
+		fredpointer = (TH1D*)outlist->FindObject(Form("fred2_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
+		fredpointer->Fill(TotalEMeV);
+
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
+		{
+		  if(cut->IsInside(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
+		  {
+		    fredpointer = (TH1D*)outlist->FindObject(Form("fred3_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
+		    fredpointer->Fill(TotalEMeV);
+		  }
+		}
+	      }
 	    }
 	  }
 	}
@@ -952,7 +981,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(totcutname)))
       {
-	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && csm->GetMultiplicity()>=3)
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
 	{
 	  TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
 	  double TotalE = 0;
