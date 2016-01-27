@@ -1103,9 +1103,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
-      if(aloc.size()>2)
-	cerr<<"I didn't think this would happen!  more than 2 alphas detected!"<<endl;
-      else if(aloc.size()==2)
+
+      if(aloc.size()>0)
       {
 	TH1D* etotalphapointer = (TH1D*)outlist->FindObject(Form("ETot_%i_2alpha",csm->GetHit(aloc.at(0))->GetDetectorNumber()));
 	double etot=0;
@@ -1114,6 +1113,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  etot += csm->GetHit(ee)->GetEnergyMeV();
 	}
 	etotalphapointer->Fill(etot);
+
+	TH1I* numalphaptr = (TH1I*)outlist->FindObject("AlphaMult");
+	numalphaptr->Fill(aloc.size());
       }
     }
 //***********************

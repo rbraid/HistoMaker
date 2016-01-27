@@ -345,6 +345,8 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1I("MultBlobHigh","Multiplicity of the high energy blob in the dEve",20,0,20));
   outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));
+
+  outlist->Add(new TH1I("AlphaMult","Number of identified alphas in an event",5,0,5));
   
   
   if(DEBUG)
