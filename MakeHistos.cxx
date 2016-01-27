@@ -904,7 +904,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
-	  TH1I* multpointer = (TH1I*)outlist->FindObject("Be10Mult");
+	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be10Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
@@ -922,14 +922,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_thick_%i_v3",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
-	  TH1I* multpointer = (TH1I*)outlist->FindObject("Be12Mult");
+	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");

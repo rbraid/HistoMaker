@@ -39,6 +39,9 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
     
+    outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
+    outlist->Add(new TH1I(Form("Be12Mult_%i",id),Form("Multiplicity of an identified 12Be in detector %i",id),20,0,20));
+    
     outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -340,8 +343,6 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
 
-  outlist->Add(new TH1I("Be10Mult","Multiplicity of an identified 10Be",20,0,20));
-  outlist->Add(new TH1I("Be12Mult","Multiplicity of an identified 12Be",20,0,20));
   outlist->Add(new TH1I("MultBlobHigh","Multiplicity of the high energy blob in the dEve",20,0,20));
   outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));
   
