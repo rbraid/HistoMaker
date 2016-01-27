@@ -1086,7 +1086,36 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
     }
+//***********************
+//      looking for 2 alphas
+//***********************
 
+    if(csm->GetMultiplicity()>=3)
+    {
+      vector<int> aloc;
+      for(int i=0;i<csm->GetMultiplicity();i++)
+      {
+	if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_alpha_thickness_%i_v1",csm->GetHit(i)->GetDetectorNumber()))))
+	{
+	  if(cut->IsInside(csm->GetHit(i)->GetEnergyMeV(),csm->GetHit(i)->GetDdE_dx()) && csm->GetHit(i)->GetEEnergy() > 10)
+	  {
+	    aloc.push_back(i);
+	  }
+	}
+      }
+      if(aloc.size()>2)
+	cerr<<"I didn't think this would happen!  more than 2 alphas detected!"<<endl;
+      else if(aloc.size()==2)
+      {
+	TH1D* etotalphapointer = (TH1D*)outlist->FindObject(Form("ETot_%i_2alpha",csm->GetHit(aloc.at(0))->GetDetectorNumber()));
+	double etot=0;
+	for(int ee = 0; ee<csm->GetMultiplicity(); ee++)
+	{
+	  etot += csm->GetHit(ee)->GetEnergyMeV();
+	}
+	etotalphapointer->Fill(etot);
+      }
+    }
 //***********************
 //      Fancy dE v E
 //***********************
