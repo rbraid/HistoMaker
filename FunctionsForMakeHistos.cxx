@@ -115,6 +115,12 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
 
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_corr12",id),Form("Particle ID for Detector %i, detected with an identified 12Be",id),3200,0,160,800,0,2000));//
+    temp2->SetOption("colz");
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",id));
+    temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
+
     outlist->Add(new TH2D(Form("pid_%i_summed_thickness_2hit",id),Form("Particle ID for Detector %i 2 hits in same detector",id),3200,0,160,800,0,2000));//
     temp2->SetOption("colz");
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit",id));

@@ -983,13 +983,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
 	{
-	  TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
-	  double TotalE = 0;
-	  for(int asdf=0;asdf<csm->GetMultiplicity();asdf++)
+	  if(csm->GetMultiplicity()>=3)
 	  {
-	    TotalE+=csm->GetHit(asdf)->GetEnergyMeV();
+	    TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
+	    double TotalE = 0;
+	    for(int asdf=0;asdf<csm->GetMultiplicity();asdf++)
+	    {
+	      TotalE+=csm->GetHit(asdf)->GetEnergyMeV();
+	    }
+	    totalenergypointer->Fill(TotalE);
 	  }
-	  totalenergypointer->Fill(TotalE);
 	}
       }
 	  
@@ -1165,6 +1168,25 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		  TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit_samepix",hita->GetDetectorNumber()));
 		  hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
 		  hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+		}
+	      }
+	    }
+	  }
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",hita->GetDetectorNumber()))))
+	  {
+	    if(hita->GetEnergyMeV(),hita->GetDdE_dx() && hita->GetEEnergy() > 10)
+	    {
+	      //we have a confirmed 12Be
+	      for(int bb=0;bb<csm->GetMultiplicity();bb++)
+	      {
+		TCSMHit *hitb = csm->GetHit(bb);
+		if(hitb==hita)
+		  continue;
+		
+		if(hitb->GetEEnergy()>0.)
+		{
+		  TH2D *corrpointer = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",hita->GetDetectorNumber()));
+		  corrpointer->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
 		}
 	      }
 	    }
