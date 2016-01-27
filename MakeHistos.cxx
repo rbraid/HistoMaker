@@ -1069,6 +1069,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
 	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
 	if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
+
+	temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+	temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
       }
 
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));

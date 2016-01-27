@@ -190,16 +190,18 @@ void SetupHistos(TList *outlist)
       outlist->Add(new TH2D(Form("EvTheta_%iTotal_mult%i",id,mid),Form("E vs Theta Detector %i with Multiplicity %i",id,mid),100,0,100,700,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",id,mid));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+      outlist->Add(new TH2D(Form("pid_%i_summed_thickness_mult%i",id,mid),Form("Particle ID for Detector %i, with Multiplicity %i",id,mid),3200,0,160,800,0,2000));//
+      temp2->SetOption("colz");
+      temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_mult%i",id,mid));
+      temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+      temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     }
   }
   
   for(int det=1;det<=4;det++)
-  {
-    outlist->Add(new TH1D(Form("fred1_%i",det),Form("Total energy of multiplicity 3, detector %i",det),100,0,100));
-    outlist->Add(new TH1D(Form("fred2_%i",det),Form("Total energy of multiplicity 3, detector %i, 2 hits in side",det),100,0,100));
-    outlist->Add(new TH1D(Form("fred3_%i",det),Form("Total energy of multiplicity 3, detector %i, 2 hits in side and 12Be identified",det),100,0,100));
-    
+  {    
     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
     temp2->SetContour(666);
@@ -303,6 +305,10 @@ void SetupHistos(TList *outlist)
   temp2->SetOption("colz");
   temp2->GetXaxis()->SetTitle("Z");
   temp2->GetYaxis()->SetTitle("X");
+
+  outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
+  outlist->Add(new TH1D("fred2_1","Total energy of multiplicity 3, 2 hits in side",100,0,100));
+  outlist->Add(new TH1D("fred3_1","Total energy of multiplicity 3, 2 hits in side and 12Be identified",100,0,100));
   
   outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map of Silicon Detectors",120,0,120,360,-180,180));
   temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
