@@ -292,7 +292,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		fredpointer = (TH1D*)outlist->FindObject(Form("fred2_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
 		fredpointer->Fill(TotalEMeV);
 
-		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
 		{
 		  if(cut->IsInside(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
 		  {
@@ -922,7 +922,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
@@ -943,7 +943,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
+	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
+	      temp1->Fill(Doppler(tigresshit,hit));
+	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
 	      temp1->Fill(Doppler(tigresshit,hit));
 	      
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
@@ -972,10 +977,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       TString totcutname;
       if(int(BEAM_ENERGY) == 55)
-	totcutname = Form("Be12_all_high_%i_v1",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
       else if(int(BEAM_ENERGY) == 30)
       {
-	totcutname = Form("Be12_all_high_%i_v1",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
 	cerr<<DRED<<"Error: total 12Be cut not implemeted yet, reverting to high energy cut"<<RESET_COLOR<<endl;
       }
       
@@ -1090,6 +1095,46 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
     }
 //***********************
+//    Gamma Plots
+//***********************
+    for(int I=0;I<csm->GetMultiplicity();I++)
+    {
+      TCSMHit *hit = csm->GetHit(I);
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_allbe_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      TH1D* gpointer = (TH1D*)outlist->FindObject("GammaBe");
+	      gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
+	}
+      }
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_allli_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      TH1D* gpointer = (TH1D*)outlist->FindObject("GammaLi");
+	      gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
+	}
+      }
+    }
+//***********************
 //      looking for 2 alphas
 //***********************
 
@@ -1172,7 +1217,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      }
 	    }
 	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("Be12_all_high_%i_v1",hita->GetDetectorNumber()))))
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hita->GetDetectorNumber()))))
 	  {
 	    if(hita->GetEnergyMeV(),hita->GetDdE_dx() && hita->GetEEnergy() > 10)
 	    {
