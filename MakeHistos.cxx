@@ -929,6 +929,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
+	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",hit->GetDetectorNumber()));
+	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
@@ -948,7 +951,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(Doppler(tigresshit,hit));
-	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
+	      temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp");
 	      temp1->Fill(Doppler(tigresshit,hit));
 	      
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
