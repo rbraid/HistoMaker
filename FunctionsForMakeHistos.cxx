@@ -157,6 +157,16 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut",id),Form("EvTheta %i, cut on gammas",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCutNoID",id),Form("EvTheta %i, cut on gammas",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCutNoID",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_correlated",id));
@@ -363,7 +373,9 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("GammaLi","Gamma spec for broad Li cut",6000,0,30));
   outlist->Add(new TH1D("GammaLi7","Gamma spec for 7Li cut",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas","Gamma spec for 12Be cut",6000,0,30));
+  outlist->Add(new TH1D("Be12GammasNoID","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",6000,0,30));
+  outlist->Add(new TH1D("Be12GammasDoppNoID","Gamma spec for 12Be cut doppler corrected",6000,0,30));
   
   
   if(DEBUG)
