@@ -1160,6 +1160,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	}
       }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_alpha_thickness_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+	    
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      TH1D* gpointer = (TH1D*)outlist->FindObject("GammaAlpha");
+	      gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
+	}
+      }
     }
 //***********************
 //looking for non id 12Be

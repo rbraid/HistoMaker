@@ -372,6 +372,7 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("GammaBe","Gamma spec for broad Be cut",6000,0,30));
   outlist->Add(new TH1D("GammaLi","Gamma spec for broad Li cut",6000,0,30));
   outlist->Add(new TH1D("GammaLi7","Gamma spec for 7Li cut",6000,0,30));
+  outlist->Add(new TH1D("GammaAlpha","Gamma spec for Alpha cut",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12GammasNoID","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",6000,0,30));
