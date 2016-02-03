@@ -347,7 +347,7 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1I("counts","counts",2,1,2));
   
-  outlist->Add(new TH1D("GammaSum","Gamma Spectrum",2000,0,200));
+  outlist->Add(new TH1D("GammaSum","Gamma Spectrum",6000,0,30));
   temp1 = (TH1D*)outlist->FindObject("GammaSum");
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
   temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
