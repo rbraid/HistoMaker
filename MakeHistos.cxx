@@ -1181,7 +1181,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //looking for non id 12Be
 //***********************
 
-    if(csm->GetMultiplicity()>=2)
+    //if(csm->GetMultiplicity()>=2)
     {
       for(int i=0;i<csm->GetMultiplicity();i++)
       {
