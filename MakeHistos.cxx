@@ -960,7 +960,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
 	      {
 		TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
-		delta->Fill(hit->GetTime()-tigresshit->GetTime());
+		delta->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
 
 		cout<<endl;
 		cout<<"TIGRESS TIME: "<<tigresshit->GetTime()<<endl;
