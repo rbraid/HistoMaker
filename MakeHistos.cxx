@@ -1199,7 +1199,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID");
 	      gpointer->Fill(Doppler(tigresshit,hit));
 
-	      if(tigresshit->GetCore()->GetEnergy()/1000. > 2.12 && tigresshit->GetCore()->GetEnergy()/1000. < 2.13)
+	      if(tigresshit->GetCore()->GetEnergy()/1000. < 2.12 && tigresshit->GetCore()->GetEnergy()/1000. > 2.13)
 	      {
 		gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID_suppressed");
 		gpointer->Fill(Doppler(tigresshit,hit));
