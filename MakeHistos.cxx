@@ -292,7 +292,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		fredpointer = (TH1D*)outlist->FindObject(Form("fred2_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
 		fredpointer->Fill(TotalEMeV);
 
-		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v11",csm->GetHit(corrloc)->GetDetectorNumber()))))
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
 		{
 		  if(cut->IsInside(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
 		  {
@@ -973,10 +973,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       TString totcutname;
       if(int(BEAM_ENERGY) == 55)
-	totcutname = Form("pid_high_summed_be12_aggressive_%i_v11",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
       else if(int(BEAM_ENERGY) == 30)
       {
-	totcutname = Form("pid_high_summed_be12_aggressive_%i_v11",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
 	cerr<<DRED<<"Error: total 12Be cut not implemeted yet, reverting to high energy cut"<<RESET_COLOR<<endl;
       }
       
@@ -1295,7 +1295,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		if(hitb==hita)
 		  continue;
 		
-		if(hitb->GetEEnergy()>0.)
+		if(hitb->GetEEnergy()>10. && hitb->GetDEnergy() > 10. && hita->GetDetectorNumber() != hitb->GetDetectorNumber())
 		{
 		  TH2D *corrpointer = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",hita->GetDetectorNumber()));
 		  corrpointer->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
