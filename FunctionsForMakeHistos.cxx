@@ -382,7 +382,9 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("Be12GammasNoID","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDoppNoID","Gamma spec for 12Be cut doppler corrected",6000,0,30));
-
+  outlist->Add(new TH1D("Be12GammasDoppNoID_suppressed","Gamma spec for 12Be cut doppler corrected, with 2.1 MeV stop line suppressed",6000,0,30));
+  
+  
   outlist->Add(new TH1I("TimeDiffAll","Difference between charged particle and gamma",20000,-10000,10000));
   outlist->Add(new TH1I("GvGTimeDiff","Difference in time between gammas",20000,-10000,10000));
   
