@@ -1286,7 +1286,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hita->GetDetectorNumber()))))
 	  {
-	    if(hita->GetEnergyMeV(),hita->GetDdE_dx() && hita->GetEEnergy() > 10)
+	    if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
 	    {
 	      //we have a confirmed 12Be
 	      for(int bb=0;bb<csm->GetMultiplicity();bb++)
