@@ -961,21 +961,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      {
 		TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
 		delta->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-
-		cout<<endl;
-		cout<<"TIGRESS TIME: "<<tigresshit->GetTime()<<endl;
-		cout<<"TIGRESS CFD:  "<<tigresshit->GetTimeCFD()<<endl;
-
-		cout<<"GetDHorizontalTime: "<<hit->GetDHorizontalTime()<<endl;
-		cout<<"GetDVerticalTime: "<<hit->GetDVerticalTime()<<endl;
-		cout<<"GetDHorizontalCFD: "<<hit->GetDHorizontalCFD()<<endl;
-		cout<<"GetDVerticalCFD: "<<hit->GetDVerticalCFD()<<endl;
-
-		cout<<"GetEHorizontalTime: "<<hit->GetEHorizontalTime()<<endl;
-		cout<<"GetEVerticalTime: "<<hit->GetEVerticalTime()<<endl;
-		cout<<"GetEHorizontalCFD: "<<hit->GetEHorizontalCFD()<<endl;
-		cout<<"GetEVerticalCFD: "<<hit->GetEVerticalCFD()<<endl;
-		cout<<endl<<endl;
 	      }
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2150)
 	      {
@@ -1299,7 +1284,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      }
 	    }
 	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v11",hita->GetDetectorNumber()))))
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hita->GetDetectorNumber()))))
 	  {
 	    if(hita->GetEnergyMeV(),hita->GetDdE_dx() && hita->GetEEnergy() > 10)
 	    {
