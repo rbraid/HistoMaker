@@ -1327,6 +1327,29 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       temp = (TH1D*)outlist->FindObject("GammaSum");
       temp->Fill(hit->GetCore()->GetEnergy()/1000.);
     }
+
+    if(tigress->GetAddBackMultiplicity()>1)
+    {
+      for(int y=1; y<tigress->GetAddBackMultiplicity();y++)
+      {
+	TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	TH1I* difp = (TH1I*)outlist->FindObject("GvGTimeDiff");
+	difp->Fill(tigress->GetAddBackHit(0)->GetTimeCFD()-tigresshit->GetTimeCFD());
+      }
+    }
+
+    for(int y=0; y<csm->GetMultiplicity();y++)
+    {
+      TCSMHit* hit = csm->GetHit(y);
+      for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+      {
+	TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	TH1I* difp = (TH1I*)outlist->FindObject("TimeDiffAll");
+	difp->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+      }
+    }
 //***********************
 //         End
 //***********************
