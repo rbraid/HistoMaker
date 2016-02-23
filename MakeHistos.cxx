@@ -1342,6 +1342,28 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	TH2D* point = (TH2D*)outlist->FindObject("GEvT");
 	point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
       }
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+	    
+	    TH1I* difp12 = (TH1I*)outlist->FindObject("TimeDiff12Be");
+	    difp12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+	    TH2D* point12 = (TH2D*)outlist->FindObject("GEvT_12Be");
+	    point12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
+
+	    TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
+	    for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
+	    {
+	      matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
+	    }
+	  }
+	}
+      }
     }
 
     for(int y=0; y<tigress->GetAddBackMultiplicity();y++)

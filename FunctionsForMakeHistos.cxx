@@ -388,13 +388,25 @@ void SetupHistos(TList *outlist)
   temp2 = (TH2D*)outlist->FindObject("GEvT");
   temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
   temp2->GetYaxis()->SetTitle("Energy in MeV");
+
+  outlist->Add(new TH2D("GEvT_12Be","Gamma energy vs time difference from 12Be",4100,-4000,100,5000,0,50));
+  temp2 = (TH2D*)outlist->FindObject("GEvT_12Be");
+  temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
+  temp2->GetYaxis()->SetTitle("Energy in MeV");
   
   outlist->Add(new TH2D("GammaMatrix","Gamma energy vs gamma energy",1200,0,30,1200,0,30));
   temp2 = (TH2D*)outlist->FindObject("GammaMatrix");
   temp2->GetXaxis()->SetTitle("Energy in MeV");
   temp2->GetYaxis()->SetTitle("Energy in MeV");
+
+  outlist->Add(new TH2D("GammaMatrix_12Be","Gamma energy vs gamma energy, cut on 12Be",1200,0,30,1200,0,30));
+  temp2 = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
+  temp2->GetXaxis()->SetTitle("Energy in MeV");
+  temp2->GetYaxis()->SetTitle("Energy in MeV");
   
   outlist->Add(new TH1I("TimeDiffAll","Difference between charged particle and gamma",20000,-10000,10000));
+  outlist->Add(new TH1I("TimeDiff12Be","Difference between 12Be and gamma",20000,-10000,10000));
+  
   outlist->Add(new TH1I("GvGTimeDiff","Difference in time between gammas",20000,-10000,10000));
   
   
