@@ -1339,6 +1339,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	TH1I* difp = (TH1I*)outlist->FindObject("TimeDiffAll");
 	difp->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+	TH2D* point = (TH2D*)outlist->FindObject("GEvT");
+	point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
+      }
+    }
+
+    for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+    {
+      TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+      TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix");
+      for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
+      {
+	matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
       }
     }
 //***********************
