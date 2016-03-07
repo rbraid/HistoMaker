@@ -113,17 +113,21 @@ void SetupHistos(TList *outlist)
     temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("pid_%i_summed_thickness",id),Form("Particle ID for Detector %i",id),3200,0,160,800,0,2000));//
-        temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
-
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",id));
     temp2->GetYaxis()->SetTitleOffset(1.5);
     temp2->SetContour(666);
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
 
-    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_corr12",id),Form("Particle ID for Detector %i, detected with an identified 12Be",id),3200,0,160,800,0,2000));//
-        temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",id));
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_gcut",id),Form("Particle ID for Detector %i, cut on 2.1 MeV gamma",id),3200,0,160,800,0,2000));//
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",id));
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
 
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_corr12",id),Form("Particle ID for Detector %i, detected with an identified 12Be",id),3200,0,160,800,0,2000));//
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",id));
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");

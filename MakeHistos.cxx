@@ -1375,6 +1375,25 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
       }
     }
+
+    for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+    {
+      TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+      
+      if(tigresshit->GetCore()->GetEnergy()>2120 && tigresshit->GetCore()->GetEnergy()<2130)
+      {
+	for(int q=0; q<csm->GetMultiplicity();q++)
+	{
+	  TCSMHit* hit = csm->GetHit(q);
+
+	  if(hit->GetDetectorNumber()<3)
+	  {
+	    TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",hit->GetDetectorNumber()));
+	    tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+	  }
+	}
+      }
+    }
 //***********************
 //         End
 //***********************
