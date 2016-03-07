@@ -1391,6 +1391,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",hit->GetDetectorNumber()));
 	    tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 	  }
+	  TH1D* gcutp = (TH1D*)outlist->FindObject(Form("gCutE_%i",hit->GetDetectorNumber()));
+	  gcutp->Fill(hit->GetEnergyMeV());
 	}
       }
     }
