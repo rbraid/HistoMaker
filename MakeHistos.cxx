@@ -292,7 +292,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		fredpointer = (TH1D*)outlist->FindObject(Form("fred2_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
 		fredpointer->Fill(TotalEMeV);
 
-		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_%i_v1",csm->GetHit(corrloc)->GetDetectorNumber()))))
 		{
 		  if(cut->IsInside(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
 		  {
@@ -922,7 +922,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_%i_v1",hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
@@ -951,6 +951,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+
+	      if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -140)
+	      {
+		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt");
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      }
+
+	      else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -500)
+	      {
+		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_delayed");
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      }
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(Doppler(tigresshit,hit));
@@ -973,10 +985,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       }
       TString totcutname;
       if(int(BEAM_ENERGY) == 55)
-	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_thick_12Be_%i_v1",hit->GetDetectorNumber());
       else if(int(BEAM_ENERGY) == 30)
       {
-	totcutname = Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber());
+	totcutname = Form("pid_high_thick_12Be_%i_v1",hit->GetDetectorNumber());
 	cerr<<DRED<<"Error: total 12Be cut not implemeted yet, reverting to high energy cut"<<RESET_COLOR<<endl;
       }
       
@@ -1284,7 +1296,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      }
 	    }
 	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hita->GetDetectorNumber()))))
+	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_%i_v1",hita->GetDetectorNumber()))))
 	  {
 	    if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
 	    {
@@ -1343,7 +1355,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
       }
 
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_summed_be12_aggressive_%i_v1",hit->GetDetectorNumber()))))
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_%i_v1",hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
