@@ -1408,6 +1408,35 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
     }
+
+//***********************
+//  Multiplicity plots
+//***********************
+if(csm->GetMultiplicity()!=0 || tigress->GetAddBackMultiplicity()!=0)
+{
+  bool be12=0;
+  for(int aa=0;aa<csm->GetMultiplicity();aa++)
+  {
+    TCSMHit *hita = csm->GetHit(aa);
+    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_%i_v1",hita->GetDetectorNumber()))))
+    {
+      if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
+      {
+	be12=1;
+      }
+    }
+  }
+
+  TH2I* cvgp = (TH2I*)outlist->FindObject("CvGmult");
+  cvgp->Fill(csm->GetMultiplicity(),tigress->GetAddBackMultiplicity());
+
+  if(be12)
+  {
+    TH2I* cvgpbe = (TH2I*)outlist->FindObject("CvGmult_12be");
+    cvgpbe->Fill(csm->GetMultiplicity(),tigress->GetAddBackMultiplicity());
+  }
+}
+      
 //***********************
 //         End
 //***********************

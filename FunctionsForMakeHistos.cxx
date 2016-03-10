@@ -419,7 +419,9 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1I("TimeDiff12Be","Difference between 12Be and gamma",20000,-10000,10000));
   
   outlist->Add(new TH1I("GvGTimeDiff","Difference in time between gammas",20000,-10000,10000));
-  
+
+  outlist->Add(new TH2I("CvGmult","Charged particle multiplicity vs Gamma multiplicity",10,0,10,10,0,10));
+  outlist->Add(new TH2I("CvGmult_12be","Charged particle multiplicity vs Gamma multiplicity, cut on 12Be",10,0,10,10,0,10));
   
   if(DEBUG)
   {
