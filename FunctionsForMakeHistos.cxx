@@ -389,6 +389,8 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("GammaAlpha","Gamma spec for Alpha cut",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas_prompt","Gamma spec for 12Be cut, prompt only",6000,0,30));
+  outlist->Add(new TH1D("Be12Gammas_prompt_doppler","Gamma spec for 12Be cut, prompt only, with doppler correction",6000,0,30));
+  outlist->Add(new TH1D("Be12Gammas_medium","Gamma spec for 12Be cut, medium cut",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas_delayed","Gamma spec for 12Be cut, delayed only",6000,0,30));
   outlist->Add(new TH1D("Be12GammasNoID","Gamma spec for 12Be cut",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",6000,0,30));
@@ -420,8 +422,8 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH1I("GvGTimeDiff","Difference in time between gammas",20000,-10000,10000));
 
-  outlist->Add(new TH2I("CvGmult","Charged particle multiplicity vs Gamma multiplicity",10,0,10,10,0,10));
-  outlist->Add(new TH2I("CvGmult_12be","Charged particle multiplicity vs Gamma multiplicity, cut on 12Be",10,0,10,10,0,10));
+  outlist->Add(new TH2I("CvGmult","Charged particle multiplicity vs Gamma multiplicity",20,0,20,20,0,20));
+  outlist->Add(new TH2I("CvGmult_12be","Charged particle multiplicity vs Gamma multiplicity, cut on 12Be",20,0,20,20,0,20));
   
   if(DEBUG)
   {

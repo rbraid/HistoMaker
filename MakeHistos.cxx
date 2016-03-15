@@ -956,6 +956,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      {
 		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt");
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt_doppler");
+		temp1->Fill(Doppler(tigresshit,hit));
+	      }
+
+	      else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -150 && hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -400 )
+	      {
+		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_medium");
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      }
 
 	      else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -500)
