@@ -38,6 +38,8 @@ void SetupHistos(TList *outlist)
     }
 
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
+
+    outlist->Add(new TH1I(Form("NBe_%i",id),Form("Number of Be of each isotope",id),6,8,14));
     
     outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
     outlist->Add(new TH1I(Form("Be12Mult_%i",id),Form("Multiplicity of an identified 12Be in detector %i",id),20,0,20));
@@ -107,7 +109,7 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("pid_%i_summed",id),Form("Particle ID, detector %i, summed",id),400,0,40,250,0,25));//
+    outlist->Add(new TH2D(Form("pid_%i_summed",id),Form("Particle ID, detector %i, summed",id),700,0,70,500,0,50));//
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",id));
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
