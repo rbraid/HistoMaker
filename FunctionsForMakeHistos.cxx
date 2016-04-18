@@ -11,7 +11,7 @@ void SetupHistos(TList *outlist)
   for(int id = 1; id<=2;id++)
   {
     
-    for(int strip = 0; strip<16; strip++)
+    /*for(int strip = 0; strip<16; strip++)
     {
       outlist->Add(new TH2D(Form("stripPID_det%i_strip%02i",id,strip),Form("Detector %i PID strip %i",id,strip),3200,0,40,800,0,800));
       temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",id,strip));
@@ -22,9 +22,9 @@ void SetupHistos(TList *outlist)
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",id,strip));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    }
+    }*/
     
-    for(int theta=10;theta<55;theta++)
+    /*for(int theta=10;theta<55;theta++)
     {
       outlist->Add(new TH1D(Form("BeEx%i_theta%02i",id,theta),Form("Be-12 Excitation Energy Theta %i",id,theta),500,-10,25));
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i",id,theta));
@@ -35,7 +35,7 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_theta%02i_corr",id,theta));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
-    }
+    }*/
 
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
 
@@ -44,10 +44,10 @@ void SetupHistos(TList *outlist)
     outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
     outlist->Add(new TH1I(Form("Be12Mult_%i",id),Form("Multiplicity of an identified 12Be in detector %i",id),20,0,20));
     
-    outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
-    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
+//     outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
+//     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
+//     temp1->GetXaxis()->SetTitle("Energy in MeV");
+//     temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("Be12_Gamma_%i",id),Form("Gamma spectrum",id),6000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",id));
@@ -79,10 +79,10 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),Form("Gamma spectrum cut on Ex Spectrum, doppler corrected",id),3000,0,30));
-    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
+//     outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),Form("Gamma spectrum cut on Ex Spectrum, doppler corrected",id),3000,0,30));
+//     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
+//     temp1->GetXaxis()->SetTitle("Energy in MeV");
+//     temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
@@ -104,10 +104,10 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
-    outlist->Add(new TH2D(Form("pid_%i_fvb",id),Form("Particle ID, detector %i, cut on 1:1",id),700,0,70,700,0,70));//
-    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",id));
-    temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
+//     outlist->Add(new TH2D(Form("pid_%i_fvb",id),Form("Particle ID, detector %i, cut on 1:1",id),700,0,70,700,0,70));//
+//     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_fvb",id));
+//     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
+//     temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("pid_%i_summed",id),Form("Particle ID, detector %i, summed",id),700,0,70,500,0,50));//
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed",id));
@@ -153,20 +153,20 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE8",id),Form("EvTheta %i of the reconstructed 8Be",id),400,0,100,1400,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+//     outlist->Add(new TH2D(Form("EvTheta_%i_BE8",id),Form("EvTheta %i of the reconstructed 8Be",id),400,0,100,1400,0,70));
+//     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",id));
+//     temp2->GetXaxis()->SetTitle("Theta in Degrees");
+//     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10",id),Form("EvTheta %i of the identified 10Be",id),400,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+//     outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,700,0,70));
+//     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
+//     temp2->GetXaxis()->SetTitle("Theta in Degrees");
+//     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
     outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut",id),Form("EvTheta %i, cut on gammas",id),100,0,100,700,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",id));
@@ -239,17 +239,17 @@ void SetupHistos(TList *outlist)
   
   for(int det=1;det<=4;det++)
   {    
-    outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
-    temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
-    temp2->SetContour(666);
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
+//     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
+//     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
+//     temp2->SetContour(666);
+//     temp2->SetOption("colz");
+//     temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
+//     temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
     
-    outlist->Add(new TH1D(Form("AlphaEx%i",det),Form("AlphaEx Excitation Energy",det),350,-10,25));
-    temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",det));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
+//     outlist->Add(new TH1D(Form("AlphaEx%i",det),Form("AlphaEx Excitation Energy",det),350,-10,25));
+//     temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",det));
+//     temp1->GetXaxis()->SetTitle("Energy in MeV");
+//     temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("gCutE_%i",det),Form("Total E, cut on 2.125 MeV gamma ray",det),6500,0,65));
     temp1 = (TH1D*)outlist->FindObject(Form("gCutE_%i",det));
@@ -314,10 +314,10 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,700,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+//     outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,700,0,70));
+//     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));
+//     temp2->GetXaxis()->SetTitle("Theta in Degrees");
+//     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
@@ -348,9 +348,9 @@ void SetupHistos(TList *outlist)
   temp2->GetXaxis()->SetTitle("Z");
   temp2->GetYaxis()->SetTitle("X");
 
-  outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
-  outlist->Add(new TH1D("fred2_1","Total energy of multiplicity 3, 2 hits in side",100,0,100));
-  outlist->Add(new TH1D("fred3_1","Total energy of multiplicity 3, 2 hits in side and 12Be identified",100,0,100));
+//   outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
+//   outlist->Add(new TH1D("fred2_1","Total energy of multiplicity 3, 2 hits in side",100,0,100));
+//   outlist->Add(new TH1D("fred3_1","Total energy of multiplicity 3, 2 hits in side and 12Be identified",100,0,100));
   
   outlist->Add(new TH2D("CSM_HP_Theta_Phi","Angular Coverage Map of Silicon Detectors",120,0,120,360,-180,180));
   temp2 = (TH2D*)outlist->FindObject("CSM_HP_Theta_Phi");
@@ -361,7 +361,7 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1D("deltaGamma","Time difference between 12Be and 2.12 Gamma",2000,-10000,10000));
 
-  outlist->Add(new TH1I("counts","counts",2,1,2));
+  //outlist->Add(new TH1I("counts","counts",2,1,2));
   
   outlist->Add(new TH1D("GammaSum","Gamma Spectrum",60000,0,30));
   temp1 = (TH1D*)outlist->FindObject("GammaSum");
@@ -378,7 +378,7 @@ void SetupHistos(TList *outlist)
   temp2->GetXaxis()->SetTitle("Strip Number");
   temp2->GetYaxis()->SetTitle("Charge");
   
-  outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
+  //outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
 
   outlist->Add(new TH1I("MultBlobHigh","Multiplicity of the high energy blob in the dEve",20,0,20));
   outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));

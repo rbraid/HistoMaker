@@ -65,7 +65,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     ((TH1D *)outlist->FindObject("Multiplicity"))->Fill(csm->GetMultiplicity());
 
-    TCSMHit *Be11Hit;
+    /*TCSMHit *Be11Hit;
     TCSMHit *Alpha1Hit;
     TCSMHit *Alpha2Hit;
     TCSMHit *Be12Hit;
@@ -141,7 +141,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
       }
-
+*/
+      int hits[4] = {0};
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+	hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+      }
 
       if(hits[0]==2 && hits[1]==2)
       {
@@ -155,11 +160,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  TotalEMeV += csm->GetHit(eiter)->GetEnergyMeV();
 	}
-
-	TH1D* fredpointer;
-
-	fredpointer = (TH1D*)outlist->FindObject(Form("fred1_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
-	fredpointer->Fill(TotalEMeV);
 	
 	for(int det=0;det<4;det++)
 	{
@@ -306,28 +306,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	      evtpointer->Fill(csm->GetHit(corrloc)->GetThetaDeg(),csm->GetHit(corrloc)->GetEnergyMeV());
 	    }
-
-	    if(corrloc != -1 && loc2 != -1)
-	    {
-	      if(csm->GetHit(loc2)->GetDetectorNumber()>2)
-	      {
-		fredpointer = (TH1D*)outlist->FindObject(Form("fred2_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
-		fredpointer->Fill(TotalEMeV);
-
-		if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,csm->GetHit(corrloc)->GetDetectorNumber()))))
-		{
-		  if(cut->IsInside(csm->GetHit(corrloc)->GetEnergyMeV(),csm->GetHit(corrloc)->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
-		  {
-		    fredpointer = (TH1D*)outlist->FindObject(Form("fred3_%i",1));//csm->GetHit(loc1)->GetDetectorNumber()));
-		    fredpointer->Fill(TotalEMeV);
-		  }
-		}
-	      }
-	    }
 	  }
 	}
       }
 
+      /*
        int AlphaSum = Ahits[0]+Ahits[1]+Ahits[2]+Ahits[3];
        int BeSum = Bhits[0]+Bhits[1]+Bhits[2]+Bhits[3];
 //       if(BeSum >=1)
@@ -822,7 +805,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",Be12Hit->GetDetectorNumber(),Be12Hit->GetDVerticalStrip()));
       if(temp2) temp2->Fill(Be12Hit->GetThetaDeg(),Be12Hit->GetEnergyMeV());
-    }
+    }*/
 
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -960,8 +943,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
-	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
-	  stat->Fill(hit->GetDetectorNumber()+1);
+// 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
+// 	  stat->Fill(hit->GetDetectorNumber()+1);
 
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
@@ -1063,8 +1046,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 
-	  temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
-	  temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+	  //temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
+	  //temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 	
 	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
