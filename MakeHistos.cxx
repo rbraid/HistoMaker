@@ -1487,18 +1487,18 @@ if(int(BEAM_ENERGY) == 55)
   for(int xx = 0;xx<csm->GetMultiplicity();xx++)
   {
     TCSMHit *hit = csm->GetHit(xx);
-    
+
     if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_HighEnergyOnly_%i_v1",hit->GetDetectorNumber()))))
     {
       if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
       {
-	TH2D* EvTPtr = (TH2D*)outlist->FindObject("EvTheta_12Be_%i_high");
+	TH2D* EvTPtr = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",hit->GetDetectorNumber()));
 	EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
 
 	TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_high");
 
 	for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-	{	  
+	{
 	  geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
 	}
       }
@@ -1507,11 +1507,11 @@ if(int(BEAM_ENERGY) == 55)
     {
       if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
       {
-	TH2D* EvTPtr = (TH2D*)outlist->FindObject("EvTheta_12Be_%i_low");
+	TH2D* EvTPtr = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",hit->GetDetectorNumber()));
 	EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
 
 	TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_low");
-	
+
 	for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	{
 	  geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
