@@ -69,22 +69,22 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i",id),Form("EvTheta %i",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i",id),Form("EvTheta %i",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),100,0,100,700,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
