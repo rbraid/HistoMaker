@@ -943,6 +943,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
+	  double excite = GetExciteE_Heavy(hit);
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(excite);
+
 // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 // 	  stat->Fill(hit->GetDetectorNumber()+1);
 
@@ -1471,6 +1475,49 @@ if(csm->GetMultiplicity()!=0 || tigress->GetAddBackMultiplicity()!=0)
   {
     TH2I* cvgpbe = (TH2I*)outlist->FindObject("CvGmult_12be");
     cvgpbe->Fill(csm->GetMultiplicity(),tigress->GetAddBackMultiplicity());
+  }
+}
+
+//***********************
+//    One-off Low PID and High PID plots
+//***********************
+
+if(int(BEAM_ENERGY) == 55)
+{
+  for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+  {
+    TCSMHit *hit = csm->GetHit(xx);
+    
+    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_HighEnergyOnly_%i_v1",hit->GetDetectorNumber()))))
+    {
+      if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+      {
+	TH2D* EvTPtr = (TH2D*)outlist->FindObject("EvTheta_12Be_%i_high");
+	EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
+
+	TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_high");
+
+	for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	{	  
+	  geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
+	}
+      }
+    }
+    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_LowEnergyOnly_%i_v1",hit->GetDetectorNumber()))))
+    {
+      if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+      {
+	TH2D* EvTPtr = (TH2D*)outlist->FindObject("EvTheta_12Be_%i_low");
+	EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
+
+	TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_low");
+	
+	for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	{
+	  geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
+	}
+      }
+    }
   }
 }
       

@@ -74,6 +74,16 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),100,0,100,700,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
     outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),100,0,100,700,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -398,6 +408,10 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDoppNoID","Gamma spec for 12Be cut doppler corrected",6000,0,30));
   outlist->Add(new TH1D("Be12GammasDoppNoID_suppressed","Gamma spec for 12Be cut doppler corrected, with 2.1 MeV stop line suppressed",6000,0,30));
+
+  outlist->Add(new TH1D("Be12Gammas_low","Gamma spec for 12Be cut Low Energy PID only",6000,0,30));
+  outlist->Add(new TH1D("Be12Gammas_high","Gamma spec for 12Be cut High Energy PID only",6000,0,30));
+  
 
   outlist->Add(new TH2D("GEvT","Gamma energy vs time difference from charged particle",4100,-4000,100,5000,0,50));
   temp2 = (TH2D*)outlist->FindObject("GEvT");
