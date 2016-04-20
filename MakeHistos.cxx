@@ -28,7 +28,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   if(int(BEAM_ENERGY) == 55)
   {
     Be12Cut = "pid_high_thick_12Be_%i_v3";
-    Be10Cut = "pid_high_thick_10Be_%i_v2";
+    Be10Cut = "pid_high_thick_10Be_%i_v1";
   }
   else if(int(BEAM_ENERGY) == 30)
   {
@@ -39,7 +39,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     cerr<<"Something is wrong with setting cuts.  Beam energy unrecognized, reverting to high energy"<<endl;
     Be12Cut = "pid_high_thick_12Be_%i_v3";
-    Be10Cut = "pid_high_thick_10Be_%i_v2";
+    Be10Cut = "pid_high_thick_10Be_%i_v1";
   }
 
   

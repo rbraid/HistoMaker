@@ -495,10 +495,10 @@ double GetExciteE_10Heavy(double be10E, double be10T)
   be10E=be10E/1000.;
   const double pi = TMath::Pi();
   
-  const double M1 = MASS_BE10;
-  const double M2 = MASS_BE10;
-  const double M3 = MASS_BE8;
-  const double M4 = MASS_BE12;
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = MASS_BE10;
+  const double M4 = MASS_BE10;
   double mQ = M1+M2-M3-M4;
   
   double V1 = sqrt(2*BEAM_ENERGY/M1);
