@@ -984,11 +984,24 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_delayed");
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      }
+
+	      double doppE = Doppler(tigresshit,hit)
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
-	      temp1->Fill(Doppler(tigresshit,hit));
+	      temp1->Fill(doppE);
 	      temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp");
-	      temp1->Fill(Doppler(tigresshit,hit));
+	      temp1->Fill(doppE);
+
+	      if( (doppE > 2.09 && doppE < 2.14) ||
+		(doppE > 2.70 && doppE < 2.76))
+	      {
+		TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",hit->GetDetectorNumber()));
+		evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+		TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut_dopp",hit->GetDetectorNumber()));
+		tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+	      }
+
 	      
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
 	      {

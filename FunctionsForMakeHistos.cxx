@@ -143,6 +143,11 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
 
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_gcut_dopp",id),Form("Particle ID for Detector %i, cut on 2.1 or 2.7 MeV gamma",id),3200,0,160,800,0,2000));//
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut_dopp",id));
+    temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
+
     outlist->Add(new TH2D(Form("pid_%i_summed_thickness_corr12",id),Form("Particle ID for Detector %i, detected with an identified 12Be",id),3200,0,160,800,0,2000));//
     temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",id));
     temp2->SetOption("colz");
@@ -185,6 +190,11 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut",id),Form("EvTheta %i, cut on gammas",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut_dopp",id),Form("EvTheta %i, cut on doppler corrected 2.1 and 2.7 gammas",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut_dopp",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
