@@ -985,7 +985,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      }
 
-	      double doppE = Doppler(tigresshit,hit)
+	      double doppE = Doppler(tigresshit,hit);
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(doppE);
