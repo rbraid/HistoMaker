@@ -73,7 +73,7 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
+    
     outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -407,7 +407,11 @@ void SetupHistos(TList *outlist)
   temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
   temp2->GetXaxis()->SetTitle("Strip Number");
   temp2->GetYaxis()->SetTitle("Charge");
-  
+
+  outlist->Add(new TH2D("EvTheta_12Be","EvTheta",1000,0,100,1400,0,70));
+  temp2 = (TH2D*)outlist->FindObject("EvTheta_12Be");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   //outlist->Add(new TH1I("StatCheck","Checking Cases",20,0,20));
 
   outlist->Add(new TH1I("MultBlobHigh","Multiplicity of the high energy blob in the dEve",20,0,20));
