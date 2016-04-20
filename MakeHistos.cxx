@@ -24,22 +24,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
   TString Be12Cut;
   TString Be10Cut;
+  TString Be9Cut;
   
   if(int(BEAM_ENERGY) == 55)
   {
     Be12Cut = "pid_high_thick_12Be_%i_v3";
     Be10Cut = "pid_high_thick_10Be_%i_v1";
+    Be9Cut = "pid_high_thick_9Be_%i_v1";
   }
   else if(int(BEAM_ENERGY) == 30)
   {
     Be12Cut = "pid_low_thick_12Be_%i_v2";
     Be10Cut = "pid_low_thick_10Be_%i_v2";
+    Be9Cut = "pid_low_thick_9Be_%i_v1";
   }
   else
   {
     cerr<<"Something is wrong with setting cuts.  Beam energy unrecognized, reverting to high energy"<<endl;
     Be12Cut = "pid_high_thick_12Be_%i_v3";
     Be10Cut = "pid_high_thick_10Be_%i_v1";
+    Be9Cut = "pid_high_thick_9Be_%i_v1";
   }
 
   
@@ -916,6 +920,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
+	  bool Be9 = 0;
+
+	  for(int asdf = 0; asdf<csm->GetMultiplicity(); asdf++)
+	  {
+	    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
+	    {
+	      if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	      {
+		Be9 = 1;
+	      }
+	    }
+	  }
+
+	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_9supp",hit->GetDetectorNumber()));
+	  if(temp1 && !Be9) temp1->Fill(excite);
+
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
 	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -995,7 +1015,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      if( (doppE > 2.09 && doppE < 2.14) ||
 		(doppE > 2.70 && doppE < 2.76))
 	      {
-		TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",hit->GetDetectorNumber()));
+		TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut_dopp",hit->GetDetectorNumber()));
 		evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
 		TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut_dopp",hit->GetDetectorNumber()));
