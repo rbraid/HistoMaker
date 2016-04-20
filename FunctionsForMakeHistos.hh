@@ -37,6 +37,8 @@ double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2);
 void SetupHistos(TList *outlist);
 double GetExciteE_Heavy(double be12E, double be12T);
 double GetExciteE_Heavy(TCSMHit* Hit);
+double GetExciteE_10Heavy(double be12E, double be12T);
+double GetExciteE_10Heavy(TCSMHit* Hit);
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
 double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H);
 

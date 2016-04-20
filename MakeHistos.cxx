@@ -912,6 +912,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be10Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
+	  double excite = GetExciteE_10Heavy(hit);
+	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(excite);
+
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
 	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);

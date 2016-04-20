@@ -98,6 +98,11 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be10Ex%i",id),Form("Be-10 Excitation Energy",id),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("BeEx%i_corr",id),Form("Be-12 Excitation Energy, with straggling correction",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",id));
@@ -480,6 +485,41 @@ double GetExciteE_Heavy(double be12E, double be12T)
 double GetExciteE_Heavy(TCSMHit* Hit)
 {
   return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
+}
+
+double GetExciteE_10Heavy(double be10E, double be10T)
+{
+  //   cout<<"BeamE: "<<BeamE<<endl;
+  //   cout<<"BeE: "<<be12E<<endl;
+  //   cout<<"BeT: "<<be12T<<endl;
+  be10E=be10E/1000.;
+  const double pi = TMath::Pi();
+  
+  const double M1 = MASS_BE10;
+  const double M2 = MASS_BE10;
+  const double M3 = MASS_BE8;
+  const double M4 = MASS_BE12;
+  double mQ = M1+M2-M3-M4;
+  
+  double V1 = sqrt(2*BEAM_ENERGY/M1);
+  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
+  double V4 = sqrt(2*be10E/M4);
+  double kPrimeM4 = COMV / V4;
+  
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
+  double COMEnergyM4 = be10E * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( be10T ) );
+  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
+  double ExcitedState = mQ - QVal;
+  
+  //   cout<<"EX: "<<ExcitedState<<endl<<endl;
+  
+  return(ExcitedState);
+  
+}
+
+double GetExciteE_10Heavy(TCSMHit* Hit)
+{
+  return(GetExciteE_10Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
