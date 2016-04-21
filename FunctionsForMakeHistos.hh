@@ -30,7 +30,7 @@
 
 extern double BEAM_ENERGY;
 
-double Doppler(TTigressHit* thit, TCSMHit* chit);
+double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double* CorrParticle(double E, double Theta, double Phi, double Mass);
 double* CorrParticle(TCSMHit*);
 double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2);

@@ -435,7 +435,9 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1D("Be12Gammas_low","Gamma spec for 12Be cut Low Energy PID only",6000,0,30));
   outlist->Add(new TH1D("Be12Gammas_high","Gamma spec for 12Be cut High Energy PID only",6000,0,30));
-  
+
+  outlist->Add(new TH1D("GammaBe10Brute","Gamma spec for all, assuming 10Be doppler correction",6000,0,30));
+  outlist->Add(new TH1D("GammaBe12Brute","Gamma spec for all, assuming 12Be doppler correction",6000,0,30));
 
   outlist->Add(new TH2D("GEvT","Gamma energy vs time difference from charged particle",4100,-4000,100,5000,0,50));
   temp2 = (TH2D*)outlist->FindObject("GEvT");
@@ -616,10 +618,24 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
   
 }
 
-double Doppler(TTigressHit* thit, TCSMHit* chit)
+double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
 {
   double pi = TMath::Pi();
-  double M4 = MASS_BE12;
+  
+  double M4;
+
+  switch(mass)
+  {
+    case 12:
+      M4 = MASS_BE12;
+      break;
+    case 10:
+      M4 = MASS_BE10;
+      break;
+    default:
+      cerr<<"Doppler correcting for unknown mass, reverting to 12Be.  Note Doppler assumes a Be isotope for now."<<endl;
+      M4 = MASS_BE12;
+  }
   
   double LabEnergyHeavy = chit->GetEnergyMeV();
   

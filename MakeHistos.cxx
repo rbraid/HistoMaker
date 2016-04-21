@@ -945,7 +945,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
-	      temp1->Fill(Doppler(tigresshit,hit));
+	      temp1->Fill(Doppler(tigresshit,hit,10));
 	    }
 	  }
 	}
@@ -993,7 +993,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt");
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 		temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt_doppler");
-		temp1->Fill(Doppler(tigresshit,hit));
+		temp1->Fill(Doppler(tigresshit,hit,12));
 	      }
 
 	      else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -150 && hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -400 )
@@ -1008,7 +1008,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      }
 
-	      double doppE = Doppler(tigresshit,hit);
+	      double doppE = Doppler(tigresshit,hit,12);
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(doppE);
@@ -1243,12 +1243,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      TH1D* gpointer = (TH1D*)outlist->FindObject("Be12GammasNoID");
 	      gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID");
-	      gpointer->Fill(Doppler(tigresshit,hit));
+	      gpointer->Fill(Doppler(tigresshit,hit,12));
 
 	      if(tigresshit->GetCore()->GetEnergy()/1000. < 2.12 || tigresshit->GetCore()->GetEnergy()/1000. > 2.13)
 	      {
 		gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID_suppressed");
-		gpointer->Fill(Doppler(tigresshit,hit));
+		gpointer->Fill(Doppler(tigresshit,hit,12));
 	      }
 	    }
 	    if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2150)
@@ -1489,6 +1489,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	}
       }
     }
+//***********************
+//  Multiplicity plots
+//***********************
+
+for(int i=0;i<csm->GetMultiplicity();i++)
+{
+  TCSMHit *csmhit = csm->GetHit(i);
+  for(int j=0;j<tigress->GetAddBackMultiplicity();j++)
+  {
+    TTigressHit *tigresshit = tigress->GetAddBackHit(j);
+    
+    if(tigresshit->GetCore()->GetEnergy()>10)
+    {
+      TH1D* temp1;
+      temp1 = (TH1D*)outlist->FindObject("GammaBe10Brute");
+      temp1->Fill(Doppler(tigresshit,csmhit,10));
+      temp1 = (TH1D*)outlist->FindObject("GammaBe12Brute");
+      temp1->Fill(Doppler(tigresshit,csmhit,12));
+    }
+  }
+}
 
 //***********************
 //  Multiplicity plots
