@@ -920,21 +920,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
-	  bool Be9 = 0;
-
-	  for(int asdf = 0; asdf<csm->GetMultiplicity(); asdf++)
-	  {
-	    if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
-	    {
-	      if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-	      {
-		Be9 = 1;
-	      }
-	    }
-	  }
-
-	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_9supp",hit->GetDetectorNumber()));
-	  if(temp1 && !Be9) temp1->Fill(excite);
+	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(GetExciteE_10Heavy_Corrected(hit));
 
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
@@ -973,6 +960,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  double excite = GetExciteE_Heavy(hit);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
+
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit));
 
 // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 // 	  stat->Fill(hit->GetDetectorNumber()+1);

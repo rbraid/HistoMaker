@@ -103,9 +103,9 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH1D(Form("Be10Ex%i_9supp",id),Form("Be-10 Excitation Energy, suppressed if 9Be also",id),350,-10,25));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_9supp",id));
+    
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr",id),Form("Be-10 Excitation Energy, with straggling correction",id),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
@@ -508,6 +508,11 @@ double GetExciteE_Heavy(TCSMHit* Hit)
   return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
 }
 
+double GetExciteE_Heavy_Corrected(TCSMHit* Hit)
+{
+  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("12be"),Hit->GetDPosition().Theta()));
+}
+
 double GetExciteE_10Heavy(double be10E, double be10T)
 {
   //   cout<<"BeamE: "<<BeamE<<endl;
@@ -541,6 +546,11 @@ double GetExciteE_10Heavy(double be10E, double be10T)
 double GetExciteE_10Heavy(TCSMHit* Hit)
 {
   return(GetExciteE_10Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
+}
+
+double GetExciteE_10Heavy_Corrected(TCSMHit* Hit)
+{
+  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("10be"),Hit->GetDPosition().Theta()));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
