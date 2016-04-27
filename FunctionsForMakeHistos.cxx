@@ -73,6 +73,11 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_corrected",id),Form("EvTheta %i, 12Be, with straggling correction",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_corrected",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
@@ -184,6 +189,11 @@ void SetupHistos(TList *outlist)
 //     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10",id),Form("EvTheta %i of the identified 10Be",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_corrected",id),Form("EvTheta %i of the identified 10Be, with straggling correction",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -510,7 +520,7 @@ double GetExciteE_Heavy(TCSMHit* Hit)
 
 double GetExciteE_Heavy_Corrected(TCSMHit* Hit)
 {
-  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("12be"),Hit->GetDPosition().Theta()));
+  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("12be")*1000.,Hit->GetDPosition().Theta()));
 }
 
 double GetExciteE_10Heavy(double be10E, double be10T)
@@ -550,7 +560,7 @@ double GetExciteE_10Heavy(TCSMHit* Hit)
 
 double GetExciteE_10Heavy_Corrected(TCSMHit* Hit)
 {
-  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("10be"),Hit->GetDPosition().Theta()));
+  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("10be")*1000.,Hit->GetDPosition().Theta()));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
