@@ -560,7 +560,7 @@ double GetExciteE_10Heavy(TCSMHit* Hit)
 
 double GetExciteE_10Heavy_Corrected(TCSMHit* Hit)
 {
-  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("10be")*1000.,Hit->GetDPosition().Theta()));
+  return(GetExciteE_10Heavy(Hit->GetCorrectedEnergyMeV("10be")*1000.,Hit->GetDPosition().Theta()));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
