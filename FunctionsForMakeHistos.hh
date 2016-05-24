@@ -32,7 +32,7 @@ extern double BEAM_ENERGY;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double* CorrParticle(double E, double Theta, double Phi, double Mass);
-double* CorrParticle(TCSMHit*);
+double* CorrParticle(TCSMHit*, int Z = 0);
 double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2);
 void SetupHistos(TList *outlist);
 double GetExciteE_Heavy(double be12E, double be12T);
@@ -43,6 +43,6 @@ double GetExciteE_10Heavy(TCSMHit* Hit);
 double GetExciteE_10Heavy_Corrected(TCSMHit* Hit);
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
 double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H);
-
+bool AlmostEqual(double a, double b, double threshold = .2);
 
 #endif

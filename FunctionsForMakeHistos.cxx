@@ -7,6 +7,7 @@ void SetupHistos(TList *outlist)
   TH2D *temp2 = 0;
   TH2I *temp2INT = 0;
   TH3D *temp3 = 0;
+  TH3I *temp3INT = 0;
   
   for(int id = 1; id<=2;id++)
   {
@@ -94,10 +95,10 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-//     outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),Form("Gamma spectrum cut on Ex Spectrum, doppler corrected",id),3000,0,30));
-//     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
-//     temp1->GetXaxis()->SetTitle("Energy in MeV");
-//     temp1->GetYaxis()->SetTitle("Counts");
+    outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),Form("Gamma spectrum cut on Ex Spectrum, doppler corrected",id),3000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("BeEx%i",id),Form("Be-12 Excitation Energy",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",id));
@@ -110,7 +111,12 @@ void SetupHistos(TList *outlist)
     temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("Be10Ex%i_corr",id),Form("Be-10 Excitation Energy, with straggling correction",id),350,-10,25));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr_supp",id),Form("Be-10 Excitation Energy, with straggling correction kinematically suppressed",id),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
@@ -192,7 +198,7 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
+    
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10_corrected",id),Form("EvTheta %i of the identified 10Be, with straggling correction",id),1000,0,100,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -278,7 +284,26 @@ void SetupHistos(TList *outlist)
   }
   
   for(int det=1;det<=4;det++)
-  {    
+  {
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr_opp",det),Form("Oppostie Be-10 Excitation Energy, with straggling correction",det),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",det));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp_math",det),Form("EvTheta %i of the mathematical opposite 10Be",det),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",det));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp",det),Form("EvTheta %i of the opposite 10Be",det),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",det));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp",det),Form("Gamma spectrum for opposite particle",det),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",det));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
 //     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
 //     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
 //     temp2->SetContour(666);
@@ -428,6 +453,12 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));
 
   outlist->Add(new TH1I("AlphaMult","Number of identified alphas in an event",5,0,5));
+
+  outlist->Add(new TH3I("AlmostEqual_Diagnostic","Checking what conditions are most strict",2,0,1,2,0,1,2,0,1));
+  temp3INT = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
+  temp3INT->GetXaxis()->SetTitle("EnergyBool");
+  temp3INT->GetYaxis()->SetTitle("ThetaBool");
+  temp3INT->GetZaxis()->SetTitle("PhiBool");
 
   outlist->Add(new TH1D("GammaBe","Gamma spec for broad Be cut",6000,0,30));
   outlist->Add(new TH1D("GammaLi","Gamma spec for broad Li cut",6000,0,30));
@@ -698,10 +729,22 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {
   bool debug = 0;
   const double pi = TMath::Pi();
-  const double QVal = 1.50619;//from http://www.nndc.bnl.gov/qcalc/
+  double QVal = 0.;
+
+  if(int(Mass) == int(MASS_BE12))
+    QVal = 1.50619;//from http://www.nndc.bnl.gov/qcalc/;
+  else if(int(Mass) == int(MASS_BE8))
+    QVal = 1.50619;
+  else if(int(Mass) == int(MASS_BE10))
+    QVal = 6.310645;
+  else
+  {
+    cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
+    QVal = 0;
+  }
   
   if(debug)
-    cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<endl;
+    cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<" or "<<MASS_BE10<<endl;
   
   Energy = Energy/1000.;
   
@@ -733,6 +776,8 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
     CorrMass = MASS_BE12;
   else if(int(Mass) == int(MASS_HE4))
     cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
+  else if(int(Mass) == int(MASS_BE10))
+    CorrMass = MASS_BE10;
   else
     cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
   
@@ -769,9 +814,31 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
   
 }
 
-double* CorrParticle(TCSMHit* Hit)
+double* CorrParticle(TCSMHit* Hit, int Z)
 {
-  return CorrParticle(Hit->GetEnergy(),Hit->GetDPosition().Theta(),Hit->GetDPosition().Phi(),Hit->GetMassMeV());
+  double MASS = 0.;
+
+    switch(Z)
+    {
+      case 10:
+	MASS = MASS_BE10;
+	break;
+      case 12:
+	MASS = MASS_BE12;
+	break;
+      case 8:
+	MASS = MASS_BE8;
+	break;
+      case 0:
+	MASS = Hit->GetMassMeV();
+	break;
+      default:
+	cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+	MASS = Z;
+    }
+
+  return CorrParticle(Hit->GetEnergy(),Hit->GetDPosition().Theta(),Hit->GetDPosition().Phi(),MASS);
+  
 }
 
 double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2)
@@ -779,4 +846,12 @@ double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2)
   double* be8vals;
   be8vals = CalcBe8fromAlpha(Hit1,Hit2);
   return CorrParticle(be8vals[0],be8vals[1],be8vals[2],MASS_BE8);
+}
+
+bool AlmostEqual(double a, double b, double threshold)
+{
+  if( abs(a-b) / ((a+b)/2) < threshold )
+    return true;
+  else
+    return false;
 }

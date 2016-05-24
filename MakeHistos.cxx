@@ -1506,6 +1506,72 @@ for(int i=0;i<csm->GetMultiplicity();i++)
     }
   }
 }
+//***********************
+//  Other 10Be
+//***********************
+for(int i =0; i<csm->GetMultiplicity();i++)
+{	
+  TCSMHit *hit = csm->GetHit(i);
+  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
+  {
+    if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+    {
+      double* CorrVals = CorrParticle(hit, 10);
+      
+      TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
+      mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
+      for(int j = 0; j<csm->GetMultiplicity(); j++)
+      {
+	if(i==j)
+	  continue;
+	
+	TCSMHit *opphit = csm->GetHit(j);
+	
+	int conditions = 0;
+	if(AlmostEqual(hit->GetEnergy(),CorrVals[0]))
+	  conditions++;
+	if(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1]))
+	  conditions++;
+	if(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2]))
+	  conditions++;
+
+// 	if(conditions>1)
+// 	{
+// 	  cout<<"Energy: "<<hit->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hit->GetEnergy(),CorrVals[0])<<endl;
+// 	  cout<<"Theta: "<<hit->GetPosition().Theta()<<" "<<CorrVals[1]<<"   "<<AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])<<endl;
+// 	  cout<<"Phi: "<<hit->GetPosition().Phi()<<" "<<CorrVals[2]<<"   "<<AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
+// 	}
+
+	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
+	diagpointer->Fill(AlmostEqual(hit->GetEnergy(),CorrVals[0]),AlmostEqual(hit->GetPosition().Theta(),CorrVals[1]),AlmostEqual(hit->GetPosition().Phi(),CorrVals[2]));
+
+	if(conditions == 3)
+	{
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",opphit->GetDetectorNumber()));
+	      dopptr->Fill(Doppler(tigresshit,opphit,10));
+	    }
+	  }
+
+	  TH1D* exptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",opphit->GetDetectorNumber()));
+	  exptr->Fill(GetExciteE_10Heavy_Corrected(opphit));
+
+	  TH2D* evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",opphit->GetDetectorNumber()));
+	  evtptr->Fill(opphit->GetThetaDeg(),opphit->GetEnergyMeV());
+
+	  TH1D* supexptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",hit->GetDetectorNumber()));
+	  supexptr->Fill(GetExciteE_10Heavy_Corrected(hit));
+	}
+      }
+    }
+
+  }
+}
 
 //***********************
 //  Multiplicity plots
