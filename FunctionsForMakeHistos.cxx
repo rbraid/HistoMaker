@@ -454,7 +454,7 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH1I("AlphaMult","Number of identified alphas in an event",5,0,5));
 
-  outlist->Add(new TH3I("AlmostEqual_Diagnostic","Checking what conditions are most strict",2,0,1,2,0,1,2,0,1));
+  outlist->Add(new TH3I("AlmostEqual_Diagnostic","Checking what conditions are most strict",4,0,2,4,0,2,4,0,2));
   temp3INT = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
   temp3INT->GetXaxis()->SetTitle("EnergyBool");
   temp3INT->GetYaxis()->SetTitle("ThetaBool");
