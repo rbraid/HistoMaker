@@ -1543,7 +1543,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 // 	}
 
 	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
-	diagpointer->Fill(int(AlmostEqual(hit->GetEnergy()),int(CorrVals[0]),AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
+	diagpointer->Fill(int(AlmostEqual(hit->GetEnergy(),CorrVals[0])),int(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
 
 	//if(conditions == 3)
 	{
