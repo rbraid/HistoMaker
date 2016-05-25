@@ -1545,7 +1545,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
 	diagpointer->Fill(int(AlmostEqual(hit->GetEnergy(),CorrVals[0])),int(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
 
-	//if(conditions == 3)
+	if(conditions == 3)
 	{
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
@@ -1553,15 +1553,15 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 
 	    if(tigresshit->GetCore()->GetEnergy()>10)
 	    {
-	      TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",opphit->GetDetectorNumber()));
+	      TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",hit->GetDetectorNumber()));
 	      dopptr->Fill(Doppler(tigresshit,opphit,10));
 	    }
 	  }
 
-	  TH1D* exptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",opphit->GetDetectorNumber()));
+	  TH1D* exptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",hit->GetDetectorNumber()));
 	  exptr->Fill(GetExciteE_10Heavy_Corrected(opphit));
 
-	  TH2D* evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",opphit->GetDetectorNumber()));
+	  TH2D* evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",hit->GetDetectorNumber()));
 	  evtptr->Fill(opphit->GetThetaDeg(),opphit->GetEnergyMeV());
 
 	  TH1D* supexptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",hit->GetDetectorNumber()));
