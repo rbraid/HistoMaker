@@ -923,6 +923,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
+	  if(excite>-.5 && excite<1.5)
+	  {
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+	    TVector3 COMinfo = CalcCOMmomentum(hit, 10);
+	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs_COM",hit->GetDetectorNumber()));
+	    if(temp2) temp2->Fill(COMinfo.Theta()*180./TMath::Pi(),COMinfo.Mag2()/(2.*MASS_BE10));
+	  }
+
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_10Heavy_Corrected(hit));
 

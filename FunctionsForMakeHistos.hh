@@ -44,5 +44,7 @@ double GetExciteE_10Heavy_Corrected(TCSMHit* Hit);
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
 double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H);
 bool AlmostEqual(double a, double b, double threshold = .2);
+TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);
+TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z = 0);
 
 #endif

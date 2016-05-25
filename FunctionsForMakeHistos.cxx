@@ -229,8 +229,13 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_gs",id),Form("EvTheta %i, cut on Be12 GS",id),1000,0,100,1400,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_gs",id));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_exCut_gs",id),Form("EvTheta %i, cut on Be10 GS",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_exCut_gs_COM",id),Form("EvThetaCOM %i, cut on Be10 GS",id),1440,0,360,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs_COM",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
@@ -701,28 +706,47 @@ double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
   return EGammaDopplerCorr;
 }
 
-double CalcCOMProductTheta(double theta, double energy)
+TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 {
-  const double pi = TMath::Pi();
-  const double BeamE = BEAM_ENERGY;
+  bool debug = 0;
+
+  energy=energy/1000.;
   
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = MASS_BE8;
-  const double M4 = MASS_BE12;
+  double pParticleMag = sqrt( 2. * mass * energy);
+  double pBeamMag = sqrt( 2. * MASS_BE11 * BEAM_ENERGY); //This is all in the z direction
+  TVector3 pBeam = TVector3(0.,0.,pBeamMag);
   
-  double COMVelBeam = sqrt(2*BeamE/M1);
-  double COMV = ( M1 / ( M1 + M2 ) ) * COMVelBeam;
-  double productVel = sqrt(2*energy/M3);//to get the 12Be COM theta
+  TVector3 pParticle = pos;
+  pParticle.SetMag(pParticleMag);
   
-  double kPrime = COMV / productVel;
+  return(pParticle-pBeam); //12Be
+}
+
+TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
+{
+  double MASS = 0.;
   
-  double thetaCOM = atan( sin(theta) / ( cos(theta)-kPrime ) );
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      break;
+    default:
+      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      MASS = Z;
+  }
   
-  if( thetaCOM < 0 )
-    thetaCOM += pi;
+  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
   
-  return thetaCOM; //12Be
 }
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
