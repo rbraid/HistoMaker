@@ -1535,7 +1535,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	if(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2]))
 	  conditions++;
 
-// 	if(conditions>1)
+// 	if(conditions>=1)
 // 	{
 // 	  cout<<"Energy: "<<hit->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hit->GetEnergy(),CorrVals[0])<<endl;
 // 	  cout<<"Theta: "<<hit->GetPosition().Theta()<<" "<<CorrVals[1]<<"   "<<AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])<<endl;
@@ -1545,7 +1545,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
 	diagpointer->Fill(int(AlmostEqual(hit->GetEnergy(),CorrVals[0])),int(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
 
-	if(conditions == 3)
+	//if(conditions == 3)
 	{
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
