@@ -1558,7 +1558,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
 	diagpointer->Fill(int(AlmostEqual(hit->GetEnergy(),CorrVals[0])),int(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
 
-	if(conditions == 3)
+	if((conditions == 3 && int(BEAM_ENERGY)==55) || int(BEAM_ENERGY)==30)
 	{
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
