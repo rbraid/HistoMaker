@@ -270,6 +270,26 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("Be10_TvTCOM_%i",id));
     temp2->GetXaxis()->SetTitle("Theta COM");
     temp2->GetYaxis()->SetTitle("Theta Lab");
+
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr_opp",id),Form("Oppostie Be-10 Excitation Energy, with straggling correction",id),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp_math",id),Form("EvTheta %i of the mathematical opposite 10Be",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp",id),Form("EvTheta %i of the opposite 10Be",id),1000,0,100,1400,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp",id),Form("Gamma spectrum for opposite particle",id),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     
     for(int mid = 1; mid<=4;mid++)
@@ -295,25 +315,7 @@ void SetupHistos(TList *outlist)
   
   for(int det=1;det<=4;det++)
   {
-    outlist->Add(new TH1D(Form("Be10Ex%i_corr_opp",det),Form("Oppostie Be-10 Excitation Energy, with straggling correction",det),350,-10,25));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",det));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp_math",det),Form("EvTheta %i of the mathematical opposite 10Be",det),1000,0,100,1400,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp",det),Form("EvTheta %i of the opposite 10Be",det),1000,0,100,1400,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp",det),Form("Gamma spectrum for opposite particle",det),6000,0,30));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",det));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
 //     outlist->Add(new TH2D(Form("Alphacone_%i",det),Form("Alpha cone in detector %i",det),300,0,60,300,0,60));//
 //     temp2 = (TH2D*)outlist->FindObject(Form("Alphacone_%i",det));
 //     temp2->SetContour(666);
