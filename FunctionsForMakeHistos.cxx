@@ -265,6 +265,11 @@ void SetupHistos(TList *outlist)
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
     outlist->Add(new TH1D(Form("TotalEnergy_%i_12Be",id),Form("Total energy of an event with 12Be in detector %i",id),100,0,100));
+
+    outlist->Add(new TH2D(Form("Be10_TvTCOM_%i",id),Form("Theta vs ThetaCOM for 10Be, detector %i",id),1440,0,360,400,0,100));
+    temp2 = (TH2D*)outlist->FindObject(Form("Be10_TvTCOM_%i",id));
+    temp2->GetXaxis()->SetTitle("Theta COM");
+    temp2->GetYaxis()->SetTitle("Theta Lab");
     
     
     for(int mid = 1; mid<=4;mid++)
