@@ -1529,11 +1529,23 @@ for(int i =0; i<csm->GetMultiplicity();i++)
   {
     if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
     {
-      //double* CorrVals = CorrParticle(hit, 10);
-      double* CorrVals = CorrParticle(hit->GetCorrectedEnergyMeV("10be")*1000., hit->GetPosition().Theta(), hit->GetPosition().Phi(),MASS_BE10);
+      double* CorrVals = CorrParticle(hit, 10);
+      //double* CorrVals = CorrParticle(hit->GetCorrectedEnergyMeV("10be")*1000., hit->GetPosition().Theta(), hit->GetPosition().Phi(),MASS_BE10);
       
       TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
       mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
+
+      for(int asdf=0; asdf<tigress->GetAddBackMultiplicity();asdf++)
+      {
+	TTigressHit *tigresshit = tigress->GetAddBackHit(asdf);
+
+	if(tigresshit->GetCore()->GetEnergy()>10)
+	{
+	  TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
+	  dopptr->Fill(Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10));
+	}
+      }
+	
       for(int j = 0; j<csm->GetMultiplicity(); j++)
       {
 	if(i==j)
@@ -1576,7 +1588,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	  exptr->Fill(GetExciteE_10Heavy_Corrected(opphit));
 
 	  TH2D* evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",hit->GetDetectorNumber()));
-	  evtptr->Fill(opphit->GetThetaDeg(),opphit->GetCorrectedEnergyMeV("10be"));
+	  evtptr->Fill(opphit->GetThetaDeg(),opphit->GetEnergyMeV());
 
 	  TH1D* supexptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",hit->GetDetectorNumber()));
 	  supexptr->Fill(GetExciteE_10Heavy_Corrected(hit));

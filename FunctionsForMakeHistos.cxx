@@ -290,6 +290,11 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp_math",id),Form("Gamma spectrum for theoretical opposite particle",id),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     
     for(int mid = 1; mid<=4;mid++)
@@ -681,12 +686,20 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
   
 }
 
-double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
+double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass)
 {
   double pi = TMath::Pi();
+
+  TVector3 tVec = TVector3(tenergy/1000.,0,0);
+  tVec.SetTheta(ttheta);
+  tVec.SetPhi(tphi);
+
+  TVector3 cVec = TVector3(cenergy/1000.,0,0);
+  cVec.SetTheta(ctheta);
+  cVec.SetPhi(cphi);
   
   double M4;
-
+  
   switch(mass)
   {
     case 12:
@@ -700,17 +713,27 @@ double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
       M4 = MASS_BE12;
   }
   
-  double LabEnergyHeavy = chit->GetEnergyMeV();
+  double LabEnergyHeavy = cVec.Mag();
   
   double beta =  sqrt( (LabEnergyHeavy*(LabEnergyHeavy + 2.0*M4) )/( ( LabEnergyHeavy + M4 )*( LabEnergyHeavy + M4 ) ) );
   
-  double CosTheta = cos( chit->GetPosition().Angle( thit->GetPosition() ) );
+  double CosTheta = cos( cVec.Angle( tVec) );
   
   double RelativisticCorr = (1.0 / ( sqrt( 1.0 - beta*beta ) ) );
   
-  double EGammaDopplerCorr = ( (thit->GetCore()->GetEnergy()/1000. * RelativisticCorr) * ( (1.0 - beta*CosTheta) ) );
+  double EGammaDopplerCorr = ( (tVec.Mag() * RelativisticCorr) * ( (1.0 - beta*CosTheta) ) );
   
   return EGammaDopplerCorr;
+}
+
+double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
+{
+  return Doppler(thit->GetCore()->GetEnergy(), thit->GetPosition().Theta(), thit->GetPosition().Phi(), chit->GetEnergy(), chit->GetPosition().Theta(), chit->GetPosition().Phi(), mass);
+}
+
+double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, int mass)
+{
+  return Doppler(thit->GetCore()->GetEnergy(), thit->GetPosition().Theta(), thit->GetPosition().Phi(), cenergy, ctheta, cphi, mass);
 }
 
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
