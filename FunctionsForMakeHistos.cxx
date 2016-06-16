@@ -742,14 +742,21 @@ TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 
   energy=energy/1000.;
   
-  double pParticleMag = sqrt( 2. * mass * energy);
-  double pBeamMag = sqrt( 2. * MASS_BE11 * BEAM_ENERGY); //This is all in the z direction
-  TVector3 pBeam = TVector3(0.,0.,pBeamMag);
+  double vParticleMag = sqrt((2.*energy)/mass);
+  TVector3 vParticle = pos;
+  vParticle.SetMag(vParticleMag);
+
+  double vBeam = sqrt((2.*BEAM_ENERGY)/MASS_BE11);
+
+  double vCOMMag = (mass*vBeam)/(mass+MASS_BE11);
+  TVector3 vCOM(0.,0.,vCOMMag);
+
+  if(debug)
+  {
+    cout<<"Calculated Theta COM: "<<((vParticle-vCOM)*mass).Theta()*180./TMath::Pi()<<endl;
+  }
   
-  TVector3 pParticle = pos;
-  pParticle.SetMag(pParticleMag);
-  
-  return(pParticle-pBeam); //12Be
+  return((vParticle-vCOM)*mass);
 }
 
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
