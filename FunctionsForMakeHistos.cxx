@@ -19,7 +19,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
       
-      outlist->Add(new TH2D(Form("EvTheta_%i_BE_strip%02i",id,strip),Form("EvTheta %i, cut on Be Strip",id,strip),1000,0,100,1400,0,70));
+      outlist->Add(new TH2D(Form("EvTheta_%i_BE_strip%02i",id,strip),Form("EvTheta %i, cut on Be Strip",id,strip),100,0,100,350,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_strip%02i",id,strip));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -73,27 +73,27 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i",id),Form("EvTheta %i",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i",id),Form("EvTheta %i",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_corrected",id),Form("EvTheta %i, 12Be, with straggling correction",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_corrected",id),Form("EvTheta %i, 12Be, with straggling correction",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_corrected",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -192,47 +192,47 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-//     outlist->Add(new TH2D(Form("EvTheta_%i_BE8",id),Form("EvTheta %i of the reconstructed 8Be",id),1000,0,100,1400,0,70));
+//     outlist->Add(new TH2D(Form("EvTheta_%i_BE8",id),Form("EvTheta %i of the reconstructed 8Be",id),100,0,100,350,0,70));
 //     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE8",id));
 //     temp2->GetXaxis()->SetTitle("Theta in Degrees");
 //     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10",id),Form("EvTheta %i of the identified 10Be",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10",id),Form("EvTheta %i of the identified 10Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_corrected",id),Form("EvTheta %i of the identified 10Be, with straggling correction",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_corrected",id),Form("EvTheta %i of the identified 10Be, with straggling correction",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-//     outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),1000,0,100,1400,0,70));
+//     outlist->Add(new TH2D(Form("EvTheta_%i_BE",id),Form("EvTheta %i, cut on Be",id),100,0,100,350,0,70));
 //     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE",id));
 //     temp2->GetXaxis()->SetTitle("Theta in Degrees");
 //     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut",id),Form("EvTheta %i, cut on gammas",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut",id),Form("EvTheta %i, cut on gammas",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut_dopp",id),Form("EvTheta %i, cut on doppler corrected 2.1 and 2.7 gammas",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCut_dopp",id),Form("EvTheta %i, cut on doppler corrected 2.1 and 2.7 gammas",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut_dopp",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCutNoID",id),Form("EvTheta %i, cut on gammas",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_gammaCutNoID",id),Form("EvTheta %i, cut on gammas",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCutNoID",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_correlated",id),Form("EvTheta %i, cut on Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_correlated",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_exCut_gs",id),Form("EvTheta %i, cut on Be10 GS",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_exCut_gs",id),Form("EvTheta %i, cut on Be10 GS",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -242,12 +242,12 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_1e",id),Form("EvTheta %i, cut on Be 2.24",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_1e",id),Form("EvTheta %i, cut on Be 2.24",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_1e",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_sc",id),Form("EvTheta %i, cut on Be <5",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE_exCut_sc",id),Form("EvTheta %i, cut on Be <5",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_exCut_sc",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -257,12 +257,12 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Front)");
     temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Back)");
     
-    outlist->Add(new TH2D(Form("twohitEVT_%i_side",id),Form("Corresponding hit from TwoHit in detector %i",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohitEVT_%i_side",id),Form("Corresponding hit from TwoHit in detector %i",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_side",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("twohitEVT_%i_telescope",id),Form("Corresponding hit from TwoHit in detector %i",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohitEVT_%i_telescope",id),Form("Corresponding hit from TwoHit in detector %i",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohitEVT_%i_telescope",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -279,12 +279,12 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp_math",id),Form("EvTheta %i of the mathematical opposite 10Be",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp_math",id),Form("EvTheta %i of the mathematical opposite 10Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp",id),Form("EvTheta %i of the opposite 10Be",id),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_opp",id),Form("EvTheta %i of the opposite 10Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -307,7 +307,7 @@ void SetupHistos(TList *outlist)
       temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
       temp2->GetYaxis()->SetTitle("dE Energy deposited in MeV");
       
-      outlist->Add(new TH2D(Form("EvTheta_%iTotal_mult%i",id,mid),Form("E vs Theta Detector %i with Multiplicity %i",id,mid),1000,0,100,1400,0,70));
+      outlist->Add(new TH2D(Form("EvTheta_%iTotal_mult%i",id,mid),Form("E vs Theta Detector %i with Multiplicity %i",id,mid),100,0,100,350,0,70));
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",id,mid));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -369,25 +369,25 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Difference in Angle in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_%i",det),Form("2 Hits in detector %i, cut on cone and angle",det),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohit_twocut_%i",det),Form("2 Hits in detector %i, cut on cone and angle",det),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i",det));
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_Be8",det),Form("2 Hits in detector %i, cut on cone and angle",det),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohit_twocut_%i_Be8",det),Form("2 Hits in detector %i, cut on cone and angle",det),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",det));
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr",det),Form("Correpsonding particle of 2 hits in detector %i",det),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr",det),Form("Correpsonding particle of 2 hits in detector %i",det),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",det));
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_cut",det),Form("Correpsonding particle of 2 hits in detector %i, cut on PID",det),1000,0,100,1400,0,70));
+    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_cut",det),Form("Correpsonding particle of 2 hits in detector %i, cut on PID",det),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_cut",det));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -399,7 +399,7 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
     
-//     outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),1000,0,100,1400,0,70));
+//     outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,350,0,70));
 //     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));
 //     temp2->GetXaxis()->SetTitle("Theta in Degrees");
 //     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -413,7 +413,7 @@ void SetupHistos(TList *outlist)
       if(det>2 && type=='E')//This skips 3 and 4 E, which don't exist
 	continue;
       
-      outlist->Add(new TH2D(Form("EvTheta_%i%c",det,type),Form("EvTheta, Detector %i, Position %c",det,type),1000,0,100,1400,0,70));//
+      outlist->Add(new TH2D(Form("EvTheta_%i%c",det,type),Form("EvTheta, Detector %i, Position %c",det,type),100,0,100,350,0,70));//
       temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i%c",det,type));
       temp2->GetXaxis()->SetTitle("Theta in Degrees");
       temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
@@ -463,7 +463,7 @@ void SetupHistos(TList *outlist)
   temp2->GetXaxis()->SetTitle("Strip Number");
   temp2->GetYaxis()->SetTitle("Charge");
 
-  outlist->Add(new TH2D("EvTheta_12Be","EvTheta",1000,0,100,1400,0,70));
+  outlist->Add(new TH2D("EvTheta_12Be","EvTheta",100,0,100,350,0,70));
   temp2 = (TH2D*)outlist->FindObject("EvTheta_12Be");
   temp2->GetXaxis()->SetTitle("Theta in Degrees");
   temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
