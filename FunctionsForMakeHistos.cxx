@@ -38,6 +38,9 @@ void SetupHistos(TList *outlist)
       temp1->GetYaxis()->SetTitle("Counts");
     }*/
 
+    outlist->Add(new TH1I(Form("correction_straggling_%i",id),Form("Energy added by a straggling correction in detector %i",id),500,0,10));
+    outlist->Add(new TH1I(Form("correction_deadlayer_%i",id),Form("Energy added by a dead layer correction in detector %i",id),500,0,10));
+    
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
 
     outlist->Add(new TH1I(Form("NBe_%i",id),Form("Number of Be of each isotope",id),6,8,14));

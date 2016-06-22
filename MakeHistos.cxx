@@ -915,6 +915,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_corrected",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetCorrectedEnergyMeV("10Be"));
+
+	  TH1I* correctionpointer = (TH1I*)outlist->FindObject(Form("correction_straggling_%i",hit->GetDetectorNumber()));
+	  correctionpointer->Fill(hit->GetCorrectedEnergyMeVTarget(hit->GetCorrectedEnergyMeVDetector("10Be"),"10Be") - hit->GetEnergyMeV());
+	  correctionpointer = (TH1I*)outlist->FindObject(Form("correction_deadlayer_%i",hit->GetDetectorNumber()));
+	  correctionpointer->Fill(hit->GetCorrectedEnergyMeVDetector("10Be") - hit->GetEnergyMeV());
 	  
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be10Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
