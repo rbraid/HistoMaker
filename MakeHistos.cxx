@@ -30,14 +30,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   if(int(BEAM_ENERGY) == 55)
   {
     Be12Cut = "pid_high_thick_12Be_%i_v3";
-    Be11Cut = "pid_high_thick_11Be_%i_v1";//v1 is elastic only, v2 is everything
+    Be11Cut = "pid_high_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_high_thick_10Be_%i_v1";
     Be9Cut = "pid_high_thick_9Be_%i_v1";
   }
   else if(int(BEAM_ENERGY) == 30)
   {
     Be12Cut = "pid_low_thick_12Be_%i_v2";
-    Be11Cut = "pid_low_thick_11Be_%i_v1";//v1 is elastic only, v2 is everything
+    Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_low_thick_10Be_%i_v2";
     Be9Cut = "pid_low_thick_9Be_%i_v1";
   }
@@ -45,7 +45,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     cerr<<"Something is wrong with setting cuts.  Beam energy unrecognized, reverting to high energy"<<endl;
     Be12Cut = "pid_high_thick_12Be_%i_v3";
-    Be11Cut = "pid_high_thick_11Be_%i_v1";//v1 is elastic only, v2 is everything
+    Be11Cut = "pid_high_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_high_thick_10Be_%i_v1";
     Be9Cut = "pid_high_thick_9Be_%i_v1";
   }
