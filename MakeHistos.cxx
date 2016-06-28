@@ -928,7 +928,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be10Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
-	  double excite = GetExciteE_10Heavy(hit);
+	  double excite = GetExciteE_Heavy(hit,10);
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
@@ -946,7 +946,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  }
 
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_10Heavy_Corrected(hit));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,10));
 
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
@@ -969,6 +969,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+	  double excite = GetExciteE_Heavy(hit,11);
+	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(excite);
 	}
       }
 //////////////////////////////////////////////////
@@ -995,12 +999,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
-	  double excite = GetExciteE_Heavy(hit);
+	  double excite = GetExciteE_Heavy(hit,12);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,12));
 
 // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 // 	  stat->Fill(hit->GetDetectorNumber()+1);
@@ -1604,13 +1608,13 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	  }
 
 	  TH1D* exptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",hit->GetDetectorNumber()));
-	  exptr->Fill(GetExciteE_10Heavy_Corrected(opphit));
+	  exptr->Fill(GetExciteE_Heavy_Corrected(opphit,10));
 
 	  TH2D* evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp",hit->GetDetectorNumber()));
 	  evtptr->Fill(opphit->GetThetaDeg(),opphit->GetEnergyMeV());
 
 	  TH1D* supexptr = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",hit->GetDetectorNumber()));
-	  supexptr->Fill(GetExciteE_10Heavy_Corrected(hit));
+	  supexptr->Fill(GetExciteE_Heavy_Corrected(hit,10));
 	}
       }
     }

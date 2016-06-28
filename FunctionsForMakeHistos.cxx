@@ -112,6 +112,11 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be11Ex%i",id),Form("Be-11 Excitation Energy",id),350,-10,25));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
     
     outlist->Add(new TH1D(Form("Be10Ex%i_corr",id),Form("Be-10 Excitation Energy, with straggling correction",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",id));
@@ -539,27 +544,51 @@ void SetupHistos(TList *outlist)
   }
 }
 
-double GetExciteE_Heavy(double be12E, double be12T)
+double GetExciteE_Heavy(double energy, double theta, double mass)
 {
   //   cout<<"BeamE: "<<BeamE<<endl;
-  //   cout<<"BeE: "<<be12E<<endl;
-  //   cout<<"BeT: "<<be12T<<endl;
-  be12E=be12E/1000.;
+  //   cout<<"BeE: "<<energy<<endl;
+  //   cout<<"BeT: "<<theta<<endl;
+  energy=energy/1000.;
   const double pi = TMath::Pi();
+
+  double othermass;
+
+  switch(int(mass))
+  {
+    case int(MASS_BE8):
+      othermass = MASS_BE12;
+      break;
+    case int(MASS_BE9):
+      othermass = MASS_BE11;
+      break;
+    case int(MASS_BE10):
+      othermass = MASS_BE10;
+      break;
+    case int(MASS_BE11):
+      othermass = MASS_BE9;
+      break;
+    case int(MASS_BE12):
+      othermass = MASS_BE8;
+      break;
+    default:
+      cerr<<"Unknown mass in GetExciteE_Heavy: "<<mass<<endl;
+      return(-1);
+  }
   
   const double M1 = MASS_BE11;
   const double M2 = MASS_BE9;
-  const double M3 = MASS_BE8;
-  const double M4 = MASS_BE12;
+  const double M3 = othermass;
+  const double M4 = mass;
   double mQ = M1+M2-M3-M4;
   
   double V1 = sqrt(2*BEAM_ENERGY/M1);
   double COMV = ( M1 / ( M1 + M2 ) ) * V1;
-  double V4 = sqrt(2*be12E/M4);
+  double V4 = sqrt(2*energy/M4);
   double kPrimeM4 = COMV / V4;
   
   double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double COMEnergyM4 = be12E * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( be12T ) );
+  double COMEnergyM4 = energy * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( theta ) );
   double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
   double ExcitedState = mQ - QVal;
   
@@ -569,54 +598,69 @@ double GetExciteE_Heavy(double be12E, double be12T)
   
 }
 
-double GetExciteE_Heavy(TCSMHit* Hit)
+double GetExciteE_Heavy(TCSMHit* Hit, int Z)
 {
-  return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    case 11:
+      MASS = MASS_BE11;
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      break;
+    default:
+      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta(),MASS));
 }
 
-double GetExciteE_Heavy_Corrected(TCSMHit* Hit)
+double GetExciteE_Heavy_Corrected(TCSMHit* Hit, int Z)
 {
-  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV("12be")*1000.,Hit->GetDPosition().Theta()));
-}
-
-double GetExciteE_10Heavy(double be10E, double be10T)
-{
-  //   cout<<"BeamE: "<<BeamE<<endl;
-  //   cout<<"BeE: "<<be12E<<endl;
-  //   cout<<"BeT: "<<be12T<<endl;
-  be10E=be10E/1000.;
-  const double pi = TMath::Pi();
+  double MASS = 0.;
+  TString isotope;
   
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = MASS_BE10;
-  const double M4 = MASS_BE10;
-  double mQ = M1+M2-M3-M4;
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      isotope = "10be";
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      isotope = "12be";
+      break;
+    case 11:
+      MASS = MASS_BE11;
+      isotope = "11be";
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      isotope = "8be";
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      isotope = Hit->GetIsotope();
+      break;
+    default:
+      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      MASS = Z;
+      isotope = "12be";
+  }
   
-  double V1 = sqrt(2*BEAM_ENERGY/M1);
-  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
-  double V4 = sqrt(2*be10E/M4);
-  double kPrimeM4 = COMV / V4;
-  
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double COMEnergyM4 = be10E * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( be10T ) );
-  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
-  double ExcitedState = mQ - QVal;
-  
-  //   cout<<"EX: "<<ExcitedState<<endl<<endl;
-  
-  return(ExcitedState);
-  
-}
-
-double GetExciteE_10Heavy(TCSMHit* Hit)
-{
-  return(GetExciteE_10Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta()));
-}
-
-double GetExciteE_10Heavy_Corrected(TCSMHit* Hit)
-{
-  return(GetExciteE_10Heavy(Hit->GetCorrectedEnergyMeV("10be")*1000.,Hit->GetDPosition().Theta()));
+  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV(isotope)*1000.,Hit->GetDPosition().Theta(),MASS));
 }
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
