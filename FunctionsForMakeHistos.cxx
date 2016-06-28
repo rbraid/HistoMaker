@@ -556,19 +556,19 @@ double GetExciteE_Heavy(double energy, double theta, double mass)
 
   switch(int(mass))
   {
-    case int(MASS_BE8):
+    case 7456: //be8
       othermass = MASS_BE12;
       break;
-    case int(MASS_BE9):
+    case 8394: //be9
       othermass = MASS_BE11;
       break;
-    case int(MASS_BE10):
+    case 9327: //be10
       othermass = MASS_BE10;
-      break;
-    case int(MASS_BE11):
+      break; 
+    case 10266: //be11
       othermass = MASS_BE9;
       break;
-    case int(MASS_BE12):
+    case 11203: //be12
       othermass = MASS_BE8;
       break;
     default:
