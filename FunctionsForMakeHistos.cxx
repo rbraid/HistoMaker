@@ -108,10 +108,14 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
+    outlist->Add(new TH2I(Form("BeEx%i_mult",id),Form("Be-12 Excitation Energy vs multiplicity",id),350,-10,25,5,0,4));
+
     outlist->Add(new TH1D(Form("Be10Ex%i",id),Form("Be-10 Excitation Energy",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH2I(Form("Be10Ex%i_mult",id),Form("Be-10 Excitation Energy vs multiplicity",id),350,-10,25,5,0,4));
 
     outlist->Add(new TH1D(Form("Be10Ex%i_gcut",id),Form("Be-10 Excitation Energy, cut on gamma rays",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut",id));
@@ -122,6 +126,8 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH2I(Form("Be11Ex%i_mult",id),Form("Be-11 Excitation Energy vs multiplicity",id),350,-10,25,5,0,4));
 
     outlist->Add(new TH1D(Form("Be11Ex%i_corr",id),Form("Be-11 Excitation Energy, with energy corrections",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",id));

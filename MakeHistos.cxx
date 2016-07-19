@@ -965,6 +965,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,10));
 
+	  temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex%i_mult",hit->GetDetectorNumber()));
+	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,10),csm->GetMultiplicity());
+
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
 	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -990,8 +993,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit,11));
 
-	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
+	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,11));
+
+	  temp2INT = (TH2I*)outlist->FindObject(Form("Be11Ex%i_mult",hit->GetDetectorNumber()));
+	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,11),csm->GetMultiplicity());
 	}
       }
 //////////////////////////////////////////////////
@@ -1024,6 +1030,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,12));
+
+	  temp2INT = (TH2I*)outlist->FindObject(Form("BeEx%i_mult",hit->GetDetectorNumber()));
+	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,12),csm->GetMultiplicity());
 
 // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
 // 	  stat->Fill(hit->GetDetectorNumber()+1);
