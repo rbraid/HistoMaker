@@ -932,6 +932,23 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      double dopp = Doppler(tigresshit,hit,10);
+	      
+	      if((dopp>2.577 && dopp<2.612) ||
+		(dopp>3.337 && dopp<3.402))
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut",hit->GetDetectorNumber()));
+		expg->Fill(excite);
+	      }
+	    }
+	  }
+
 	  if(excite>-.5 && excite<1.5)
 	  {
 	    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_exCut_gs",hit->GetDetectorNumber()));
@@ -970,9 +987,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
-	  double excite = GetExciteE_Heavy(hit,11);
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(excite);
+	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit,11));
+
+	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
+	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,11));
 	}
       }
 //////////////////////////////////////////////////
@@ -1127,6 +1146,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	
 	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
 	  temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
+
 	}
 	temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
 	temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
@@ -1564,8 +1584,9 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 
 	if(tigresshit->GetCore()->GetEnergy()>10)
 	{
+	  double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
 	  TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
-	  dopptr->Fill(Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10));
+	  dopptr->Fill(dopp);
 	}
       }
 	
