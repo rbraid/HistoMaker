@@ -940,10 +940,24 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    {
 	      double dopp = Doppler(tigresshit,hit,10);
 	      
-	      if((dopp>2.577 && dopp<2.612) ||
-		(dopp>3.337 && dopp<3.402))
+	      if(dopp>=2.577 && dopp<=2.612)
 	      {
-		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut",hit->GetDetectorNumber()));
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",hit->GetDetectorNumber()));
+		expg->Fill(excite);
+	      }
+	      else if(dopp>=2.876 && dopp<=2.913)
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894",hit->GetDetectorNumber()));
+		expg->Fill(excite);
+	      }
+	      else if(dopp>=3.337 && dopp<=3.402)
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368",hit->GetDetectorNumber()));
+		expg->Fill(excite);
+	      }
+	      else if(dopp>=5.951 && dopp<=5.986)
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958",hit->GetDetectorNumber()));
 		expg->Fill(excite);
 	      }
 	    }
