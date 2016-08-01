@@ -1610,6 +1610,28 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	  double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
 	  TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
 	  dopptr->Fill(dopp);
+	  double excite = GetExciteE_Heavy(hit,10);
+	  
+	  if(dopp>=2.577 && dopp<=2.612)
+	  {
+	    TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589_opp",hit->GetDetectorNumber()));
+	    expg->Fill(excite);
+	  }
+	  else if(dopp>=2.876 && dopp<=2.913)
+	  {
+	    TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894_opp",hit->GetDetectorNumber()));
+	    expg->Fill(excite);
+	  }
+	  else if(dopp>=3.337 && dopp<=3.402)
+	  {
+	    TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368_opp",hit->GetDetectorNumber()));
+	    expg->Fill(excite);
+	  }
+	  else if(dopp>=5.951 && dopp<=5.986)
+	  {
+	    TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958_opp",hit->GetDetectorNumber()));
+	    expg->Fill(excite);
+	  }
 	}
       }
 	
