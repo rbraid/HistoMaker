@@ -931,7 +931,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  double excite = GetExciteE_Heavy(hit,10);
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
-
+	  double excitec = GetExciteE_Heavy_Corrected(hit,10);
+	  
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
 	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -943,22 +944,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      if(dopp>=2.577 && dopp<=2.612)
 	      {
 		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",hit->GetDetectorNumber()));
-		expg->Fill(excite);
+		expg->Fill(excitec);
 	      }
 	      else if(dopp>=2.876 && dopp<=2.913)
 	      {
 		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894",hit->GetDetectorNumber()));
-		expg->Fill(excite);
+		expg->Fill(excitec);
 	      }
 	      else if(dopp>=3.337 && dopp<=3.402)
 	      {
 		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368",hit->GetDetectorNumber()));
-		expg->Fill(excite);
+		expg->Fill(excitec);
 	      }
 	      else if(dopp>=5.951 && dopp<=5.986)
 	      {
 		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958",hit->GetDetectorNumber()));
-		expg->Fill(excite);
+		expg->Fill(excitec);
 	      }
 	    }
 	  }
@@ -1610,7 +1611,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	  double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
 	  TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
 	  dopptr->Fill(dopp);
-	  double excite = GetExciteE_Heavy(hit,10);
+	  double excite = GetExciteE_Heavy_Corrected(hit,10);
 	  
 	  if(dopp>=2.577 && dopp<=2.612)
 	  {
