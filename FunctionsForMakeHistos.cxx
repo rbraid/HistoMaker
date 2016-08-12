@@ -59,7 +59,17 @@ void SetupHistos(TList *outlist)
     temp1->GetYaxis()->SetTitle("Counts");
 
     outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp",id),Form("Gamma spectrum",id),6000,0,30));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",id));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),Form("Gamma spectrum, with excitation > 8 MeV",id),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_lt8",id),Form("Gamma spectrum, with excitation < 8 MeV",id),6000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
@@ -162,7 +172,7 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("Be11Ex%i_mult",id),Form("Be-11 Excitation Energy vs multiplicity",id),350,-10,25,5,0,4));
+    outlist->Add(new TH2I(Form("Be11Ex%i_mult",id),Form("Be-11 Excitation Energy vs multiplicity",id),350,-10,25,4,0,4));
 
     outlist->Add(new TH1D(Form("Be11Ex%i_corr",id),Form("Be-11 Excitation Energy, with energy corrections",id),350,-10,25));
     temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",id));

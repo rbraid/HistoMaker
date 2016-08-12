@@ -1043,8 +1043,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 
+	  double excite_corrected = GetExciteE_Heavy_Corrected(hit,12);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,12));
+	  if(temp1) temp1->Fill(excite_corrected);
+
+	  
 
 	  temp2INT = (TH2I*)outlist->FindObject(Form("BeEx%i_mult",hit->GetDetectorNumber()));
 	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,12),csm->GetMultiplicity());
@@ -1058,6 +1061,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    
 	    if(tigresshit->GetCore()->GetEnergy()>10)
 	    {
+
+	      if(excite_corrected > 8)
+	      {
+		temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",hit->GetDetectorNumber()));
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      }
+	      else
+	      {
+		temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",hit->GetDetectorNumber()));
+		temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      }
+	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
