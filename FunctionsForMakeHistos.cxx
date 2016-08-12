@@ -44,6 +44,8 @@ void SetupHistos(TList *outlist)
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
 
     outlist->Add(new TH1I(Form("NBe_%i",id),Form("Number of Be of each isotope",id),6,8,14));
+    outlist->Add(new TH1I(Form("NHe_%i",id),Form("Number of He of each isotope",id),4,3,7));
+
     
     outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
     outlist->Add(new TH1I(Form("Be12Mult_%i",id),Form("Multiplicity of an identified 12Be in detector %i",id),20,0,20));
@@ -503,6 +505,16 @@ void SetupHistos(TList *outlist)
   temp2->SetOption("colz");
   temp2->GetXaxis()->SetTitle("Z");
   temp2->GetYaxis()->SetTitle("X");
+
+  outlist->Add(new TH2I("nBe10_vs_nHe6","Number of 10Be vs Number of 6He",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nBe10_vs_nHe6");
+  temp2INT->GetXaxis()->SetTitle("nBe10");
+  temp2INT->GetYaxis()->SetTitle("nHe6");
+
+  outlist->Add(new TH2I("nBe10_vs_nHe4","Number of 10Be vs Number of 4He",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
+  temp2INT->GetXaxis()->SetTitle("nBe10");
+  temp2INT->GetYaxis()->SetTitle("nHe4");
 
 //   outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
 //   outlist->Add(new TH1D("fred2_1","Total energy of multiplicity 3, 2 hits in side",100,0,100));

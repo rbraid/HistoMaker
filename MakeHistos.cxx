@@ -897,11 +897,19 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     //***********************
     //      isotope plot
     //***********************
+    int nBe12 = 0;
+    int nBe11 = 0;
+    int nBe10 = 0;
+    int nBe9 = 0;
+    int nHe6 = 0;
+    int nHe4 = 0;
+    
     for(int xx = 0;xx<csm->GetMultiplicity();xx++)
     {
       TCSMHit *hit = csm->GetHit(xx);
 
       TH1I *idptr = (TH1I*)outlist->FindObject(Form("NBe_%i",hit->GetDetectorNumber()));
+      TH1I *idptrhe = (TH1I*)outlist->FindObject(Form("NHe_%i",hit->GetDetectorNumber()));
       
       
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
@@ -909,20 +917,63 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
 	  idptr->Fill(12);
+	  nBe12++;
 	}
       }
-      
+
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  idptr->Fill(11);
+	  nBe11++;
+	}
+      }
+
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
       {
 	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
 	{
 	  idptr->Fill(10);
+	  nBe10++;
 	}
-
+      }
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  idptr->Fill(9);
+	  nBe9++;
+	}
+      }
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(He4Cut,hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  idptrhe->Fill(4);
+	  nHe4++;
+	}
       }
 
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(He6Cut,hit->GetDetectorNumber()))))
+      {
+	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+	{
+	  idptrhe->Fill(6);
+	  nHe6++;
+	}
+      }
     }
 
+    if(nHe6 > 0 || nBe10>0)
+    {
+      TH2I *idptr2d = (TH2I*)outlist->FindObject("nBe10_vs_nHe6");
+      idptr2d->Fill(nBe10,nHe6);
+      TH2I *idptr2d4 = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
+      idptr2d4->Fill(nBe10,nHe4);
+    }
       
     
 
