@@ -971,10 +971,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       TH2I *idptr2d = (TH2I*)outlist->FindObject("nBe10_vs_nHe6");
       idptr2d->Fill(nBe10,nHe6);
+    }
+
+    if(nHe4 > 0 || nBe10>0)
+    {
       TH2I *idptr2d4 = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
       idptr2d4->Fill(nBe10,nHe4);
     }
-      
     
 
 //***********************
