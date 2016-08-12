@@ -26,6 +26,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   TString Be11Cut;
   TString Be10Cut;
   TString Be9Cut;
+  TString He4Cut;
+  TString He6Cut;
   
   if(int(BEAM_ENERGY) == 55)
   {
@@ -33,6 +35,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     Be11Cut = "pid_high_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_high_thick_10Be_%i_v1";
     Be9Cut = "pid_high_thick_9Be_%i_v1";
+
+    He4Cut = "pid_high_thick_4He_%i_v1";
+    He6Cut = "pid_high_thick_6He_%i_v1";
   }
   else if(int(BEAM_ENERGY) == 30)
   {
@@ -40,6 +45,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_low_thick_10Be_%i_v2";
     Be9Cut = "pid_low_thick_9Be_%i_v1";
+
+    He4Cut = "pid_low_thick_4He_%i_v1";
+    He6Cut = "pid_low_thick_6He_%i_v1";
   }
   else
   {
@@ -48,6 +56,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     Be11Cut = "pid_high_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_high_thick_10Be_%i_v1";
     Be9Cut = "pid_high_thick_9Be_%i_v1";
+
+    He4Cut = "pid_high_thick_4He_%i_v1";
+    He6Cut = "pid_high_thick_6He_%i_v1";
   }
 
   
