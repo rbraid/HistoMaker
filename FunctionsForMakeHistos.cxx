@@ -65,12 +65,12 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),Form("Gamma spectrum, with excitation > 8 MeV",id),6000,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),Form("Gamma spectrum, with excitation > 8 MeV",id),1500,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_lt8",id),Form("Gamma spectrum, with excitation < 8 MeV",id),6000,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_lt8",id),Form("Gamma spectrum, with excitation < 8 MeV",id),1500,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
@@ -514,6 +514,11 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH2I("nBe10_vs_nHe4","Number of 10Be vs Number of 4He",5,0,5,5,0,5));
   temp2INT = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
   temp2INT->GetXaxis()->SetTitle("nBe10");
+  temp2INT->GetYaxis()->SetTitle("nHe4");
+
+  outlist->Add(new TH2I("nHe6_vs_nHe4","Number of 6He vs Number of 4He",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nHe6_vs_nHe4");
+  temp2INT->GetXaxis()->SetTitle("nHe6");
   temp2INT->GetYaxis()->SetTitle("nHe4");
 
 //   outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));

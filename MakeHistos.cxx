@@ -978,7 +978,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       TH2I *idptr2d4 = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
       idptr2d4->Fill(nBe10,nHe4);
     }
-    
+
+    if(nHe4 > 0 || nHe6>0)
+    {
+      TH2I *idptr2d6 = (TH2I*)outlist->FindObject("nHe6_vs_nHe4");
+      idptr2d6->Fill(nHe6,nHe4);
+    }
 
 //***********************
 //        Gammas
