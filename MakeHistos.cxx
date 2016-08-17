@@ -367,6 +367,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);
 	  double excitec = GetExciteE_Heavy_Corrected(hit,10);
+
+	  temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i",hit->GetDetectorNumber()));
+	  temp2INT->Fill(excitec,hit->GetThetaDeg());
 	  
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
@@ -482,7 +485,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite_corrected);
 
-	  
+	  temp2INT = (TH2I*)outlist->FindObject(Form("Be12Ex_Vs_Theta_%i",hit->GetDetectorNumber()));
+	  temp2INT->Fill(excite_corrected,hit->GetThetaDeg());
 
 	  temp2INT = (TH2I*)outlist->FindObject(Form("BeEx%i_mult",hit->GetDetectorNumber()));
 	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,12),csm->GetMultiplicity());
@@ -550,6 +554,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
 	      }
 
+	      if(doppE>=2.090 && doppE<= 2.135)
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2102",hit->GetDetectorNumber()));
+		expg->Fill(excite_corrected);
+	      }
+	      else if(doppE>=2.700 && doppE<=2.760)
+	      {
+		TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2702",hit->GetDetectorNumber()));
+		expg->Fill(excite_corrected);
+	      }
 	      
 	      if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
 	      {
