@@ -989,16 +989,33 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     if(nHe4 > 0 || nBe10>0)
     {
-      TH2I *idptr2d4 = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
-      idptr2d4->Fill(nBe10,nHe4);
+      TH2I *idptr2d = (TH2I*)outlist->FindObject("nBe10_vs_nHe4");
+      idptr2d->Fill(nBe10,nHe4);
     }
 
     if(nHe4 > 0 || nHe6>0)
     {
-      TH2I *idptr2d6 = (TH2I*)outlist->FindObject("nHe6_vs_nHe4");
-      idptr2d6->Fill(nHe6,nHe4);
+      TH2I *idptr2d = (TH2I*)outlist->FindObject("nHe6_vs_nHe4");
+      idptr2d->Fill(nHe6,nHe4);
     }
 
+    if(nBe10>0)
+    {
+      TH2I *idptr = (TH2I*)outlist->FindObject("nBe10_vs_mult");
+      idptr->Fill(nBe10,csm->GetMultiplicity());
+    }
+    
+    if(nHe6>0)
+    {
+      TH2I *idptr = (TH2I*)outlist->FindObject("nHe6_vs_mult");
+      idptr->Fill(nHe6,csm->GetMultiplicity());
+    }
+
+    if(nHe4>0)
+    {
+      TH2I *idptr = (TH2I*)outlist->FindObject("nHe4_vs_mult");
+      idptr->Fill(nHe4,csm->GetMultiplicity());
+    }
 //***********************
 //        Gammas
 //***********************

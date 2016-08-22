@@ -541,6 +541,22 @@ void SetupHistos(TList *outlist)
   temp2INT->GetXaxis()->SetTitle("nHe6");
   temp2INT->GetYaxis()->SetTitle("nHe4");
 
+  outlist->Add(new TH2I("nHe6_vs_mult","Number of 6He vs Multiplicity",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nHe6_vs_mult");
+  temp2INT->GetXaxis()->SetTitle("nHe6");
+  temp2INT->GetYaxis()->SetTitle("Multiplicity");
+
+  outlist->Add(new TH2I("nHe4_vs_mult","Number of 4He vs Multiplicity",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nHe4_vs_mult");
+  temp2INT->GetXaxis()->SetTitle("nHe4");
+  temp2INT->GetYaxis()->SetTitle("Multiplicity");
+
+  outlist->Add(new TH2I("nBe10_vs_mult","Number of Be10 vs Multiplicity",5,0,5,5,0,5));
+  temp2INT = (TH2I*)outlist->FindObject("nBe10_vs_mult");
+  temp2INT->GetXaxis()->SetTitle("nBe10");
+  temp2INT->GetYaxis()->SetTitle("Multiplicity");
+  
+
 //   outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
 //   outlist->Add(new TH1D("fred2_1","Total energy of multiplicity 3, 2 hits in side",100,0,100));
 //   outlist->Add(new TH1D("fred3_1","Total energy of multiplicity 3, 2 hits in side and 12Be identified",100,0,100));
