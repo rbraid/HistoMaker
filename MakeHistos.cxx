@@ -920,6 +920,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
     TCSMHit* He6Hit;
     TCSMHit* He4Hit;
+    TCSMHit* Be10Hit;
+
+    int Be10Loc = -1;
+    int He6Loc = -1;
+    int He4Loc = -1;
     
     for(int xx = 0;xx<csm->GetMultiplicity();xx++)
     {
@@ -953,6 +958,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  idptr->Fill(10);
 	  nBe10++;
+	  Be10Hit = hit;
+	  Be10Loc = xx;
 	}
       }
       
@@ -972,6 +979,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  idptrhe->Fill(4);
 	  nHe4++;
 	  He4Hit = hit;
+	  He4Loc = xx;
 	}
       }
 
@@ -982,6 +990,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  idptrhe->Fill(6);
 	  nHe6++;
 	  He6Hit = hit;
+	  He6Loc = xx;
 	}
       }
     }
@@ -1026,6 +1035,36 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       double *Be10Vals = CalcBe10fromHe64(He6Hit,He4Hit);
       TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",He6Hit->GetDetectorNumber()));
+      be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
+    }
+
+    if(nBe10==1 && nHe6==1 && csm->GetMultiplicity()==3)
+    {
+      TCSMHit *OtherHit;
+      for(int ii =0; ii<csm->GetMultiplicity();ii++)
+      {
+	if(ii != Be10Loc && ii != He6Loc)
+	{
+	  OtherHit = csm->GetHit(ii);
+	}
+      }
+      double *Be10Vals = CalcBe10fromHe64(He6Hit,OtherHit);
+      TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe6Be10",He6Hit->GetDetectorNumber()));
+      be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
+    }
+
+    if(nBe10==1 && nHe4==1 && csm->GetMultiplicity()==3)
+    {
+      TCSMHit *OtherHit;
+      for(int ii =0; ii<csm->GetMultiplicity();ii++)
+      {
+	if(ii != Be10Loc && ii != He4Loc)
+	{
+	  OtherHit = csm->GetHit(ii);
+	}
+      }
+      double *Be10Vals = CalcBe10fromHe64(OtherHit,He4Hit);
+      TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe4Be10",He4Hit->GetDetectorNumber()));
       be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
     }
 //***********************
