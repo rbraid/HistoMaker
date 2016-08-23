@@ -290,6 +290,11 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_fromHe",id),Form("EvTheta %i of the identified 10Be, made from He6+He4",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
     outlist->Add(new TH2D(Form("EvTheta_%i_Be11",id),Form("EvTheta %i of the identified 11Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");

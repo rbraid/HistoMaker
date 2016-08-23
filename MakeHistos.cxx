@@ -917,6 +917,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     int nBe9 = 0;
     int nHe6 = 0;
     int nHe4 = 0;
+
+    TCSMHit* He6Hit;
+    TCSMHit* He4Hit;
     
     for(int xx = 0;xx<csm->GetMultiplicity();xx++)
     {
@@ -968,6 +971,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  idptrhe->Fill(4);
 	  nHe4++;
+	  He4Hit = hit;
 	}
       }
 
@@ -977,6 +981,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	{
 	  idptrhe->Fill(6);
 	  nHe6++;
+	  He6Hit = hit;
 	}
       }
     }
@@ -1015,6 +1020,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       TH2I *idptr = (TH2I*)outlist->FindObject("nHe4_vs_mult");
       idptr->Fill(nHe4,csm->GetMultiplicity());
+    }
+
+    if(nHe4==1 && nHe6==1)
+    {
+      double *Be10Vals = CalcBe10fromHe64(He6Hit,He4Hit);
+      TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",hit->GetDetectorNumber()));
+      be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
     }
 //***********************
 //        Gammas
