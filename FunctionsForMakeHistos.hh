@@ -42,6 +42,7 @@ double GetExciteE_Heavy(double be12E, double be12T,int Z);
 double GetExciteE_Heavy(TCSMHit* Hit,int Z);
 double GetExciteE_Heavy_Corrected(TCSMHit* Hit,int Z);
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
+double* CalcBe10fromHe64(TCSMHit *He6Hit, TCSMHit *He4Hit);
 double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H);
 bool AlmostEqual(double a, double b, double threshold = .2);
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);

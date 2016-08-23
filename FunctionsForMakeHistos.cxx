@@ -810,18 +810,49 @@ double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
   //make the 8Be physical parameters, energy, theta, phi
   Be8Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe8 );  //Energy, from E=p^2/2m
   Be8Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
-  //Be8Values[2] = atan( pBe[1]/pBe[0] ); //Phi
-  
-  if( pBe[0] > 0.0 && pBe[1] > 0.0 )
-    Be8Values[2] = atan( pBe[1] / pBe[0] );
-  else if( pBe[0] < 0.0 && pBe[1] > 0.0 )
-    Be8Values[2] = atan( pBe[1] / pBe[0] ) + pi;
-  else if( pBe[0] < 0.0 && pBe[1] < 0.0 )
-    Be8Values[2] = atan( pBe[1] / pBe[0] ) + pi;
-  else if( pBe[0] > 0.0 && pBe[1] < 0.0 )
-    Be8Values[2] = atan( pBe[1] / pBe[0] ) + 2*pi;
-  
+  Be8Values[2] = atan( pBe[1],pBe[0] ); //Phi
+    
   return Be8Values;
+}
+
+double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
+{
+  const double pi=TMath::Pi();
+  
+  double *Be10Values = new double[3];
+  
+  //Make the masses for the 8Be and 4He
+  const double mBe8 = 8.0*931.494027 + 4.9416;
+  const double mHe4 = 4.0*931.494027 + 2.4249156;
+  const double mHe6 = 6.0*931.494027 + 17.5928;
+  const double mBe10 = 10.*931.494027 + 12.6074;
+  
+  vector<double> PVecHe6, PVecHe4, pBe;
+  //Convert from energy to momentum
+  double PAlpha1 = sqrt( 2.0*mHe6*He6Hit->GetEnergyMeV() );
+  double PAlpha2 = sqrt( 2.0*mHe4*He4Hit->GetEnergyMeV() );
+  
+  //fill the momentum vector for the first alpha
+  PVecHe6.push_back( PAlpha1*sin( He6Hit->GetDPosition().Theta() )*cos( He6Hit->GetDPosition().Phi() ) );
+  PVecHe6.push_back( PAlpha1*sin( He6Hit->GetDPosition().Theta() )*sin( He6Hit->GetDPosition().Phi() ) );
+  PVecHe6.push_back( PAlpha1*cos( He6Hit->GetDPosition().Theta() ) );
+  
+  //fill the momentum vector for the second alpha
+  PVecHe4.push_back( PAlpha2*sin( He4Hit->GetDPosition().Theta() )*cos( He6Hit->GetDPosition().Phi() ) );
+  PVecHe4.push_back( PAlpha2*sin( He4Hit->GetDPosition().Theta() )*sin( He6Hit->GetDPosition().Phi() ) );
+  PVecHe4.push_back( PAlpha2*cos( He4Hit->GetDPosition().Theta() ) );
+  
+  //fill the 8Be vector
+  pBe.push_back( ( PVecHe6[0]+PVecHe4[0] ) );
+  pBe.push_back( ( PVecHe6[1]+PVecHe4[1] ) );
+  pBe.push_back( ( PVecHe6[2]+PVecHe4[2] ) );
+  
+  //make the 8Be physical parameters, energy, theta, phi
+  Be10Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe10 );  //Energy, from E=p^2/2m
+  Be10Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
+  Be10Values[2] = atan2( pBe[1],pBe[0] ); //Phi
+
+  return Be10Values;
 }
 
 double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
