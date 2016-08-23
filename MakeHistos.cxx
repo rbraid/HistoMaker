@@ -1025,7 +1025,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     if(nHe4==1 && nHe6==1)
     {
       double *Be10Vals = CalcBe10fromHe64(He6Hit,He4Hit);
-      TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",hit->GetDetectorNumber()));
+      TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",He6Hit->GetDetectorNumber()));
       be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
     }
 //***********************

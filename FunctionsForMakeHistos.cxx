@@ -815,7 +815,7 @@ double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
   //make the 8Be physical parameters, energy, theta, phi
   Be8Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe8 );  //Energy, from E=p^2/2m
   Be8Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
-  Be8Values[2] = atan( pBe[1],pBe[0] ); //Phi
+  Be8Values[2] = atan2( pBe[1],pBe[0] ); //Phi
     
   return Be8Values;
 }
