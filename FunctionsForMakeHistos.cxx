@@ -841,31 +841,26 @@ double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
   const double mHe4 = 4.0*931.494027 + 2.4249156;
   const double mHe6 = 6.0*931.494027 + 17.5928;
   const double mBe10 = 10.*931.494027 + 12.6074;
+
+  const double BreakupQ = -7.409523;
   
-  vector<double> PVecHe6, PVecHe4, pBe;
   //Convert from energy to momentum
-  double PAlpha1 = sqrt( 2.0*mHe6*He6Hit->GetEnergyMeV() );
-  double PAlpha2 = sqrt( 2.0*mHe4*He4Hit->GetEnergyMeV() );
+  double PHe6Mag = sqrt( 2.0*mHe6*He6Hit->GetEnergyMeV() );
+  double PHe4Mag = sqrt( 2.0*mHe4*He4Hit->GetEnergyMeV() );
+
+  TVector3 PHe6 = He6Hit->GetDPosition();
+  TVector3 PHe4 = He4Hit->GetDPosition();
+
+  PHe6.SetMag(PHe6Mag);
+  PHe4.SetMag(PHe4Mag);
+
+  TVector3 PBe;
+
+  PBe = PHe6 + PHe4;
   
-  //fill the momentum vector for the first alpha
-  PVecHe6.push_back( PAlpha1*sin( He6Hit->GetDPosition().Theta() )*cos( He6Hit->GetDPosition().Phi() ) );
-  PVecHe6.push_back( PAlpha1*sin( He6Hit->GetDPosition().Theta() )*sin( He6Hit->GetDPosition().Phi() ) );
-  PVecHe6.push_back( PAlpha1*cos( He6Hit->GetDPosition().Theta() ) );
-  
-  //fill the momentum vector for the second alpha
-  PVecHe4.push_back( PAlpha2*sin( He4Hit->GetDPosition().Theta() )*cos( He6Hit->GetDPosition().Phi() ) );
-  PVecHe4.push_back( PAlpha2*sin( He4Hit->GetDPosition().Theta() )*sin( He6Hit->GetDPosition().Phi() ) );
-  PVecHe4.push_back( PAlpha2*cos( He4Hit->GetDPosition().Theta() ) );
-  
-  //fill the 8Be vector
-  pBe.push_back( ( PVecHe6[0]+PVecHe4[0] ) );
-  pBe.push_back( ( PVecHe6[1]+PVecHe4[1] ) );
-  pBe.push_back( ( PVecHe6[2]+PVecHe4[2] ) );
-  
-  //make the 8Be physical parameters, energy, theta, phi
-  Be10Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe10 );  //Energy, from E=p^2/2m
-  Be10Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
-  Be10Values[2] = atan2( pBe[1],pBe[0] ); //Phi
+  Be10Values[0] = PBe.Mag2()/(2*mBe10) + BreakupQ;  //Energy, from E=p^2/2m
+  Be10Values[1] = PBe.Theta();
+  Be10Values[2] = PBe.Phi();
 
   return Be10Values;
 }
