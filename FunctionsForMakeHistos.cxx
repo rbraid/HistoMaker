@@ -873,7 +873,7 @@ double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
 
   PBe = PHe6 + PHe4;
   
-  Be10Values[0] = PBe.Mag2()/(2*mBe10);  //Energy, from E=p^2/2m
+  Be10Values[0] = PBe.Mag2()/(2*mBe10) - BreakupQ;  //Energy, from E=p^2/2m
   Be10Values[1] = PBe.Theta();
   Be10Values[2] = PBe.Phi();
 
