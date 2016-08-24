@@ -1036,6 +1036,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       double *Be10Vals = CalcBe10fromHe64(He6Hit,He4Hit);
       TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",He6Hit->GetDetectorNumber()));
       be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
+
+      TH2I *idptr = (TH2I*)outlist->FindObject("detno_He64");
+      idptr->Fill(He4Hit->GetDetectorNumber(),He6Hit->GetDetectorNumber());
     }
 
     if(nBe10==1 && nHe6==1 && csm->GetMultiplicity()==3)
@@ -1051,6 +1054,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       double *Be10Vals = CalcBe10fromHe64(He6Hit,OtherHit);
       TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe6Be10",He6Hit->GetDetectorNumber()));
       be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
+
+      TH2I *idptr = (TH2I*)outlist->FindObject("detno_He64_6tag");
+      idptr->Fill(OtherHit->GetDetectorNumber(),He6Hit->GetDetectorNumber());
     }
 
     if(nBe10==1 && nHe4==1 && csm->GetMultiplicity()==3)
@@ -1066,6 +1072,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       double *Be10Vals = CalcBe10fromHe64(OtherHit,He4Hit);
       TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe4Be10",He4Hit->GetDetectorNumber()));
       be10evtptr->Fill(Be10Vals[1]*180/3.14159,Be10Vals[0]);
+
+      TH2I *idptr = (TH2I*)outlist->FindObject("detno_He64_4tag");
+      idptr->Fill(He4Hit->GetDetectorNumber(),OtherHit->GetDetectorNumber());
     }
 //***********************
 //        Gammas

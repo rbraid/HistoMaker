@@ -570,6 +570,21 @@ void SetupHistos(TList *outlist)
   temp2INT = (TH2I*)outlist->FindObject("nBe10_vs_mult");
   temp2INT->GetXaxis()->SetTitle("nBe10");
   temp2INT->GetYaxis()->SetTitle("Multiplicity");
+
+  outlist->Add(new TH2I("detno_He64","Detector Number for He4 and He6",4,1,5,4,1,5));
+  temp2INT = (TH2I*)outlist->FindObject("detno_He64");
+  temp2INT->GetXaxis()->SetTitle("Detector Number for 4He");
+  temp2INT->GetYaxis()->SetTitle("Detector Number for 6He");
+
+  outlist->Add(new TH2I("detno_He64_6tag","Detector Number for He4 and He6",4,1,5,4,1,5));
+  temp2INT = (TH2I*)outlist->FindObject("detno_He64_6tag");
+  temp2INT->GetXaxis()->SetTitle("Detector Number for 4He");
+  temp2INT->GetYaxis()->SetTitle("Detector Number for 6He");
+
+  outlist->Add(new TH2I("detno_He64_4tag","Detector Number for He4 and He6",4,1,5,4,1,5));
+  temp2INT = (TH2I*)outlist->FindObject("detno_He64_4tag");
+  temp2INT->GetXaxis()->SetTitle("Detector Number for 4He");
+  temp2INT->GetYaxis()->SetTitle("Detector Number for 6He");
   
 
 //   outlist->Add(new TH1D("fred1_1","Total energy of multiplicity 3",100,0,100));
@@ -858,7 +873,7 @@ double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
 
   PBe = PHe6 + PHe4;
   
-  Be10Values[0] = PBe.Mag2()/(2*mBe10) - BreakupQ;  //Energy, from E=p^2/2m
+  Be10Values[0] = PBe.Mag2()/(2*mBe10);  //Energy, from E=p^2/2m
   Be10Values[1] = PBe.Theta();
   Be10Values[2] = PBe.Phi();
 
