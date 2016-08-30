@@ -120,14 +120,14 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("BeEx%i_mult",id),Form("Be-12 Excitation Energy vs multiplicity",id),450,-10,45,5,0,4));
+    outlist->Add(new TH2I(Form("BeEx%i_mult",id),Form("Be-12 Excitation Energy vs multiplicity",id),450,-10,45,4,0,4));
 
     outlist->Add(new TH1D(Form("Be10Ex%i",id),Form("Be-10 Excitation Energy",id),450,-10,45));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("Be10Ex%i_mult",id),Form("Be-10 Excitation Energy vs multiplicity",id),450,-10,45,5,0,4));
+    outlist->Add(new TH2I(Form("Be10Ex%i_mult",id),Form("Be-10 Excitation Energy vs multiplicity",id),450,-10,45,4,0,4));
 
     outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2589",id),Form("Be-10 Excitation Energy, cut on gamma rays",id),450,-10,45));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",id));
@@ -204,6 +204,21 @@ void SetupHistos(TList *outlist)
     outlist->Add(new TH2I(Form("Be12Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),450,-10,45,28,0,56));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be12Ex_Vs_Theta_%i",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_4He",id),Form("Total Energy vs Theta in Detector %i",id),450,-10,45,28,0,56));
+    temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_4He",id));
+    temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+    
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_6He",id),Form("Total Energy vs Theta in Detector %i",id),450,-10,45,28,0,56));
+    temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_6He",id));
+    temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult3_10Be",id),Form("Total Energy vs Theta in Detector %i",id),450,-10,45,28,0,56));
+    temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult3_10Be",id));
+    temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
     
     outlist->Add(new TH1D(Form("Be12Ex%i_gcut_2102",id),Form("Be-12 Excitation Energy, cut on gamma rays",id),450,-10,45));

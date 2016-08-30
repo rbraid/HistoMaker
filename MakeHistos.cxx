@@ -925,6 +925,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     int Be10Loc = -1;
     int He6Loc = -1;
     int He4Loc = -1;
+
+    double totE=0.;
     
     for(int xx = 0;xx<csm->GetMultiplicity();xx++)
     {
@@ -933,6 +935,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       TH1I *idptr = (TH1I*)outlist->FindObject(Form("NBe_%i",hit->GetDetectorNumber()));
       TH1I *idptrhe = (TH1I*)outlist->FindObject(Form("NHe_%i",hit->GetDetectorNumber()));
       
+      totE+=hit->GetEnergyMeV();
       
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
       {
@@ -1075,6 +1078,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
       TH2I *idptr = (TH2I*)outlist->FindObject("detno_He64_4tag");
       idptr->Fill(He4Hit->GetDetectorNumber(),OtherHit->GetDetectorNumber());
+    }
+
+    if(nHe4 == 1 && csm->GetMultiplicity()==2)
+    {
+      TH2I *evtptr = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_4He",He4Hit->GetDetectorNumber()));
+      evtptr->Fill(totE,He4Hit->GetThetaDeg());
+    }
+    if(nHe6 == 1 && csm->GetMultiplicity()==2)
+    {
+      TH2I *evtptr = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_6He",He6Hit->GetDetectorNumber()));
+      evtptr->Fill(totE,He6Hit->GetThetaDeg());
+    }
+    if(nBe10 == 1 && csm->GetMultiplicity()==3)
+    {
+      TH2I *evtptr = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult3_10Be",Be10Hit->GetDetectorNumber()));
+      evtptr->Fill(totE,Be10Hit->GetThetaDeg());
     }
 //***********************
 //        Gammas
