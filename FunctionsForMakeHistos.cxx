@@ -458,6 +458,11 @@ void SetupHistos(TList *outlist)
 //     temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",det));
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
 //     temp1->GetYaxis()->SetTitle("Counts");
+
+outlist->Add(new TH2I(Form("EvTheta_%i_BE10_noid",det),Form("EvTheta %i of 10Be based of kinematics, no PID",det),100,0,100,350,0,70));
+temp2INT = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",det));
+temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH1D(Form("gCutE_%i",det),Form("Total E, cut on 2.125 MeV gamma ray",det),6500,0,65));
     temp1 = (TH1D*)outlist->FindObject(Form("gCutE_%i",det));

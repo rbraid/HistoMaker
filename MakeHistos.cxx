@@ -1098,7 +1098,48 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //***********************
 //Looking for below PID 10Be
 //***********************
-    
+    if(csm->GetMultiplicity() >= 2)
+    {
+      for(int aa=0;aa<csm->GetMultiplicity();aa++)
+      {
+	TCSMHit *hita = csm->GetHit(aa);
+	if(hita->GetEEnergy()<10.)
+	{
+	  double* CorrVals = CorrParticle(hita, 10);
+	  
+	  for(int bb=aa+1;bb<csm->GetMultiplicity();bb++)
+	  {
+	    TCSMHit *hitb = csm->GetHit(bb);
+	    if(hitb->GetEEnergy()<10.)
+	    {
+	      int conditions = 0;
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]))
+		conditions++;
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]))
+		conditions++;
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]))
+		conditions++;
+
+// 	      if(conditions>=1)
+// 	      {
+// 		cout<<"Energy: "<<hitb->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hitb->GetEnergy(),CorrVals[0])<<endl;
+// 		cout<<"Theta: "<<hitb->GetPosition().Theta()*180./TMath::Pi()<<" "<<CorrVals[1]*180./TMath::Pi()<<"   "<<AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1])<<endl;
+// 		cout<<"Phi: "<<hitb->GetPosition().Phi()*180./TMath::Pi()<<" "<<CorrVals[2]*180./TMath::Pi()<<"   "<<AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
+// 	      }
+	      
+	      if(conditions==3)
+	      {
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hita->GetDetectorNumber()));
+		evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hitb->GetDetectorNumber()));
+		evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+	      }
+	    }
+	  }
+	}
+      }
+    }
 //***********************
 //        Gammas
 //***********************
@@ -1277,8 +1318,8 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 // 	if(conditions>=1)
 // 	{
 // 	  cout<<"Energy: "<<hit->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hit->GetEnergy(),CorrVals[0])<<endl;
-// 	  cout<<"Theta: "<<hit->GetPosition().Theta()<<" "<<CorrVals[1]<<"   "<<AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])<<endl;
-// 	  cout<<"Phi: "<<hit->GetPosition().Phi()<<" "<<CorrVals[2]<<"   "<<AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
+// 	  cout<<"Theta: "<<hit->GetPosition().Theta()*180./TMath::Pi()<<" "<<CorrVals[1]*180./TMath::Pi()<<"   "<<AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])<<endl;
+// 	  cout<<"Phi: "<<hit->GetPosition().Phi()*180./TMath::Pi()<<" "<<CorrVals[2]*180./TMath::Pi()<<"   "<<AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
 // 	}
 
 	TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
