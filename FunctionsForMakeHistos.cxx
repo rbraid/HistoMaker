@@ -127,6 +127,11 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid",id),Form("Be-10 Excitation Energy",id),700,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
     outlist->Add(new TH2I(Form("Be10Ex%i_mult",id),Form("Be-10 Excitation Energy vs multiplicity",id),700,-10,60,4,0,4));
 
     outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2589",id),Form("Be-10 Excitation Energy, cut on gamma rays",id),700,-10,60));
@@ -174,6 +179,11 @@ void SetupHistos(TList *outlist)
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
 
+    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_noid",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),700,-10,60,28,0,56));
+    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",id));
+    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+    
     outlist->Add(new TH1D(Form("Be11Ex%i",id),Form("Be-11 Excitation Energy",id),700,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -304,6 +314,11 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+    outlist->Add(new TH2I(Form("EvTheta_%i_BE10_noid",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
+    temp2INT = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",id));
+    temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10_fromHe",id),Form("EvTheta %i of the 10Be, made from He6+He4",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_fromHe",id));
@@ -458,11 +473,6 @@ void SetupHistos(TList *outlist)
 //     temp1 = (TH1D*)outlist->FindObject(Form("AlphaEx%i",det));
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
 //     temp1->GetYaxis()->SetTitle("Counts");
-
-outlist->Add(new TH2I(Form("EvTheta_%i_BE10_noid",det),Form("EvTheta %i of 10Be based of kinematics, no PID",det),100,0,100,350,0,70));
-temp2INT = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",det));
-temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
-temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     outlist->Add(new TH1D(Form("gCutE_%i",det),Form("Total E, cut on 2.125 MeV gamma ray",det),6500,0,65));
     temp1 = (TH1D*)outlist->FindObject(Form("gCutE_%i",det));
