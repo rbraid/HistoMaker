@@ -1096,6 +1096,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       evtptr->Fill(totE,Be10Hit->GetThetaDeg());
     }
 //***********************
+//Looking for below PID 10Be
+//***********************
+    
+//***********************
 //        Gammas
 //***********************
     for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
