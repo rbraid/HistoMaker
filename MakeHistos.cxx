@@ -1128,35 +1128,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 	      }
 	      
 	      if(conditions==3)
-	      {
-		int det = 0;
-		if(hita->GetDetectorNumber() <3)
-		  det = hita->GetDetectorNumber();
-		else if(hitb->GetDetectorNumber() <3)
-		  det = hitb->GetDetectorNumber();
-		else
-		  cerr<<"Both hits are in side detectors, what?"<<endl;
-		
-		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",det));
-		evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+	      {		
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hita->GetDetectorNumber()));
+		if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 
-		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",det));
-		evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hitb->GetDetectorNumber()));
+		if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
 
 		double excitecA = GetExciteE_Heavy_Corrected(hita,10);
 		double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
 		
 		TH2I *evtA = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hita->GetDetectorNumber()));
-		evtA->Fill(excitecA,hitb->GetThetaDeg());
+		if(evtA) evtA->Fill(excitecA,hita->GetThetaDeg());
 
 		TH2I *evtB = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hitb->GetDetectorNumber()));
-		evtB->Fill(excitecB,hitb->GetThetaDeg());
+		if(evtB) evtB->Fill(excitecB,hitb->GetThetaDeg());
 
 		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",hita->GetDetectorNumber()));
-		exA->Fill(excitecA);
+		if(exA) exA->Fill(excitecA);
 
 		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",hitb->GetDetectorNumber()));
-		exB->Fill(excitecB);
+		if(exB) exB->Fill(excitecB);
 	      }
 	    }
 	  }
