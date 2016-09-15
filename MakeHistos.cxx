@@ -606,6 +606,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(temp2) temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEEnergy()/1000.);
       if(DEBUG) cout<<"HitPattern"<<endl;
 
+      if(hit->GetDetectorNumber() == 2)
+      {
+	TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
+	blehptr->Fill(15-hit->GetDVerticalStrip());
+      }
+      else if(hit->GetDetectorNumber() == 1)
+      {
+	TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
+	blehptr->Fill(hit->GetDVerticalStrip());
+      }
+	
+
       if(hit->GetDEnergy()>500)
       {
 	temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
