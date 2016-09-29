@@ -638,8 +638,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	if(hit->GetDthickness()>5)
 	{
 	  //cout<<thickness<<endl;
-	  temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
-	  temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+	  if(hit->GetDEnergy()>0 && hit->GetEEnergy()>0)
+	  {
+	    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
+	    temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+	  }
 
 	  //temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
 	  //temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
@@ -1124,13 +1127,37 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TCSMHit *hitb = csm->GetHit(bb);
 	    if(hitb->GetEEnergy()<10.)
 	    {
-	      int conditions = 0;
-	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]))
-		conditions++;
-	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]))
-		conditions++;
-	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]))
-		conditions++;
+	      int conditions20 = 0;
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.2)
+		conditions20++;
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.2)
+		conditions20++;
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.2)
+		conditions20++;
+
+	      int conditions1 = 0;
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.01)
+		conditions1++;
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.01)
+		conditions1++;
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.01)
+		conditions1++;
+
+	      int conditions5 = 0;
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.05)
+		conditions5++;
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.05)
+		conditions5++;
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.05)
+		conditions5++;
+
+	      int conditions10 = 0;
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.1)
+		conditions10++;
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.1)
+		conditions10++;
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.1)
+		conditions10++;
 
 // 	      if(conditions>=1)
 // 	      {
@@ -1139,29 +1166,85 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 // 		cout<<"Phi: "<<hitb->GetPosition().Phi()*180./TMath::Pi()<<" "<<CorrVals[2]*180./TMath::Pi()<<"   "<<AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
 // 	      }
 	      
-	      if(conditions==3)
+	      if(conditions20==3)
 	      {		
-		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hita->GetDetectorNumber()));
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",hita->GetDetectorNumber()));
 		if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 
-		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",hitb->GetDetectorNumber()));
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",hitb->GetDetectorNumber()));
 		if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
 
 		double excitecA = GetExciteE_Heavy_Corrected(hita,10);
 		double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
 		
-		TH2I *evtA = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hita->GetDetectorNumber()));
+		TH2I *evtA = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid_20",hita->GetDetectorNumber()));
 		if(evtA) evtA->Fill(excitecA,hita->GetThetaDeg());
 
-		TH2I *evtB = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hitb->GetDetectorNumber()));
+		TH2I *evtB = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid_20",hitb->GetDetectorNumber()));
 		if(evtB) evtB->Fill(excitecB,hitb->GetThetaDeg());
 
-		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",hita->GetDetectorNumber()));
+		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hita->GetDetectorNumber()));
 		if(exA) exA->Fill(excitecA);
 
-		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",hitb->GetDetectorNumber()));
+		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hitb->GetDetectorNumber()));
 		if(exB) exB->Fill(excitecB);
 	      }
+
+	      if(conditions10==3)
+	      {
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_10",hita->GetDetectorNumber()));
+		if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_10",hitb->GetDetectorNumber()));
+		if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+		double excitecA = GetExciteE_Heavy_Corrected(hita,10);
+		double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+
+		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",hita->GetDetectorNumber()));
+		if(exA) exA->Fill(excitecA);
+
+		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",hitb->GetDetectorNumber()));
+		if(exB) exB->Fill(excitecB);
+	      }
+
+	      if(conditions5==3)
+	      {
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_5",hita->GetDetectorNumber()));
+		if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_5",hitb->GetDetectorNumber()));
+		if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+		double excitecA = GetExciteE_Heavy_Corrected(hita,10);
+		double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+
+		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_5",hita->GetDetectorNumber()));
+		if(exA) exA->Fill(excitecA);
+
+		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_5",hitb->GetDetectorNumber()));
+		if(exB) exB->Fill(excitecB);
+	      }
+
+	      if(conditions1==3)
+	      {
+		TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_1",hita->GetDetectorNumber()));
+		if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+
+		TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_1",hitb->GetDetectorNumber()));
+		if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+		double excitecA = GetExciteE_Heavy_Corrected(hita,10);
+		double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+
+		TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_1",hita->GetDetectorNumber()));
+		if(exA) exA->Fill(excitecA);
+
+		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_1",hitb->GetDetectorNumber()));
+		if(exB) exB->Fill(excitecB);
+	      }
+
+	      cout<< conditions20<< " "<<conditions10<<" "<<conditions5<<" "<<conditions1<<endl;
 	    }
 	  }
 	}

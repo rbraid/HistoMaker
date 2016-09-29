@@ -127,8 +127,20 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be10Ex%i_noid",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid",id));
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_20",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_10",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_5",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_5",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_1",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_1",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
@@ -317,8 +329,20 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid",id));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_20",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_10",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_10",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_5",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_5",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_1",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_1",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
