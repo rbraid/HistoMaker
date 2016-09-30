@@ -1244,7 +1244,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		if(exB) exB->Fill(excitecB);
 	      }
 
-	      cout<< conditions20<< " "<<conditions10<<" "<<conditions5<<" "<<conditions1<<endl;
+	      //cout<< conditions20<< " "<<conditions10<<" "<<conditions5<<" "<<conditions1<<endl;
 	    }
 	  }
 	}
