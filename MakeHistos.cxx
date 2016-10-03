@@ -640,8 +640,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  //cout<<thickness<<endl;
 	  if(hit->GetDEnergy()>0 && hit->GetEEnergy()>0)
 	  {
+	    if(hit->GetDVerticalStrip() == 7 && hit->GetDHorizontalStrip() == 9)
+	      continue;
+	    
 	    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
 	    temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+
+// 	    if((hit->GetEnergyMeV()>7.1 && hit->GetEnergyMeV()<8.65) &&
+// 	      (hit->GetDdE_dx()>200 && hit->GetDdE_dx() < 290) &&
+// 	      hit->GetDetectorNumber()==2)
+// 	    {
+// 	      hit->Print();
+// 	    }
 	  }
 
 	  //temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
