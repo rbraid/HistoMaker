@@ -1128,35 +1128,35 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    if(hitb->GetEEnergy()<10.)
 	    {
 	      int conditions20 = 0;
-	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.2)
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.2))
 		conditions20++;
-	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.2)
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.2))
 		conditions20++;
-	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.2)
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.2))
 		conditions20++;
 
 	      int conditions1 = 0;
-	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.01)
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.01))
 		conditions1++;
-	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.01)
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.01))
 		conditions1++;
-	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.01)
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.01))
 		conditions1++;
 
 	      int conditions5 = 0;
-	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.05)
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.05))
 		conditions5++;
-	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.05)
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.05))
 		conditions5++;
-	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.05)
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.05))
 		conditions5++;
 
 	      int conditions10 = 0;
-	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0]),.1)
+	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.1))
 		conditions10++;
-	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1]),.1)
+	      if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.1))
 		conditions10++;
-	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2]),.1)
+	      if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.1))
 		conditions10++;
 
 // 	      if(conditions>=1)
