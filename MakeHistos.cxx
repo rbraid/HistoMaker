@@ -1198,6 +1198,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hitb->GetDetectorNumber()));
 		if(exB) exB->Fill(excitecB);
+
+		TH2I *eve = (TH2I*)outlist->FindObject(Form("EvE_%i_BE10_noid",hita->GetDetectorNumber()));
+		if(eve) eve->Fill(hita->GetEnergyMeV(),hitb->GetEnergyMeV());
 	      }
 
 	      if(conditions10==3)

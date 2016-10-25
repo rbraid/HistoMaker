@@ -329,6 +329,8 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
+    outlist->Add(new TH2I(Form("EvE_%i_BE10_noid",id),Form("Energy vs Energy of non-pid 10Be in Detector %i",id),350,0,70,350,0,70));
+
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_20",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
