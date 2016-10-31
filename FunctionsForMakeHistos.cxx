@@ -328,9 +328,7 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2I(Form("EvE_%i_BE10_noid",id),Form("Energy vs Energy of non-pid 10Be in Detector %i",id),350,0,70,350,0,70));
-
+    
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10_noid_20",id),Form("EvTheta %i of 10Be based of kinematics, no PID",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
@@ -591,6 +589,12 @@ void SetupHistos(TList *outlist)
     }
   }
   
+  outlist->Add(new TH2I("EvE_BE10_noid","Energy vs Energy of non-pid 10Be",600,0,30,600,0,30));
+  outlist->Add(new TH2I("EvE_BE10_noid_corrected","Energy vs Energy of non-pid 10Be with energy correction",600,0,30,600,0,30));
+  outlist->Add(new TH2I("EMaxvsETot","Max Energy vs Total Energy of non-pid 10Be with energy correction",600,0,30,1200,0,60));
+  temp2INT = (TH2I*)outlist->FindObject("EMaxvsETot");
+  temp2INT->GetXaxis()->SetTitle("Max Energy between the two particles in MeV");
+  temp2INT->GetYaxis()->SetTitle("Total Energy in MeV");
   
   outlist->Add(new TH3D("positions","positions",200,0,100,120,-30,30,400,-100,100));
   outlist->Add(new TH2D("positions_proj","positions_proj",220,-20,100,400,-100,100));
@@ -1064,6 +1068,108 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
   
   return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
   
+}
+
+double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
+{
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      break;
+    default:
+      cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  TVector3 pvec = CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+
+  return CalcCOMEnergyMeV(pvec, Z);
+}
+
+double CalcCOMEnergyMeV(TVector3 pvec, int Z)
+{
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    default:
+      cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  return pvec.Mag2()/(2*MASS);
+}
+
+double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
+{
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      break;
+    default:
+      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  TVector3 pvec = CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+
+  return CalcCOMThetaDeg(pvec, Z);
+}
+
+double CalcCOMThetaDeg(TVector3 pvec, int Z)
+{
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    default:
+      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  return pvec.Theta()*180./TMath::Pi();
 }
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)

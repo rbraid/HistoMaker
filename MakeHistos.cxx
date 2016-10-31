@@ -433,6 +433,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      temp1->Fill(Doppler(tigresshit,hit,10));
 	    }
 	  }
+
+	  
 	}
       }
 //////////////////////////////////////////////////
@@ -1199,8 +1201,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hitb->GetDetectorNumber()));
 		if(exB) exB->Fill(excitecB);
 
-		TH2I *eve = (TH2I*)outlist->FindObject(Form("EvE_%i_BE10_noid",hita->GetDetectorNumber()));
+		TH2I *eve = (TH2I*)outlist->FindObject("EvE_BE10_noid");
 		if(eve) eve->Fill(hita->GetEnergyMeV(),hitb->GetEnergyMeV());
+		
+		TH2I *evec = (TH2I*)outlist->FindObject("EvE_BE10_noid_corrected");
+		if(evec) evec->Fill(hita->GetCorrectedEnergyMeV("10be"),hitb->GetCorrectedEnergyMeV("10be"));
+
+		if(hita->GetEnergy()<hitb->GetEnergy())
+		{
+		  TCSMHit *temp;
+		  temp=hita;
+		  hita=hitb;
+		  hitb=temp;
+		}
+
+		TH2I *emvet = (TH2I*)outlist->FindObject("EMaxvsETot");
+		if(emvet) emvet->Fill(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
 	      }
 
 	      if(conditions10==3)
