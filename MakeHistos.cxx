@@ -1139,6 +1139,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	    TCSMHit *hitb = csm->GetHit(bb);
 	    if(hitb->GetEEnergy()<10.)
 	    {
+	      if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
+		continue;
+	      
 	      int conditions20 = 0;
 	      if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.2))
 		conditions20++;
@@ -1215,14 +1218,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		  hitb=temp;
 		}
 
-		if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
-		  cout<<"!";
-
 		TH2I *emvet = (TH2I*)outlist->FindObject("EMaxvsETot_10Be");
 		if(emvet) emvet->Fill(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
 
 		TH2I *etotvang = (TH2I*)outlist->FindObject("RelAnglevsETot_10Be");
 		if(etotvang) etotvang->Fill(hita->GetPosition().Angle(hitb->GetPosition())*180./TMath::Pi(),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
+
+		TH2I *etotvtheta = (TH2I*)outlist->FindObject("ThetavsETot_10Be");
+		if(etotvtheta) etotvtheta->Fill(hita->GetPosition().Theta()*180./TMath::Pi(),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
 
 		if(TCutG *cut = (TCutG*)(cutlist->FindObject("Be10_emax_vs_etotal_gs")))
 		{
