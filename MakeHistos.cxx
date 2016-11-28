@@ -1223,6 +1223,30 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
 		TH2I *etotvang = (TH2I*)outlist->FindObject("RelAnglevsETot_10Be");
 		if(etotvang) etotvang->Fill(hita->GetPosition().Angle(hitb->GetPosition()),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
+
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject("Be10_emax_vs_etotal_gs"));
+		{
+		  if(cut->IsInside(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"))
+		  {
+		    TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_gs",hita->GetDetectorNumber()));
+		    if(exA) exA->Fill(excitecA);
+		     
+		     TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_gs",hitb->GetDetectorNumber()));
+		    if(exB) exB->Fill(excitecB);
+		  }
+		}
+
+		if(TCutG *cut = (TCutG*)(cutlist->FindObject("Be10_emax_vs_etotal_1st"));
+		   {
+		     if(cut->IsInside(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"))
+		     {
+		       TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_1e",hita->GetDetectorNumber()));
+		       if(exA) exA->Fill(excitecA);
+
+				      TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_1e",hitb->GetDetectorNumber()));
+		       if(exB) exB->Fill(excitecB);
+		     }
+		   }
 	      }
 
 	      if(conditions10==3)

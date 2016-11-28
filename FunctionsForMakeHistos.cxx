@@ -131,6 +131,17 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_20_gs",id),Form("Be-10 Excitation Energy, Ground State",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_gs",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+
+    outlist->Add(new TH1D(Form("Be10Ex%i_noid_20_1e",id),Form("Be-10 Excitation Energy, 1st Excited State",id),1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_1e",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
     outlist->Add(new TH1D(Form("Be10Ex%i_noid_10",id),Form("Be-10 Excitation Energy",id),1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
