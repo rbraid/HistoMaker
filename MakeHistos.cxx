@@ -1215,8 +1215,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 		  hitb=temp;
 		}
 
-		TH2I *emvet = (TH2I*)outlist->FindObject("EMaxvsETot");
+		if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
+		  cout<<"!";
+
+		TH2I *emvet = (TH2I*)outlist->FindObject("EMaxvsETot_10Be");
 		if(emvet) emvet->Fill(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
+
+		TH2I *etotvang = (TH2I*)outlist->FindObject("RelAnglevsETot_10Be");
+		if(etotvang) etotvang->Fill(hita->GetPosition().Angle(hitb->GetPosition()),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
 	      }
 
 	      if(conditions10==3)

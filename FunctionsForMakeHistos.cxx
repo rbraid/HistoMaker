@@ -591,9 +591,15 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH2I("EvE_BE10_noid","Energy vs Energy of non-pid 10Be",600,0,30,600,0,30));
   outlist->Add(new TH2I("EvE_BE10_noid_corrected","Energy vs Energy of non-pid 10Be with energy correction",600,0,30,600,0,30));
-  outlist->Add(new TH2I("EMaxvsETot","Max Energy vs Total Energy of non-pid 10Be with energy correction",600,0,30,1200,0,60));
-  temp2INT = (TH2I*)outlist->FindObject("EMaxvsETot");
+  
+  outlist->Add(new TH2I("EMaxvsETot_10Be","Max Energy vs Total Energy of non-pid 10Be with energy correction",600,0,30,1200,0,60));
+  temp2INT = (TH2I*)outlist->FindObject("EMaxvsETot_10Be");
   temp2INT->GetXaxis()->SetTitle("Max Energy between the two particles in MeV");
+  temp2INT->GetYaxis()->SetTitle("Total Energy in MeV");
+
+  outlist->Add(new TH2I("RelAnglevsETot_10Be","Max Energy vs Total Energy of non-pid 10Be with energy correction",600,0,30,1200,0,60));
+  temp2INT = (TH2I*)outlist->FindObject("RelAnglevsETot_10Be");
+  temp2INT->GetXaxis()->SetTitle("Relative Angle in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy in MeV");
   
   outlist->Add(new TH3D("positions","positions",200,0,100,120,-30,30,400,-100,100));
