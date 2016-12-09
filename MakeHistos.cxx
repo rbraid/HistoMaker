@@ -1177,6 +1177,13 @@ if(csm->GetMultiplicity() == 2)
 	  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
 	  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	  duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+	  double excitecA = GetExciteE_Heavy_Corrected(hita,10);
+	  double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+
+	  TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
+	  dualex->Fill(excitecA);
+	  dualex->Fill(excitecB);
 	}
       }
     }

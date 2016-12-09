@@ -4,6 +4,7 @@ void SetupHistos(TList *outlist)
 {
   if(DEBUG) cout<<"Setting up Histos"<<endl;
   TH1D *temp1 = 0;
+  TH1I *temp1INT = 0;
   TH2D *temp2 = 0;
   TH2I *temp2INT = 0;
   TH3D *temp3 = 0;
@@ -771,30 +772,35 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1I("Be10Diag_Theta","Difference in non-PID Theta from expected value",720,-360,360));
   outlist->Add(new TH1I("Be10Diag_Energy","Difference in non-PID Energy from expected value",1200,-60,60));
 
-  outlist->Add(new TH2D("Dual10Be_nocut","EvTheta of 2 particles",100,0,100,350,0,70));
-  temp2 = (TH2D*)outlist->FindObject("Dual10Be_nocut");
-  temp2->GetXaxis()->SetTitle("Theta in Degrees");
-  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  outlist->Add(new TH2I("Dual10Be_nocut","EvTheta of 2 particles",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_nocut");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-  outlist->Add(new TH2D("Dual10Be_phicut","EvTheta of 2 particles, cut on Phi",100,0,100,350,0,70));
-  temp2 = (TH2D*)outlist->FindObject("Dual10Be_phicut");
-  temp2->GetXaxis()->SetTitle("Theta in Degrees");
-  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  outlist->Add(new TH2I("Dual10Be_phicut","EvTheta of 2 particles, cut on Phi",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_phicut");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-  outlist->Add(new TH2D("Dual10Be_encut","EvTheta of 2 particles, cut on Energy and Phi",100,0,100,350,0,70));
-  temp2 = (TH2D*)outlist->FindObject("Dual10Be_encut");
-  temp2->GetXaxis()->SetTitle("Theta in Degrees");
-  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  outlist->Add(new TH2I("Dual10Be_encut","EvTheta of 2 particles, cut on Energy and Phi",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_encut");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-  outlist->Add(new TH2D("Dual10Be_thetacut","EvTheta of 2 particles, cut on Theta and Phi",100,0,100,350,0,70));
-  temp2 = (TH2D*)outlist->FindObject("Dual10Be_thetacut");
-  temp2->GetXaxis()->SetTitle("Theta in Degrees");
-  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  outlist->Add(new TH2I("Dual10Be_thetacut","EvTheta of 2 particles, cut on Theta and Phi",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
-  outlist->Add(new TH2D("Dual10Be_allcut","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
-  temp2 = (TH2D*)outlist->FindObject("Dual10Be_allcut");
-  temp2->GetXaxis()->SetTitle("Theta in Degrees");
-  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  outlist->Add(new TH2I("Dual10Be_allcut","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+  outlist->Add(new TH1I("DualBe10_ex_allcut","Be-10 Excitation Energy non-PID cut on Theta, Phi and Energy",1400,-10,60));
+  temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
+  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+  temp1INT->GetYaxis()->SetTitle("Counts");
   
   if(DEBUG)
   {
