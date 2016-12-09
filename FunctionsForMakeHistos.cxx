@@ -765,6 +765,36 @@ void SetupHistos(TList *outlist)
 
   outlist->Add(new TH2I("CvGmult","Charged particle multiplicity vs Gamma multiplicity",20,0,20,20,0,20));
   outlist->Add(new TH2I("CvGmult_12be","Charged particle multiplicity vs Gamma multiplicity, cut on 12Be",20,0,20,20,0,20));
+
+  outlist->Add(new TH1I("Be10Diag_Phi","Difference in non-PID Phi from expected value",720,-360,360));
+  outlist->Add(new TH1I("Be10Diag_Phi_dat","Difference in non-PID Phi from other data",720,-360,360));
+  outlist->Add(new TH1I("Be10Diag_Theta","Difference in non-PID Theta from expected value",720,-360,360));
+  outlist->Add(new TH1I("Be10Diag_Energy","Difference in non-PID Energy from expected value",1200,-60,60));
+
+  outlist->Add(new TH2D("Dual10Be_nocut","EvTheta of 2 particles",100,0,100,350,0,70));
+  temp2 = (TH2D*)outlist->FindObject("Dual10Be_nocut");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+  outlist->Add(new TH2D("Dual10Be_phicut","EvTheta of 2 particles, cut on Phi",100,0,100,350,0,70));
+  temp2 = (TH2D*)outlist->FindObject("Dual10Be_phicut");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+  outlist->Add(new TH2D("Dual10Be_encut","EvTheta of 2 particles, cut on Energy and Phi",100,0,100,350,0,70));
+  temp2 = (TH2D*)outlist->FindObject("Dual10Be_encut");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+  outlist->Add(new TH2D("Dual10Be_thetacut","EvTheta of 2 particles, cut on Theta and Phi",100,0,100,350,0,70));
+  temp2 = (TH2D*)outlist->FindObject("Dual10Be_thetacut");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
+  outlist->Add(new TH2D("Dual10Be_allcut","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  temp2 = (TH2D*)outlist->FindObject("Dual10Be_allcut");
+  temp2->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   
   if(DEBUG)
   {
