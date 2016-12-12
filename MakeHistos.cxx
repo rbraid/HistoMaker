@@ -1155,24 +1155,24 @@ if(csm->GetMultiplicity() == 2)
     double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
     double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
     double phidiff = (hitb->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
-    if(phidiff >= -10 && phidiff <= 10)
+    if(phidiff >= -20 && phidiff <= 20)
     {
       TH2I *dualp = (TH2I*)outlist->FindObject("Dual10Be_phicut");
       dualp->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
       dualp->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-      if(thetadiff >= -3 && thetadiff <= 5)
+      if(thetadiff >= -6 && thetadiff <= 10)
       {
 	TH2I *dualt = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
 	dualt->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	dualt->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
       }
 
-      if(energydiff >= -2.5 && energydiff <= .5)
+      if(energydiff >= -5 && energydiff <= 1)
       {
 	TH2I *duale = (TH2I*)outlist->FindObject("Dual10Be_encut");
 	duale->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	duale->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-	if(thetadiff >= -3 && thetadiff <= 5)
+	if(thetadiff >= -6 && thetadiff <= 10)
 	{
 	  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
 	  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
