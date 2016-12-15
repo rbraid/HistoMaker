@@ -584,6 +584,12 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
     temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
+
+    outlist->Add(new TH2D(Form("EvTheta_%i_10BeBreakup",det),Form("EvTheta %i of 10Be based of kinematics, no PID",det),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup",det));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
     for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
     {
       if(det>2 && type=='E')//This skips 3 and 4 E, which don't exist
@@ -801,6 +807,32 @@ void SetupHistos(TList *outlist)
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
+
+  outlist->Add(new TH2I("Dual10Be_nocut_corrected","EvTheta of 2 particles, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_nocut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_phicut_corrected","EvTheta of 2 particles, cut on Phi, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_phicut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_encut_corrected","EvTheta of 2 particles, cut on Energy and Phi, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_encut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_thetacut_corrected","EvTheta of 2 particles, cut on Theta and Phi, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_thetacut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+
   
   if(DEBUG)
   {

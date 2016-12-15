@@ -1122,9 +1122,29 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       TH2I *evtptr = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult3_10Be",Be10Hit->GetDetectorNumber()));
       evtptr->Fill(totE,Be10Hit->GetThetaDeg());
     }
+
+//***********************
+//Looking for 10Be -> 4He + 6He
+//***********************
+if(csm->GetMultiplicity()==3)
+{
+  for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+  {
+    TCSMHit *hit = csm->GetHit(xx);
+
+    TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup",hit->GetDetectorNumber()));
+    be10evtptr->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+  }
+}
 //***********************
 //Looking for below PID 10Be
 //***********************
+for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+{
+  TCSMHit *hit = csm->GetHit(xx);
+
+}
+
 if(csm->GetMultiplicity() == 2)
 {
   TCSMHit *hita = csm->GetHit(0);
@@ -1160,11 +1180,20 @@ if(csm->GetMultiplicity() == 2)
       TH2I *dualp = (TH2I*)outlist->FindObject("Dual10Be_phicut");
       dualp->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
       dualp->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+      TH2I *dualpc = (TH2I*)outlist->FindObject("Dual10Be_phicut_corrected");
+      dualpc->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+      dualpc->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
+      
       if(thetadiff >= -3 && thetadiff <= 5)
       {
 	TH2I *dualt = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
 	dualt->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	dualt->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+	TH2I *dualtc = (TH2I*)outlist->FindObject("Dual10Be_thetacut_corrected");
+	dualtc->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+	dualtc->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
       }
 
       if(energydiff >= -2.5 && energydiff <= .5)
@@ -1172,11 +1201,19 @@ if(csm->GetMultiplicity() == 2)
 	TH2I *duale = (TH2I*)outlist->FindObject("Dual10Be_encut");
 	duale->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	duale->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+	TH2I *dualec = (TH2I*)outlist->FindObject("Dual10Be_encut_corrected");
+	dualec->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+	dualec->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
 	if(thetadiff >= -3 && thetadiff <= 5)
 	{
 	  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
 	  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
 	  duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+
+	  TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
+	  dualac->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+	  dualac->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
 
 	  double excitecA = GetExciteE_Heavy_Corrected(hita,10);
 	  double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
