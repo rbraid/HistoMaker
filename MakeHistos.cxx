@@ -1134,17 +1134,13 @@ if(csm->GetMultiplicity()==3)
 
     TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup",hit->GetDetectorNumber()));
     be10evtptr->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+
+    
   }
 }
 //***********************
 //Looking for below PID 10Be
 //***********************
-for(int xx = 0;xx<csm->GetMultiplicity();xx++)
-{
-  TCSMHit *hit = csm->GetHit(xx);
-
-}
-
 if(csm->GetMultiplicity() == 2)
 {
   TCSMHit *hita = csm->GetHit(0);
