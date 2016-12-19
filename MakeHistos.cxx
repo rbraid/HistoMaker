@@ -1128,6 +1128,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //***********************
 if(csm->GetMultiplicity()==3)
 {
+  int MaxLoc=0;
   for(int xx = 0;xx<csm->GetMultiplicity();xx++)
   {
     TCSMHit *hit = csm->GetHit(xx);
@@ -1135,8 +1136,12 @@ if(csm->GetMultiplicity()==3)
     TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup",hit->GetDetectorNumber()));
     be10evtptr->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
-    
+    if(csm->GetHit(MaxLoc)->GetEnergy() < hit->GetEnergy())
+      MaxLoc = xx;
   }
+
+  TH2D* be10evtptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup_cut",csm->GetHit(MaxLoc)->GetDetectorNumber()));
+  be10evtptr->Fill(csm->GetHit(MaxLoc)->GetThetaDeg(),csm->GetHit(MaxLoc)->GetEnergyMeV());
 }
 //***********************
 //Looking for below PID 10Be
