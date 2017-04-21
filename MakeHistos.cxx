@@ -1231,9 +1231,38 @@ if(csm->GetMultiplicity() == 2)
 	  TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
 	  dualex->Fill(excitecA);
 	  dualex->Fill(excitecB);
-	}
-      }
+
+	  TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
+	  TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
+	  TH1I *gamptrl = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low");
+	  TCSMHit* Hhit;
+	  TCSMHit* Lhit;
+
+	  if(hita->GetEnergyMeV()>=hitb->GetEnergyMeV())
+	  {
+	  	Hhit = hita;
+	  	Lhit = hitb;
+	  }
+	  else
+	  {
+	  	Hhit = hitb;
+	  	Lhit = hita;
+	  }
+
+	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+	  {
+	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+	    
+	    if(tigresshit->GetCore()->GetEnergy()>10)
+	    {
+	      gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+	      gamptrh->Fill(Doppler(tigresshit,Hhit,10));
+	      gamptrl->Fill(Doppler(tigresshit,Lhit,10));
+	    }
     }
+  }
+}
+}
     
     int conditions20 = 0;
     if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.2))
