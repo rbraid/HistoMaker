@@ -479,6 +479,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
 	  multpointer->Fill(csm->GetMultiplicity());
 
+	  TH2I* derp = (TH2I*)outlist->FindObject("Be12TotalEnergy_v_Mult");
+	  double totalE = 0;
+	  for(int i=0; i<csm->GetMultiplicity();i++)
+	  {
+	  	totalE += csm->GetHit(i)->GetEnergyMeV();
+	  }
+
+	  derp->Fill(totalE,csm->GetMultiplicity());
+
 	  double excite = GetExciteE_Heavy(hit,12);
 	  temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(excite);

@@ -50,7 +50,8 @@ void SetupHistos(TList *outlist)
     
     outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
     outlist->Add(new TH1I(Form("Be12Mult_%i",id),Form("Multiplicity of an identified 12Be in detector %i",id),20,0,20));
-    
+
+
 //     outlist->Add(new TH1D(Form("GammaCut_%i",id),Form("Gamma spectrum cut on Ex Spectrum",id),3000,0,30));
 //     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_%i",id));
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -838,6 +839,7 @@ void SetupHistos(TList *outlist)
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
+    outlist->Add(new TH2I("Be12TotalEnergy_v_Mult","Total energy vs Multiplcity with 12Be Identified",100,0,100,5,0,5));
   
   if(DEBUG)
   {
