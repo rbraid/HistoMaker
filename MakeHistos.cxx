@@ -448,8 +448,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
 	  if(temp1) temp1->Fill(GetExciteE_Heavy(hit,11));
 
+      double ex11c =GetExciteE_Heavy_Corrected(hit,11);
 	  temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",hit->GetDetectorNumber()));
-	  if(temp1) temp1->Fill(GetExciteE_Heavy_Corrected(hit,11));
+	  if(temp1) temp1->Fill(ex11c);
+      
+      if(ex11c >= -1 && ex11c<= 1)
+      {
+        temp2INT = (TH2I*)outlist->FindObject(Form("Be11_%i_EvTCOM",hit->GetDetectorNumber()));
+        temp2INT->Fill(CalcCOMThetaDeg(hit,11),CalcCOMEnergyMeV(hit,11));
+        
+        temp2INT = (TH2I*)outlist->FindObject(Form("Be11_TvTCOM_%i",hit->GetDetectorNumber()));
+        temp2INT->Fill(CalcCOMThetaDeg(hit,11),hit->GetThetaDeg());
+      }
 
 	  temp2INT = (TH2I*)outlist->FindObject(Form("Be11Ex%i_mult",hit->GetDetectorNumber()));
 	  temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,11),csm->GetMultiplicity());

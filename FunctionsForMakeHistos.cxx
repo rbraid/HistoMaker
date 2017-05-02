@@ -221,6 +221,13 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
+    outlist->Add(new TH2I(Form("Be11_%i_EvTCOM",id),Form("Be-11 COM Theta vs Energy in Detector %i",id),1400,-10,60,28,0,56));
+    
+    outlist->Add(new TH2I(Form("Be11_TvTCOM_%i",id),Form("Theta vs ThetaCOM for 11Be, detector %i",id),1440,0,360,400,0,100));
+    temp2INT = (TH2I*)outlist->FindObject(Form("Be11_TvTCOM_%i",id));
+    temp2INT->GetXaxis()->SetTitle("Theta COM");
+    temp2INT->GetYaxis()->SetTitle("Theta Lab");
+    
     outlist->Add(new TH1D(Form("Be10Ex%i_corr",id),"Be-10 Excitation Energy, with straggling correction",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -1206,6 +1213,9 @@ double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
     case 8:
       MASS = MASS_BE8;
       break;
+    case 11:
+      MASS = MASS_BE11;
+      break;
     case 0:
       MASS = Hit->GetMassMeV();
       break;
@@ -1234,6 +1244,9 @@ double CalcCOMEnergyMeV(TVector3 pvec, int Z)
     case 8:
       MASS = MASS_BE8;
       break;
+    case 11:
+      MASS = MASS_BE11;
+      break;
     default:
       cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
       MASS = Z;
@@ -1256,6 +1269,9 @@ double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
       break;
     case 8:
       MASS = MASS_BE8;
+      break;
+    case 11:
+      MASS = MASS_BE11;
       break;
     case 0:
       MASS = Hit->GetMassMeV();
@@ -1284,6 +1300,9 @@ double CalcCOMThetaDeg(TVector3 pvec, int Z)
       break;
     case 8:
       MASS = MASS_BE8;
+      break;
+    case 11:
+      MASS = MASS_BE11;
       break;
     default:
       cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
