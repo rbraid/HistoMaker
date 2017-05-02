@@ -1258,6 +1258,33 @@ if(csm->GetMultiplicity() == 2)
 	      gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      gamptrh->Fill(Doppler(tigresshit,Hhit,10));
 	      gamptrl->Fill(Doppler(tigresshit,Lhit,10));
+          
+          double dopp = Doppler(tigresshit,Hhit,10);
+
+          if(dopp>=3.35 && dopp<=3.38)
+          {
+            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_3368");
+            dualexgcut->Fill(excitecA);
+            dualexgcut->Fill(excitecB);
+          }
+          else if(dopp>=2.585 && dopp<=2.597)
+          {
+            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2589");
+            dualexgcut->Fill(excitecA);
+            dualexgcut->Fill(excitecB);
+          }
+          else if(dopp>=2.89 && dopp<=2.91)
+          {
+            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2894");
+            dualexgcut->Fill(excitecA);
+            dualexgcut->Fill(excitecB);
+          }
+          else if(dopp>=2.86 && dopp<=2.87)
+          {
+            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
+            dualexgcut->Fill(excitecA);
+            dualexgcut->Fill(excitecB);
+          }
 	    }
     }
   }
