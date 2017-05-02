@@ -44,8 +44,8 @@ void SetupHistos(TList *outlist)
     
     outlist->Add(new TH1D(Form("ETot_%i_2alpha",id),Form("Total energy with two detected alphas in detector %i",id),100,0,100));
 
-    outlist->Add(new TH1I(Form("NBe_%i",id),Form("Number of Be of each isotope",id),6,8,14));
-    outlist->Add(new TH1I(Form("NHe_%i",id),Form("Number of He of each isotope",id),4,3,7));
+    outlist->Add(new TH1I(Form("NBe_%i",id),"Number of Be of each isotope",6,8,14));
+    outlist->Add(new TH1I(Form("NHe_%i",id),"Number of He of each isotope",4,3,7));
 
     
     outlist->Add(new TH1I(Form("Be10Mult_%i",id),Form("Multiplicity of an identified 10Be in detector %i",id),20,0,20));
@@ -57,32 +57,32 @@ void SetupHistos(TList *outlist)
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
 //     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i",id),Form("Gamma spectrum",id),30000,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp",id),Form("Gamma spectrum",id),30000,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),Form("Gamma spectrum, with excitation > 8 MeV",id),1500,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),"Gamma spectrum, with excitation > 8 MeV",1500,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_lt8",id),Form("Gamma spectrum, with excitation < 8 MeV",id),1500,0,30));
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_lt8",id),"Gamma spectrum, with excitation < 8 MeV",1500,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),Form("Gamma spectrum",id),30000,0,30));
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),Form("Gamma spectrum",id),30000,0,30));
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
