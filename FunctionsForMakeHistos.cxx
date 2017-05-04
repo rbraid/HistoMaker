@@ -520,7 +520,7 @@ void SetupHistos(TList *outlist)
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
 //     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2I(Form("Sigma_11Be_d%i_gs",det),Form("Number of 11Be ground state hits in each pixel for detector %i",16,0,16,16,0,16);
+    outlist->Add(new TH2I(Form("Sigma_11Be_d%i_gs",det),Form("Number of 11Be ground state hits in each pixel for detector %i",det),16,0,16,16,0,16));
     //temp2INT = (TH2I*)outlist->FindObject(Form("Sigma_11Be_d%i_gs",det));
     
     outlist->Add(new TH1D(Form("gCutE_%i",det),"Total E, cut on 2.125 MeV gamma ray",6500,0,65));

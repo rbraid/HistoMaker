@@ -460,7 +460,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           temp2INT = (TH2I*)outlist->FindObject(Form("Be11_TvTCOM_%i",hit->GetDetectorNumber()));
           temp2INT->Fill(CalcCOMThetaDeg(hit,11),hit->GetThetaDeg());
           
-          temp2INT = (TH2I)outlist->FindObject(Form("Sigma_11Be_d%i_gs",hit->GetDetectorNumber()));
+          temp2INT = (TH2I*)outlist->FindObject(Form("Sigma_11Be_d%i_gs",hit->GetDetectorNumber()));
           temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
         }
         
