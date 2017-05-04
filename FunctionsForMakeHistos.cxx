@@ -520,6 +520,9 @@ void SetupHistos(TList *outlist)
 //     temp1->GetXaxis()->SetTitle("Energy in MeV");
 //     temp1->GetYaxis()->SetTitle("Counts");
     
+    outlist->Add(new TH2I(Form("Sigma_11Be_d%i_gs",det),Form("Number of 11Be ground state hits in each pixel for detector %i",16,0,16,16,0,16);
+    //temp2INT = (TH2I*)outlist->FindObject(Form("Sigma_11Be_d%i_gs",det));
+    
     outlist->Add(new TH1D(Form("gCutE_%i",det),"Total E, cut on 2.125 MeV gamma ray",6500,0,65));
     temp1 = (TH1D*)outlist->FindObject(Form("gCutE_%i",det));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -826,17 +829,17 @@ void SetupHistos(TList *outlist)
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
   
-  outlist->Add(new TH1I("DualBe10Ex_gcut_2589","Be-10 Excitation Energy non-PID cut on 3368 #gamma ray",1400,-10,60));
+  outlist->Add(new TH1I("DualBe10Ex_gcut_2589","Be-10 Excitation Energy non-PID cut on 2589 #gamma ray",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2589");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
   
-  outlist->Add(new TH1I("DualBe10Ex_gcut_2894","Be-10 Excitation Energy non-PID cut on 3368 #gamma ray",1400,-10,60));
+  outlist->Add(new TH1I("DualBe10Ex_gcut_2894","Be-10 Excitation Energy non-PID cut on 2894 #gamma ray",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2894");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
   
-  outlist->Add(new TH1I("DualBe10Ex_gcut_286-7","Be-10 Excitation Energy non-PID cut on 3368 #gamma ray",1400,-10,60));
+  outlist->Add(new TH1I("DualBe10Ex_gcut_286-7","Be-10 Excitation Energy non-PID cut on ??? #gamma ray",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
