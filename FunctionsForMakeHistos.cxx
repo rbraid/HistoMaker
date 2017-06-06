@@ -868,6 +868,21 @@ void SetupHistos(TList *outlist)
   temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected_highonly","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected higher energy hit only",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_highonly");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected_lowonly","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected lower energy hit only",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_lowonly");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
 
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_low","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on Low E 10Be",30000,0,30));
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_high","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on High E 10Be",30000,0,30));

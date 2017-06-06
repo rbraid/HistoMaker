@@ -1261,6 +1261,11 @@ if(csm->GetMultiplicity() == 2)
 	  	Hhit = hitb;
 	  	Lhit = hita;
 	  }
+	  
+	  TH2I *dualhigh = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_highonly");
+      dualhigh->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));
+      TH2I *duallow = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_lowonly");
+      duallow->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));
 
 	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
 	  {
