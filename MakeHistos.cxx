@@ -1247,6 +1247,10 @@ if(csm->GetMultiplicity() == 2)
 	  TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
 	  dualex->Fill(excitecA);
 	  dualex->Fill(excitecB);
+      
+      TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
+      if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
+      if(exvt) exvt->Fill(excitecB,hitb->GetThetaDeg());
 
 	  TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
 	  TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
@@ -1264,6 +1268,9 @@ if(csm->GetMultiplicity() == 2)
 	  	Hhit = hitb;
 	  	Lhit = hita;
 	  }
+	  
+	  TH2I *etotvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",Hhit->GetDetectorNumber()));
+      if(etotvt) etotvt->Fill(BEAM_ENERGY +6.31 - Hhit->GetCorrectedEnergyMeV("10be")-Lhit->GetCorrectedEnergyMeV("10be"),Hhit->GetThetaDeg());
 	  
 	  TH2I *dualhigh = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_highonly");
       dualhigh->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));

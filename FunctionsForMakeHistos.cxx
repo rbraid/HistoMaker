@@ -199,12 +199,22 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+    
+    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_Dual",id),Form("Corrected Excitation Energy vs Theta in Detector %i, from dual kinematics cuts",id),1400,-10,60,70,0,70));
+    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",id));
+    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+    
+    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_SumE",id),Form("Corrected Excitation Energy vs Theta in Detector %i, from summed Energy",id),1400,-10,60,70,0,70));
+    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",id));
+    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
+    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
 
-    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_noid",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_noid",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
@@ -221,7 +231,7 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2I(Form("Be11_%i_EvTCOM",id),Form("Be-11 COM Theta vs Energy in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("Be11_%i_EvTCOM",id),Form("Be-11 COM Theta vs Energy in Detector %i",id),1400,-10,60,70,0,70));
     
     outlist->Add(new TH2I(Form("Be11_TvTCOM_%i",id),Form("Theta vs ThetaCOM for 11Be, detector %i",id),1440,0,360,400,0,100));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be11_TvTCOM_%i",id));
@@ -243,22 +253,22 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("Be12Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("Be12Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be12Ex_Vs_Theta_%i",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
 
-    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_4He",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_4He",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_4He",id));
     temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
     
-    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_6He",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult2_6He",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult2_6He",id));
     temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
 
-    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult3_10Be",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,28,0,56));
+    outlist->Add(new TH2I(Form("TotalE_Vs_Theta_%i_mult3_10Be",id),Form("Total Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("TotalE_Vs_Theta_%i_mult3_10Be",id));
     temp2INT->GetXaxis()->SetTitle("Total Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
