@@ -724,6 +724,11 @@ void SetupHistos(TList *outlist)
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
   temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
   
+  outlist->Add(new TH1D("GammaSum_eff","Efficiency Corrected Gamma Spectrum",30000,0,30));
+  temp1 = (TH1D*)outlist->FindObject("GammaSum_eff");
+  temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
+  temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
+  
   outlist->Add(new TH2D("EnergyCheck","Energy for each strip",240,0,240,7000,0,70));//
   temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
   temp2->GetXaxis()->SetTitle("Strip Number");

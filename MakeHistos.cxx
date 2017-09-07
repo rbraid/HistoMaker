@@ -1502,6 +1502,11 @@ if(csm->GetMultiplicity() == 2)
 
       temp = (TH1D*)outlist->FindObject("GammaSum");
       temp->Fill(hit->GetCore()->GetEnergy()/1000.);
+      if(hit->GetCore()->GetEnergy() > 10 && hit->GetCore()->GetEnergy() < 3000){
+      temp = (TH1D*)outlist->FindObject("GammaSum_eff");
+      //cout<<" Energy: "<<hit->GetCore()->GetEnergy()/1000.<<" Efficiency Weight: "<<hit->GetCore()->GetEfficiency()<<endl;
+      temp->Fill(hit->GetCore()->GetEnergy()/1000.,hit->GetCore()->GetEfficiency());
+      }
     }
 
     if(tigress->GetAddBackMultiplicity()>1)
