@@ -1063,6 +1063,9 @@ if(csm->GetMultiplicity() == 2)
           TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
           TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
           TH1I *gamptrl = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low");
+          TH1I *gamptreff = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_eff");
+          TH1I *gamptrheff = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high_eff");
+          TH1I *gamptrleff = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low_eff");
           TCSMHit* Hhit;
           TCSMHit* Lhit;
           
@@ -1099,6 +1102,10 @@ if(csm->GetMultiplicity() == 2)
               gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
               gamptrh->Fill(Doppler(tigresshit,Hhit,10));
               gamptrl->Fill(Doppler(tigresshit,Lhit,10));
+              
+              gamptreff->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+              gamptrheff->Fill(Doppler(tigresshit,Hhit,10),EfficiencyWeight(tigresshit));
+              gamptrleff->Fill(Doppler(tigresshit,Lhit,10),EfficiencyWeight(tigresshit));
               
               double dopp = Doppler(tigresshit,Hhit,10);
               
@@ -1252,6 +1259,9 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	  double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
 	  TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
 	  dopptr->Fill(dopp);
+      TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
+      dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
+      
 	  double excite = GetExciteE_Heavy_Corrected(hit,10);
 	  
 	  if(dopp>=2.577 && dopp<=2.612)
@@ -1312,6 +1322,8 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	    {
 	      TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",hit->GetDetectorNumber()));
 	      dopptr->Fill(Doppler(tigresshit,opphit,10));
+          TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",hit->GetDetectorNumber()));
+          dopptreff->Fill(Doppler(tigresshit,opphit,10),EfficiencyWeight(tigresshit));
 	    }
 	  }
 
