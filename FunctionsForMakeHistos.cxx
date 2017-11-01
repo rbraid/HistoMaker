@@ -61,12 +61,22 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_eff",id),"Gamma spectrum",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_eff",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
 
     outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
+    outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_eff",id),"Gamma spectrum",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_eff",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
     outlist->Add(new TH1D(Form("Be12_Gamma_%i_dopp_gt8",id),"Gamma spectrum, with excitation > 8 MeV",1500,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -84,6 +94,16 @@ void SetupHistos(TList *outlist)
 
     outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),"Gamma spectrum",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_eff",id),"Gamma spectrum",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_eff",id),"Gamma spectrum",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
@@ -761,12 +781,16 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("GammaLi7","Gamma spec for 7Li cut",30000,0,30));
   outlist->Add(new TH1D("GammaAlpha","Gamma spec for Alpha cut",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas","Gamma spec for 12Be cut",30000,0,30));
+  outlist->Add(new TH1D("Be12Gammas_eff","Gamma spec for 12Be cut",30000,0,30));
+  
   outlist->Add(new TH1D("Be12Gammas_prompt","Gamma spec for 12Be cut, prompt only",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas_prompt_doppler","Gamma spec for 12Be cut, prompt only, with doppler correction",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas_medium","Gamma spec for 12Be cut, medium cut",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas_delayed","Gamma spec for 12Be cut, delayed only",30000,0,30));
   outlist->Add(new TH1D("Be12GammasNoID","Gamma spec for 12Be cut",30000,0,30));
   outlist->Add(new TH1D("Be12GammasDopp","Gamma spec for 12Be cut doppler corrected",30000,0,30));
+  outlist->Add(new TH1D("Be12GammasDopp_eff","Gamma spec for 12Be cut doppler corrected",30000,0,30));
+  
   outlist->Add(new TH1D("Be12GammasDoppNoID","Gamma spec for 12Be cut doppler corrected",30000,0,30));
   outlist->Add(new TH1D("Be12GammasDoppNoID_suppressed","Gamma spec for 12Be cut doppler corrected, with 2.1 MeV stop line suppressed",30000,0,30));
 
@@ -1480,4 +1504,43 @@ bool AlmostEqual(double a, double b, double threshold)
     return true;
   else
     return false;
+}
+
+double EfficiencyWeight(double ekeV)
+{
+  double x[11];
+  double y[11];
+  
+  x[0]=40; 
+  x[1]=60; 
+  x[2]=100; 
+  x[3]=200; 
+  x[4]=400; 
+  x[5]=600; 
+  x[6]=1000; 
+  x[7]=2000; 
+  x[8]=4000; 
+  x[9]=6000; 
+  x[10]=10000;
+  
+  y[0]=0.449447;
+  y[1]=0.493347;
+  y[2]=0.490686;
+  y[3]=0.410869;
+  y[4]=0.285822;
+  y[5]=0.22862;
+  y[6]=0.172747;
+  y[7]=0.112884;
+  y[8]=0.0636638;
+  y[9]=0.0423792;
+  y[10]=0.0210946;
+  
+  TSpline3 *spline = new TSpline3("EffSpline",x,y,11);
+  
+  return(1./spline->Eval(ekeV));
+}
+
+double EfficiencyWeight(TTigressHit* thit)
+{
+  return(EfficiencyWeight(thit->GetEnergy()));
 }

@@ -48,6 +48,9 @@ bool AlmostEqual(double a, double b, double threshold = .2);
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z = 0);
 
+double EfficiencyWeight(double ekeV);
+double EfficiencyWeight(TTigressHit* thit);
+
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z = 0);
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
 double CalcCOMEnergyMeV(TVector3 pvec, int Z = 0);

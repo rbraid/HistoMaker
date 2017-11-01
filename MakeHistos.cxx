@@ -431,6 +431,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(Doppler(tigresshit,hit,10));
+          
+          temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",hit->GetDetectorNumber()));
+          temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+          temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
+          temp1->Fill(Doppler(tigresshit,hit,10),EfficiencyWeight(tigresshit));
 	    }
 	  }
 
@@ -543,6 +548,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
 	      temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
 	      temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+          
+          temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_eff",hit->GetDetectorNumber()));
+          temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+          temp1 = (TH1D*)outlist->FindObject("Be12Gammas_eff");
+          temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
 
 	      if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -140)
 	      {
@@ -568,8 +578,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 	      
 	      temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
 	      temp1->Fill(doppE);
+          temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
+          temp1->Fill(doppE,EfficiencyWeight(tigresshit));
+          
 	      temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp");
 	      temp1->Fill(doppE);
+          temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp_eff");
+          temp1->Fill(doppE,EfficiencyWeight(tigresshit));
 
 	      if( (doppE > 2.09 && doppE < 2.14) ||
 		(doppE > 2.70 && doppE < 2.76))
