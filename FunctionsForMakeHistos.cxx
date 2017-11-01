@@ -625,16 +625,6 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
     temp2->GetYaxis()->SetTitle("Energy deposited in Horizontal (Front)");
-
-    outlist->Add(new TH2D(Form("EvTheta_%i_10BeBreakup",det),Form("EvTheta %i of 10Be based on multiplicity, no PID",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("EvTheta_%i_10BeBreakup_cut",det),Form("EvTheta %i of 10Be based on multiplicity, no PID",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_10BeBreakup_cut",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
     for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
     {
