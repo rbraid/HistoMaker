@@ -1601,27 +1601,7 @@ if(csm->GetMultiplicity() == 2)
 	}
       }
     }
-//***********************
-//  Multiplicity plots
-//***********************
 
-for(int i=0;i<csm->GetMultiplicity();i++)
-{
-  TCSMHit *csmhit = csm->GetHit(i);
-  for(int j=0;j<tigress->GetAddBackMultiplicity();j++)
-  {
-    TTigressHit *tigresshit = tigress->GetAddBackHit(j);
-    
-    if(tigresshit->GetCore()->GetEnergy()>10)
-    {
-      TH1D* temp1;
-      temp1 = (TH1D*)outlist->FindObject("GammaBe10Brute");
-      temp1->Fill(Doppler(tigresshit,csmhit,10));
-      temp1 = (TH1D*)outlist->FindObject("GammaBe12Brute");
-      temp1->Fill(Doppler(tigresshit,csmhit,12));
-    }
-  }
-}
 //***********************
 //  Other 10Be
 //***********************

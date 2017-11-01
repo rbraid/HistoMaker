@@ -797,9 +797,6 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("Be12Gammas_low","Gamma spec for 12Be cut Low Energy PID only",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas_high","Gamma spec for 12Be cut High Energy PID only",30000,0,30));
 
-  outlist->Add(new TH1D("GammaBe10Brute","Gamma spec for all, assuming 10Be doppler correction",30000,0,30));
-  outlist->Add(new TH1D("GammaBe12Brute","Gamma spec for all, assuming 12Be doppler correction",30000,0,30));
-
   outlist->Add(new TH2D("GEvT","Gamma energy vs time difference from charged particle",4100,-4000,100,5000,0,50));
   temp2 = (TH2D*)outlist->FindObject("GEvT");
   temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
