@@ -987,25 +987,25 @@ if(csm->GetMultiplicity() == 2)
   {
     if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
       continue;
-
+    
     double* CorrVals = CorrParticle(hita, 10);
-
-
-
+    
+    
+    
     TH1I *diagEnergyPtr = (TH1I*)outlist->FindObject("Be10Diag_Energy");
     diagEnergyPtr->Fill((hitb->GetEnergy()-CorrVals[0])/1000.);
     TH1I *diagThetaPtr = (TH1I*)outlist->FindObject("Be10Diag_Theta");
     diagThetaPtr->Fill((hitb->GetPosition().Theta()-CorrVals[1])*180./TMath::Pi());
     TH1I *diagPhiPtr = (TH1I*)outlist->FindObject("Be10Diag_Phi");
     diagPhiPtr->Fill((hitb->GetPosition().Phi()-CorrVals[2])*180./TMath::Pi());
-
+    
     TH1I *diagPhiPtrdat = (TH1I*)outlist->FindObject("Be10Diag_Phi_dat");
     diagPhiPtrdat->Fill((hitb->GetPosition().Phi()-hita->GetPosition().Phi())*180./TMath::Pi());
-
+    
     TH2I *dualn = (TH2I*)outlist->FindObject("Dual10Be_nocut");
     dualn->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
     dualn->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
+    
     double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
     double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
     double phidiff = (hitb->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
@@ -1014,290 +1014,123 @@ if(csm->GetMultiplicity() == 2)
       TH2I *dualp = (TH2I*)outlist->FindObject("Dual10Be_phicut");
       dualp->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
       dualp->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
+      
       TH2I *dualpc = (TH2I*)outlist->FindObject("Dual10Be_phicut_corrected");
       dualpc->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
       dualpc->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
       
       if(thetadiff >= -3 && thetadiff <= 5)
       {
-	TH2I *dualt = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
-	dualt->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-	dualt->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	TH2I *dualtc = (TH2I*)outlist->FindObject("Dual10Be_thetacut_corrected");
-	dualtc->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
-	dualtc->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
+        TH2I *dualt = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
+        dualt->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+        dualt->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+        
+        TH2I *dualtc = (TH2I*)outlist->FindObject("Dual10Be_thetacut_corrected");
+        dualtc->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+        dualtc->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
       }
-
+      
       if(energydiff >= -2.5 && energydiff <= .5)
       {
-	TH2I *duale = (TH2I*)outlist->FindObject("Dual10Be_encut");
-	duale->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-	duale->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	TH2I *dualec = (TH2I*)outlist->FindObject("Dual10Be_encut_corrected");
-	dualec->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
-	dualec->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
-	if(thetadiff >= -3 && thetadiff <= 5)
-	{
-	  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
-	  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-	  duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	  TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
-	  dualac->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
-	  dualac->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
-
-	  double excitecA = GetExciteE_Heavy_Corrected(hita,10);
-	  double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-
-	  TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
-	  dualex->Fill(excitecA);
-	  dualex->Fill(excitecB);
-      
-      TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
-      if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
-      if(exvt) exvt->Fill(excitecB,hitb->GetThetaDeg());
-
-	  TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
-	  TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
-	  TH1I *gamptrl = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low");
-	  TCSMHit* Hhit;
-	  TCSMHit* Lhit;
-
-	  if(hita->GetEnergyMeV()>=hitb->GetEnergyMeV())
-	  {
-	  	Hhit = hita;
-	  	Lhit = hitb;
-	  }
-	  else
-	  {
-	  	Hhit = hitb;
-	  	Lhit = hita;
-	  }
-	  
-	  TH2I *etotvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",Hhit->GetDetectorNumber()));
-      if(etotvt) etotvt->Fill(BEAM_ENERGY +6.31 - Hhit->GetCorrectedEnergyMeV("10be")-Lhit->GetCorrectedEnergyMeV("10be"),Hhit->GetThetaDeg());
-	  
-	  TH2I *dualhigh = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_highonly");
-      dualhigh->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));
-      TH2I *duallow = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_lowonly");
-      duallow->Fill(Lhit->GetThetaDeg(),Lhit->GetCorrectedEnergyMeV("10be"));
-      
-      TH1I *dualexh = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_highonly");
-      dualexh->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
-      TH1I *dualexl = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
-      dualexl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
-      
-	  for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-	  {
-	    TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-	    
-	    if(tigresshit->GetCore()->GetEnergy()>10)
-	    {
-	      gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-	      gamptrh->Fill(Doppler(tigresshit,Hhit,10));
-	      gamptrl->Fill(Doppler(tigresshit,Lhit,10));
+        TH2I *duale = (TH2I*)outlist->FindObject("Dual10Be_encut");
+        duale->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+        duale->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+        
+        TH2I *dualec = (TH2I*)outlist->FindObject("Dual10Be_encut_corrected");
+        dualec->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+        dualec->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
+        if(thetadiff >= -3 && thetadiff <= 5)
+        {
+          TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
+          duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+          duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
           
-          double dopp = Doppler(tigresshit,Hhit,10);
-
-          if(dopp>=3.35 && dopp<=3.38)
+          TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
+          dualac->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+          dualac->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
+          
+          double excitecA = GetExciteE_Heavy_Corrected(hita,10);
+          double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+          
+          TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
+          dualex->Fill(excitecA);
+          dualex->Fill(excitecB);
+          
+          TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
+          if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
+          if(exvt) exvt->Fill(excitecB,hitb->GetThetaDeg());
+          
+          TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
+          TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
+          TH1I *gamptrl = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low");
+          TCSMHit* Hhit;
+          TCSMHit* Lhit;
+          
+          if(hita->GetEnergyMeV()>=hitb->GetEnergyMeV())
           {
-            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_3368");
-            dualexgcut->Fill(excitecA);
-            dualexgcut->Fill(excitecB);
+            Hhit = hita;
+            Lhit = hitb;
           }
-          else if(dopp>=2.585 && dopp<=2.597)
+          else
           {
-            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2589");
-            dualexgcut->Fill(excitecA);
-            dualexgcut->Fill(excitecB);
+            Hhit = hitb;
+            Lhit = hita;
           }
-          else if(dopp>=2.89 && dopp<=2.91)
+          
+          TH2I *etotvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",Hhit->GetDetectorNumber()));
+          if(etotvt) etotvt->Fill(BEAM_ENERGY +6.31 - Hhit->GetCorrectedEnergyMeV("10be")-Lhit->GetCorrectedEnergyMeV("10be"),Hhit->GetThetaDeg());
+          
+          TH2I *dualhigh = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_highonly");
+          dualhigh->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));
+          TH2I *duallow = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_lowonly");
+          duallow->Fill(Lhit->GetThetaDeg(),Lhit->GetCorrectedEnergyMeV("10be"));
+          
+          TH1I *dualexh = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_highonly");
+          dualexh->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
+          TH1I *dualexl = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
+          dualexl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
+          
+          for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
-            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2894");
-            dualexgcut->Fill(excitecA);
-            dualexgcut->Fill(excitecB);
+            TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+            
+            if(tigresshit->GetCore()->GetEnergy()>10)
+            {
+              gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+              gamptrh->Fill(Doppler(tigresshit,Hhit,10));
+              gamptrl->Fill(Doppler(tigresshit,Lhit,10));
+              
+              double dopp = Doppler(tigresshit,Hhit,10);
+              
+              if(dopp>=3.35 && dopp<=3.38)
+              {
+                TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_3368");
+                dualexgcut->Fill(excitecA);
+                dualexgcut->Fill(excitecB);
+              }
+              else if(dopp>=2.585 && dopp<=2.597)
+              {
+                TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2589");
+                dualexgcut->Fill(excitecA);
+                dualexgcut->Fill(excitecB);
+              }
+              else if(dopp>=2.89 && dopp<=2.91)
+              {
+                TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2894");
+                dualexgcut->Fill(excitecA);
+                dualexgcut->Fill(excitecB);
+              }
+              else if(dopp>=2.86 && dopp<=2.87)
+              {
+                TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
+                dualexgcut->Fill(excitecA);
+                dualexgcut->Fill(excitecB);
+              }
+            }
           }
-          else if(dopp>=2.86 && dopp<=2.87)
-          {
-            TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
-            dualexgcut->Fill(excitecA);
-            dualexgcut->Fill(excitecB);
-          }
-	    }
+        }
+      }
     }
-  }
-}
-}
-    
-    int conditions20 = 0;
-    if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.2))
-      conditions20++;
-    if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.2))
-      conditions20++;
-    if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.2))
-      conditions20++;
-
-    int conditions1 = 0;
-    if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.01))
-      conditions1++;
-    if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.01))
-      conditions1++;
-    if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.01))
-      conditions1++;
-
-    int conditions5 = 0;
-    if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.05))
-      conditions5++;
-    if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.05))
-      conditions5++;
-    if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.05))
-      conditions5++;
-
-    int conditions10 = 0;
-    if(AlmostEqual(hitb->GetEnergy(),CorrVals[0],.1))
-      conditions10++;
-    if(AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1],.1))
-      conditions10++;
-    if(AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2],.1))
-      conditions10++;
-
-    // 	      if(conditions>=1)
-      // 	      {
-	// 		cout<<"Energy: "<<hitb->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hitb->GetEnergy(),CorrVals[0])<<endl;
-      // 		cout<<"Theta: "<<hitb->GetPosition().Theta()*180./TMath::Pi()<<" "<<CorrVals[1]*180./TMath::Pi()<<"   "<<AlmostEqual(hitb->GetPosition().Theta(),CorrVals[1])<<endl;
-      // 		cout<<"Phi: "<<hitb->GetPosition().Phi()*180./TMath::Pi()<<" "<<CorrVals[2]*180./TMath::Pi()<<"   "<<AlmostEqual(hitb->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
-      // 	      }
-
-      if(conditions20==3)
-      {
-	TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",hita->GetDetectorNumber()));
-	if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-
-						    TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_20",hitb->GetDetectorNumber()));
-	if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	double excitecA = GetExciteE_Heavy_Corrected(hita,10);
-	double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-
-	TH2I *evtA = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hita->GetDetectorNumber()));
-	if(evtA) evtA->Fill(excitecA,hita->GetThetaDeg());
-
-	TH2I *evtB = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",hitb->GetDetectorNumber()));
-	if(evtB) evtB->Fill(excitecB,hitb->GetThetaDeg());
-
-	TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hita->GetDetectorNumber()));
-	if(exA) exA->Fill(excitecA);
-
-	TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20",hitb->GetDetectorNumber()));
-	if(exB) exB->Fill(excitecB);
-
-	TH2I *eve = (TH2I*)outlist->FindObject("EvE_BE10_noid");
-	if(eve) eve->Fill(hita->GetEnergyMeV(),hitb->GetEnergyMeV());
-
-	TH2I *evec = (TH2I*)outlist->FindObject("EvE_BE10_noid_corrected");
-	if(evec) evec->Fill(hita->GetCorrectedEnergyMeV("10be"),hitb->GetCorrectedEnergyMeV("10be"));
-
-	if(hita->GetEnergy()<hitb->GetEnergy())
-	{
-	  TCSMHit *temp;
-	  temp=hita;
-	  hita=hitb;
-	  hitb=temp;
-	}
-
-	TH2I *emvet = (TH2I*)outlist->FindObject("EMaxvsETot_10Be");
-	if(emvet) emvet->Fill(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
-
-	TH2I *etotvang = (TH2I*)outlist->FindObject("RelAnglevsETot_10Be");
-	if(etotvang) etotvang->Fill(hita->GetPosition().Angle(hitb->GetPosition())*180./TMath::Pi(),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
-
-	TH2I *etotvtheta = (TH2I*)outlist->FindObject("ThetavsETot_10Be");
-	if(etotvtheta) etotvtheta->Fill(hita->GetPosition().Theta()*180./TMath::Pi(),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be"));
-
-	if(TCutG *cut = (TCutG*)(cutlist->FindObject("Be10_emax_vs_etotal_gs")))
-	{
-	  if(cut->IsInside(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be")))
-	  {
-	    TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_gs",hita->GetDetectorNumber()));
-	    if(exA) exA->Fill(excitecA);
-
-	    TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_gs",hitb->GetDetectorNumber()));
-	    if(exB) exB->Fill(excitecB);
-	  }
-	}
-
-	if(TCutG *cut = (TCutG*)(cutlist->FindObject("Be10_emax_vs_etotal_1st")))
-	{
-	  if(cut->IsInside(hita->GetCorrectedEnergyMeV("10be"),hita->GetCorrectedEnergyMeV("10be")+hitb->GetCorrectedEnergyMeV("10be")))
-	  {
-	    TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_1e",hita->GetDetectorNumber()));
-	    if(exA) exA->Fill(excitecA);
-
-	    TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_20_1e",hitb->GetDetectorNumber()));
-	    if(exB) exB->Fill(excitecB);
-	  }
-	}
-      }
-
-      if(conditions10==3)
-      {
-	TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_10",hita->GetDetectorNumber()));
-	if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-
-	TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_10",hitb->GetDetectorNumber()));
-	if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	double excitecA = GetExciteE_Heavy_Corrected(hita,10);
-	double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-
-	TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",hita->GetDetectorNumber()));
-	if(exA) exA->Fill(excitecA);
-
-	TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_10",hitb->GetDetectorNumber()));
-	if(exB) exB->Fill(excitecB);
-      }
-
-      if(conditions5==3)
-      {
-	TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_5",hita->GetDetectorNumber()));
-	if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-
-	TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_5",hitb->GetDetectorNumber()));
-	if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	double excitecA = GetExciteE_Heavy_Corrected(hita,10);
-	double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-
-	TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_5",hita->GetDetectorNumber()));
-	if(exA) exA->Fill(excitecA);
-
-	TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_5",hitb->GetDetectorNumber()));
-	if(exB) exB->Fill(excitecB);
-      }
-
-      if(conditions1==3)
-      {
-	TH2I *evtptra = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_1",hita->GetDetectorNumber()));
-	if(evtptra) evtptra->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-
-	TH2I *evtptrb = (TH2I*)outlist->FindObject(Form("EvTheta_%i_BE10_noid_1",hitb->GetDetectorNumber()));
-	if(evtptrb) evtptrb->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-
-	double excitecA = GetExciteE_Heavy_Corrected(hita,10);
-	double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-
-	TH1D *exA = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_1",hita->GetDetectorNumber()));
-	if(exA) exA->Fill(excitecA);
-
-	TH1D *exB = (TH1D*)outlist->FindObject(Form("Be10Ex%i_noid_1",hitb->GetDetectorNumber()));
-	if(exB) exB->Fill(excitecB);
-      }
-
-      //cout<< conditions20<< " "<<conditions10<<" "<<conditions5<<" "<<conditions1<<endl;
-
   }
 }
 //***********************
@@ -1312,8 +1145,7 @@ if(csm->GetMultiplicity() == 2)
       temp->Fill(hit->GetCore()->GetEnergy()/1000.);
       if(hit->GetCore()->GetEnergy() > 10 && hit->GetCore()->GetEnergy() < 3000){
       temp = (TH1D*)outlist->FindObject("GammaSum_eff");
-      //cout<<" Energy: "<<hit->GetCore()->GetEnergy()/1000.<<" Efficiency Weight: "<<hit->GetCore()->GetEfficiency()<<endl;
-      temp->Fill(hit->GetCore()->GetEnergy()/1000.,hit->GetCore()->GetEfficiency());
+      temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit));
       }
     }
 
