@@ -1322,7 +1322,7 @@ for(int i =0; i<csm->GetMultiplicity();i++)
 	    {
 	      TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",hit->GetDetectorNumber()));
 	      dopptr->Fill(Doppler(tigresshit,opphit,10));
-          TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",hit->GetDetectorNumber()));
+          TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_eff",hit->GetDetectorNumber()));
           dopptreff->Fill(Doppler(tigresshit,opphit,10),EfficiencyWeight(tigresshit));
 	    }
 	  }
