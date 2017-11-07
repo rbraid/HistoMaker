@@ -729,7 +729,17 @@ void SetupHistos(TList *outlist)
   temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut");
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH1I("DualBe10_etot","Dual ^{10}Be total energy",1400,-10,60));
+  temp1INT = (TH1I*)outlist->FindObject("DualBe10_etot");
+  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+  temp1INT->GetYaxis()->SetTitle("Counts");
 
+  outlist->Add(new TH1I("DualBe10_etot_corr","Dual ^{10}Be total energy, with energy corrections",1400,-10,60));
+  temp1INT = (TH1I*)outlist->FindObject("DualBe10_etot_corr");
+  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+  temp1INT->GetYaxis()->SetTitle("Counts");
+  
   outlist->Add(new TH1I("DualBe10_ex_allcut","Be-10 Excitation Energy non-PID cut on Theta, Phi and Energy",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
