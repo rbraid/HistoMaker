@@ -1056,10 +1056,11 @@ if(csm->GetMultiplicity() == 2)
           dualex->Fill(excitecA);
           dualex->Fill(excitecB);
           
+          double Be10Q = 6.310;
           TH1I *dualtot = (TH1I*)outlist->FindObject("DualBe10_etot");
-          dualtot->Fill(BEAM_ENERGY - (hita->GetEnergyMeV() + hitb->GetEnergyMeV()));
+          dualtot->Fill((BEAM_ENERGY+Be10Q) - (hita->GetEnergyMeV() + hitb->GetEnergyMeV()));
           TH1I *dualtotcorr = (TH1I*)outlist->FindObject("DualBe10_etot_corr");
-          dualtotcorr->Fill(BEAM_ENERGY - (hita->GetCorrectedEnergyMeV("10be") + hitb->GetCorrectedEnergyMeV("10be")));
+          dualtotcorr->Fill((BEAM_ENERGY+Be10Q) - (hita->GetCorrectedEnergyMeV("10be") + hitb->GetCorrectedEnergyMeV("10be")));
           
           TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
           if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
@@ -1092,7 +1093,6 @@ if(csm->GetMultiplicity() == 2)
           dualhigh->Fill(Hhit->GetThetaDeg(),Hhit->GetCorrectedEnergyMeV("10be"));
           TH2I *duallow = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_lowonly");
           duallow->Fill(Lhit->GetThetaDeg(),Lhit->GetCorrectedEnergyMeV("10be"));
-          
           TH1I *dualexh = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_highonly");
           dualexh->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
           TH1I *dualexl = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
