@@ -1057,9 +1057,9 @@ if(csm->GetMultiplicity() == 2)
           dualex->Fill(excitecB);
           
           TH1I *dualtot = (TH1I*)outlist->FindObject("DualBe10_etot");
-          dualtot->Fill(hita->GetEnergyMeV() + hitb->GetEnergyMeV();
+          dualtot->Fill(hita->GetEnergyMeV() + hitb->GetEnergyMeV());
           TH1I *dualtotcorr = (TH1I*)outlist->FindObject("DualBe10_etot_corr");
-          dualtotcorr->Fill(hita->GetCorrectedEnergyMeV("10be") + hitb->GetCorrectedEnergyMeV("10be");
+          dualtotcorr->Fill(hita->GetCorrectedEnergyMeV("10be") + hitb->GetCorrectedEnergyMeV("10be"));
           
           TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
           if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
