@@ -905,75 +905,75 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //      Fancy dE v E
 //***********************
 
-    for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+for(int xx = 0;xx<csm->GetMultiplicity();xx++)
+{
+  TCSMHit *hit = csm->GetHit(xx);
+  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("highblob_%i_v1",hit->GetDetectorNumber()))))
+  {
+    if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
     {
-      TCSMHit *hit = csm->GetHit(xx);
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("highblob_%i_v1",hit->GetDetectorNumber()))))
-      {
-	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-	{
-	  TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobHigh");
-	  blobpointer->Fill(csm->GetMultiplicity());
-	}
-      }
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("lowblob_%i_v1",hit->GetDetectorNumber()))))
-      {
-	if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-	{
-	  TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobLow");
-	  blobpointer->Fill(csm->GetMultiplicity());
-	}
-      }
+      TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobHigh");
+      blobpointer->Fill(csm->GetMultiplicity());
     }
+  }
+  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("lowblob_%i_v1",hit->GetDetectorNumber()))))
+  {
+    if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+    {
+      TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobLow");
+      blobpointer->Fill(csm->GetMultiplicity());
+    }
+  }
+}
 
-    if(csm->GetMultiplicity()>=2)
+if(csm->GetMultiplicity()>=2)
+{
+  for(int aa=0;aa<csm->GetMultiplicity();aa++)
+  {
+    TCSMHit *hita = csm->GetHit(aa);
+    if(hita->GetEEnergy()>0.)
     {
-      for(int aa=0;aa<csm->GetMultiplicity();aa++)
+      for(int bb=aa+1;bb<csm->GetMultiplicity();bb++)
       {
-	TCSMHit *hita = csm->GetHit(aa);
-	if(hita->GetEEnergy()>0.)
-	{
-	  for(int bb=aa+1;bb<csm->GetMultiplicity();bb++)
-	  {
-	    TCSMHit *hitb = csm->GetHit(bb);
-	    if(hitb->GetEEnergy()>0.)
-	    {
-	      if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
-	      {
-		TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit",hita->GetDetectorNumber()));
-		hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
-		hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-		if(hita->GetDVerticalStrip()==hitb->GetDVerticalStrip() && hita->GetDHorizontalStrip() == hitb->GetDHorizontalStrip())
-		{
-		  TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit_samepix",hita->GetDetectorNumber()));
-		  hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
-		  hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-		}
-	      }
-	    }
-	  }
-	  if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hita->GetDetectorNumber()))))
-	  {
-	    if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
-	    {
-	      //we have a confirmed 12Be
-	      for(int bb=0;bb<csm->GetMultiplicity();bb++)
-	      {
-		TCSMHit *hitb = csm->GetHit(bb);
-		if(hitb==hita)
-		  continue;
-		
-		if(hitb->GetEEnergy()>10. && hitb->GetDEnergy() > 10. && hita->GetDetectorNumber() != hitb->GetDetectorNumber())
-		{
-		  TH2D *corrpointer = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",hita->GetDetectorNumber()));
-		  corrpointer->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-		}
-	      }
-	    }
-	  }
-	}
+        TCSMHit *hitb = csm->GetHit(bb);
+        if(hitb->GetEEnergy()>0.)
+        {
+          if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
+          {
+            TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit",hita->GetDetectorNumber()));
+            hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
+            hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+            if(hita->GetDVerticalStrip()==hitb->GetDVerticalStrip() && hita->GetDHorizontalStrip() == hitb->GetDHorizontalStrip())
+            {
+              TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit_samepix",hita->GetDetectorNumber()));
+              hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
+              hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+            }
+          }
+        }
+      }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hita->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
+        {
+          //we have a confirmed 12Be
+          for(int bb=0;bb<csm->GetMultiplicity();bb++)
+          {
+            TCSMHit *hitb = csm->GetHit(bb);
+            if(hitb==hita)
+              continue;
+            
+            if(hitb->GetEEnergy()>10. && hitb->GetDEnergy() > 10. && hita->GetDetectorNumber() != hitb->GetDetectorNumber())
+            {
+              TH2D *corrpointer = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",hita->GetDetectorNumber()));
+              corrpointer->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
+            }
+          }
+        }
       }
     }
+  }
+}
 
 
 //***********************
@@ -1062,9 +1062,26 @@ if(csm->GetMultiplicity() == 2)
           TH1I *dualtotcorr = (TH1I*)outlist->FindObject("DualBe10_etot_corr");
           dualtotcorr->Fill((BEAM_ENERGY+Be10Q) - (hita->GetCorrectedEnergyMeV("10be") + hitb->GetCorrectedEnergyMeV("10be")));
           
-          TH2I *exvt = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",hita->GetDetectorNumber()));
+          TH2I *exvt = (TH2I*)outlist->FindObject("Be10Ex_Vs_Theta_%i_Dual");
           if(exvt) exvt->Fill(excitecA,hita->GetThetaDeg());
           if(exvt) exvt->Fill(excitecB,hitb->GetThetaDeg());
+          
+          if(TCutG *cut = (TCutG*)(cutlist->FindObject("dual10be_exvt_reject_low")))
+          {
+            TH1I *dualexr = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_reject");
+            TH2I *dualacr = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_reject");
+            
+            if(!cut->IsInside(excitecA,hita->GetThetaDeg()))
+            {
+              dualacr->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
+              dualexr->Fill(excitecA);
+            }
+            if(!cut->IsInside(excitecB,hitb->GetThetaDeg()))
+            {
+              dualacr->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
+              dualexr->Fill(excitecB);
+            }
+          }
           
           TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
           TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
@@ -1139,7 +1156,7 @@ if(csm->GetMultiplicity() == 2)
                 dualexgcut->Fill(excitecB);
               }
             }
-          }
+          }         
         }
       }
     }

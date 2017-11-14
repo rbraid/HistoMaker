@@ -192,11 +192,6 @@ void SetupHistos(TList *outlist)
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
     
-    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_Dual",id),Form("Corrected Excitation Energy vs Theta in Detector %i, from dual kinematics cuts",id),1400,-10,60,70,0,70));
-    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_Dual",id));
-    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
-    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
-    
     outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_SumE",id),Form("Corrected Excitation Energy vs Theta in Detector %i, from summed Energy",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
@@ -730,6 +725,11 @@ void SetupHistos(TList *outlist)
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   
+  outlist->Add(new TH2I("Be10Ex_Vs_Theta_%i_Dual","Corrected Excitation Energy vs Theta, from dual kinematics cuts",1400,-10,60,70,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Be10Ex_Vs_Theta_%i_Dual");
+  temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
+  temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
+  
   outlist->Add(new TH1I("DualBe10_etot","Dual ^{10}Be Excitation via total energy",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_etot");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
@@ -742,6 +742,11 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH1I("DualBe10_ex_allcut","Be-10 Excitation Energy non-PID cut on Theta, Phi and Energy",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
+  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+  temp1INT->GetYaxis()->SetTitle("Counts");
+  
+  outlist->Add(new TH1I("DualBe10_ex_allcut_reject","Be-10 Excitation Energy non-PID cut on Theta, Phi and Energy, rejecting noise",1400,-10,60));
+  temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_reject");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
   
@@ -797,6 +802,16 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH2I("Dual10Be_allcut_corrected","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected",100,0,100,350,0,70));
   temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected_reject","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected, with noise rejection",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_reject");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
+  outlist->Add(new TH2I("Dual10Be_allcut_corrected_cut","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected with other kinematic cuts",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected_cut");
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   
