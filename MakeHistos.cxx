@@ -986,7 +986,7 @@ if(csm->GetMultiplicity() == 2)
 {
   TCSMHit *hita = csm->GetHit(0);
   TCSMHit *hitb = csm->GetHit(1);
-  if(hita->GetEEnergy()<10. && hitb->GetEEnergy()<10.)
+  //if(hita->GetEEnergy()<10. && hitb->GetEEnergy()<10.)
   {
     if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
       continue;
