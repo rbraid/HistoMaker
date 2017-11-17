@@ -1513,6 +1513,32 @@ if(int(BEAM_ENERGY) == 55)
         }
       }
     }
+    
+    
+    if(csm->GetMultiplicity() == 2)
+    {
+      TCSMHit *hita = csm->GetHit(0);
+      TCSMHit *hitb = csm->GetHit(1);
+      
+      if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
+        continue;
+      
+      double* CorrVals = CorrParticle(hita, 10);
+      
+      double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
+      double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
+      double phidiff = (hitb->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
+      if(phidiff >= -10 && phidiff <= 10)
+      {
+        if(energydiff >= -2.5 && energydiff <= .5)
+        {
+          if(thetadiff >= -3 && thetadiff <= 5)
+          {
+            
+          }
+        }
+      }
+    }
   }
   
         
