@@ -870,6 +870,21 @@ void SetupHistos(TList *outlist)
     temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_6_dual","Angular Distribution of ^{10}Be 6 dual",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_9.3_dual","Angular Distribution of ^{10}Be 9.3 dual",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_12_dual","Angular Distribution of ^{10}Be 12 dual",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
   }
   
   if(DEBUG)

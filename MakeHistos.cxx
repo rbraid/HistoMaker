@@ -1534,7 +1534,43 @@ if(int(BEAM_ENERGY) == 55)
         {
           if(thetadiff >= -3 && thetadiff <= 5)
           {
+            double ex10cA =GetExciteE_Heavy_Corrected(hita,10);
+            double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
+            // 6    4.5 to 7.5
+            // 9.3   7.5 to 10
+            // 12   11.2 to 12.7
             
+            if(ex10cA >= 4.5 && ex10cA <= 7.5)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+            }
+            else if(ex10cA >= 7.5 && ex10cA <= 10)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+            }
+            else if(ex10cA >= 11.2 && ex10cA <= 12.7)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+            }
+            
+            if(ex10cB >= 4.5 && ex10cB <= 7.5)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+            }
+            else if(ex10cB >= 7.5 && ex10cB <= 10)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+            }
+            else if(ex10cB >= 11.2 && ex10cB <= 12.7)
+            {
+              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
+              tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+            }
           }
         }
       }
