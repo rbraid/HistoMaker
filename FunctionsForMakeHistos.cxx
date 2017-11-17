@@ -10,6 +10,8 @@ void SetupHistos(TList *outlist)
   TH3D *temp3 = 0;
   TH3I *temp3INT = 0;
   
+  if(!ANGULAR_DISTRIBUTION)
+  {
   for(int id = 1; id<=2;id++)
   {
     
@@ -835,6 +837,40 @@ void SetupHistos(TList *outlist)
   
   outlist->Add(new TH2I("Be12TotalEnergy_v_Mult","Total energy vs Multiplcity with 12Be Identified",1400,-10,60,4,0,4));
   outlist->Add(new TH2I("Be12ExEnergy_v_Mult","Excitation energy vs Multiplcity with 12Be Identified",1400,-10,60,4,0,4));
+  
+  }
+  else if(ANGULAR_DISTRIBUTION)
+  {
+    outlist->Add(new TH1I("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_11be_0");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_11be_2.6","Angular Distribution of ^{11}Be inelastic scattering",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_11be_2.6");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_0_pid","Angular Distribution of ^{10}Be GS",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_0_pid");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_3.3_pid","Angular Distribution of ^{10}Be 3.368",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_3.3_pid");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_6_pid","Angular Distribution of ^{10}Be 6",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_6_pid");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH1I("ang_dist_10be_9.3_pid","Angular Distribution of ^{10}Be 6 + 3.368",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
+    temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+    temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+  }
   
   if(DEBUG)
   {

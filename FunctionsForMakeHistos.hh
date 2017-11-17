@@ -29,6 +29,7 @@
 #define DEBUG 0
 
 extern double BEAM_ENERGY;
+extern bool ANGULAR_DISTRIBUTION;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);

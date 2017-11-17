@@ -3,6 +3,7 @@
 #include "FunctionsForMakeHistos.hh"
 
 double BEAM_ENERGY;
+bool ANGULAR_DISTRIBUTION;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -72,6 +73,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     chain->GetEntry(x);
 
+    if(!ANGULAR_DISTRIBUTION)
+    {
     bool IsInteresting = 0;
     
     if(DEBUG)
@@ -1441,6 +1444,79 @@ if(int(BEAM_ENERGY) == 55)
 
 ////////////////////////////////////////////////////////////////////////
 
+  }
+  else if(ANGULAR_DISTRIBUTION)
+  {
+    for(int i = 0;i<csm->GetMultiplicity();i++)
+    {
+      TCSMHit *hit = csm->GetHit(i);
+      if(hit->GetDVerticalStrip()>0 && hit->GetDVerticalStrip()<15)//For now, suppress the perimeter strips, as there is a loss of solid angle there.
+      {
+        if(hit->GetDHorizontalStrip()>0 && hit->GetDHorizontalStrip()<15)
+        {
+          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
+          {
+            if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+            {           
+              double ex11c =GetExciteE_Heavy_Corrected(hit,11);
+              
+              if(ex11c >= -1 && ex11c<= 1)//We are looking at an elastic scattered 11Be
+              {
+                
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_11be_0");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,11),1./hit->GetSolidAngleD());
+              }
+              else if(ex11c >= 1.8 && ex11c<= 3.4)//We are looking at an excited 9Be
+              {
+                
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_11be_2.6");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,11),1./hit->GetSolidAngleD());
+              }
+            }
+          }
+          
+          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
+          {
+            if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+            {  
+              // 0     -1 to 1.2     .1
+              // 3.3  2.5 to 4.4     3.45
+              // 6    5.5 to 7       6.25
+              //9.3     9 to 10.5    9.75
+              double ex10c =GetExciteE_Heavy_Corrected(hit,10);
+              
+              if(ex10c >= -1 && ex10c<= 1.2)
+              {
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_0_pid");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+              }
+              
+              else if(ex10c >= 2.5 && ex10c<= 4.4)
+              {
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_3.3_pid");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+              }
+              
+              else if(ex10c >= 5.5 && ex10c<= 7)
+              {
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_pid");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+              }
+              
+              else if(ex10c >= 9 && ex10c<= 10.5)
+              {
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
+                tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+        
+        
     if(x%20000==0)
     {
       printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
@@ -1485,6 +1561,21 @@ int main(int argc, char **argv)
     BEAM_ENERGY = 1;
   }
   
+  if(strcmp(argv[2], "--angDist") == 0 || strcmp(argv[2], "-d") == 0)
+  {
+    i = 3;
+    ANGULAR_DISTRIBUTION = true;
+  }
+  else if(strcmp(argv[2], "--analysis") == 0 || strcmp(argv[2], "-a") == 0)
+  {
+    i = 3;
+    ANGULAR_DISTRIBUTION = false;
+  }
+  else
+  {
+    cerr<<"Error: no option set for ANGULAR_DISTRIBUTION.  Use flag --analysis or --angDist"<<endl;
+    ANGULAR_DISTRIBUTION = false;
+  }
   
   TApplication *app = new TApplication("app",0,0);
   TFile cf("cuts.root");
@@ -1541,7 +1632,7 @@ int main(int argc, char **argv)
   }
 
 
-  printf("%i analysis trees added to chain.\n",i-2);
+  printf("%i analysis trees added to chain.\n",i-3);
   chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
   
@@ -1557,13 +1648,24 @@ int main(int argc, char **argv)
 
   TString outputname;
 
+  if(!ANGULAR_DISTRIBUTION)
+  {
   if(int(BEAM_ENERGY) == 30)
     outputname = "outputlow.root";
   else if(int(BEAM_ENERGY) == 55)
     outputname = "outputhigh.root";
   else
     outputname = "output.root";
-
+  }
+  else
+  {
+    if(int(BEAM_ENERGY) == 30)
+      outputname = "angularlow.root";
+    else if(int(BEAM_ENERGY) == 55)
+      outputname = "angularhigh.root";
+    else
+      outputname = "angular.root";
+  }
   TFile f(outputname,"recreate");
   f.cd();
   outlist->Write();
