@@ -1545,8 +1545,9 @@ int main(int argc, char **argv)
   }
   
   
-  printf("%i analysis trees added to chain.\n",i-3);
-  chain->SetBranchAddress("TTigress",&tigress);
+  printf("%i analysis trees added to chain.\n",i-4);
+  if(!SIMULATED_DATA)
+    chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
   
   TList *outlist = new TList;
@@ -1564,7 +1565,11 @@ int main(int argc, char **argv)
   if(!ANGULAR_DISTRIBUTION)
   {
     if(int(BEAM_ENERGY) == 30)
+    {
       outputname = "outputlow.root";
+      if(SIMULATED_DATA)
+        outputname = "simoutputlow.root";
+    }
     else if(int(BEAM_ENERGY) == 55)
       outputname = "outputhigh.root";
     else
@@ -1573,7 +1578,11 @@ int main(int argc, char **argv)
   else
   {
     if(int(BEAM_ENERGY) == 30)
+    {
       outputname = "angularlow.root";
+      if(SIMULATED_DATA)
+        outputname = "simulatedangularlow.root";
+    }
     else if(int(BEAM_ENERGY) == 55)
       outputname = "angularhigh.root";
     else
