@@ -1479,6 +1479,22 @@ int main(int argc, char **argv)
     ANGULAR_DISTRIBUTION = false;
   }
   
+  if(strcmp(argv[2], "--real") == 0 || strcmp(argv[2], "-r") == 0)
+  {
+    i = 3;
+    SIMULATED_DATA = false;
+  }
+  else if(strcmp(argv[2], "--sim") == 0 || strcmp(argv[2], "-s") == 0)
+  {
+    i = 3;
+    SIMULATED_DATA = true;
+  }
+  else
+  {
+    cerr<<"Error: no option set for SIMULATED_DATA.  Use flag --real or --sim"<<endl;
+    SIMULATED_DATA = false;
+  }
+  
   TApplication *app = new TApplication("app",0,0);
   TFile cf("cuts.root");
   TIter *iter = new TIter(cf.GetListOfKeys());

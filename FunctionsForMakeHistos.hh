@@ -30,6 +30,7 @@
 
 extern double BEAM_ENERGY;
 extern bool ANGULAR_DISTRIBUTION;
+extern bool SIMULATED_DATA;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);
