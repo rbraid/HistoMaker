@@ -4,6 +4,7 @@
 
 double BEAM_ENERGY;
 bool ANGULAR_DISTRIBUTION;
+bool SIMULATED_DATA;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
