@@ -46,6 +46,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     Be12Cut = "pid_low_thick_12Be_%i_v2";
     Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
     Be10Cut = "pid_low_thick_10Be_%i_v2";
+    if(SIMULATED_DATA)
+      Be10Cut = "pid_low_thick_10Be_%i_sim";
+    
     Be9Cut = "pid_low_thick_9Be_%i_v1";
     
     He4Cut = "pid_low_thick_4He_%i_v1";
@@ -532,17 +535,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
               temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
               
-              // 	    if((hit->GetEnergyMeV()>7.1 && hit->GetEnergyMeV()<8.65) &&
-              // 	      (hit->GetDdE_dx()>200 && hit->GetDdE_dx() < 290) &&
-              // 	      hit->GetDetectorNumber()==2)
-              // 	    {
-              // 	      hit->Print();
-              // 	    }
             }
-            
-            //temp2 = (TH2D*)outlist->FindObject(Form("stripPID_det%i_strip%02i",hit->GetDetectorNumber(),hit->GetDVerticalStrip()));
-            //temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-            
+
             temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_thickness",hit->GetDetectorNumber()));
             temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
             
