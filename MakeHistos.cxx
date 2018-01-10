@@ -1515,20 +1515,20 @@ int main(int argc, char **argv)
   TFile cf2("thetacuts.root");
   TIter *iter2 = new TIter(cf2.GetListOfKeys());
   
-//   while(TObject *obj = iter2->Next())
-//   {
-//     obj = ((TKey *)obj)->ReadObj();
-//     
-//     //printf("obj->ClassName() = %s\n", obj->ClassName());
-//     if(strcmp(obj->ClassName(),"TCutG")!=0)
-//     {
-//       continue;
-//     }
-//     
-//     cutlist->Add(obj);
-//     //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
-//     ncuts++;
-//   }
+  while(TObject *obj = iter2->Next())
+  {
+    obj = ((TKey *)obj)->ReadObj();
+    
+    //printf("obj->ClassName() = %s\n", obj->ClassName());
+    if(strcmp(obj->ClassName(),"TCutG")!=0)
+    {
+      continue;
+    }
+    
+    cutlist->Add(obj);
+    //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+    ncuts++;
+  }
   
   if(ncuts==0)
     cout<<RED;
