@@ -717,6 +717,11 @@ void SetupHistos(TList *outlist)
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   
+  outlist->Add(new TH2I("Dual10Be_allcut_noE","EvTheta of 2 particles, cut on Theta, Phi, and Energy, no E hits",100,0,100,350,0,70));
+  temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
+  temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
+  temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  
   outlist->Add(new TH2I("Be10Ex_Vs_Theta_%i_Dual","Corrected Excitation Energy vs Theta, from dual kinematics cuts",1400,-10,60,70,0,70));
   temp2INT = (TH2I*)outlist->FindObject("Be10Ex_Vs_Theta_%i_Dual");
   temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");

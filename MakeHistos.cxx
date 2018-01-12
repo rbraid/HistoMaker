@@ -1,4 +1,4 @@
-// g++ MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
+// g++ -g -O0 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #include "FunctionsForMakeHistos.hh"
 
@@ -883,6 +883,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                 duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
                 
+                if(hita->GetEEnergy() <  10 && hitb->GetEEnergy() < 10)
+                {
+                  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
+                  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                  duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                }
+                
                 TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
                 dualac->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
                 dualac->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
@@ -1512,23 +1519,23 @@ int main(int argc, char **argv)
   }
   
   
-  TFile cf2("thetacuts.root");
-  TIter *iter2 = new TIter(cf2.GetListOfKeys());
-  
-  while(TObject *obj = iter2->Next())
-  {
-    obj = ((TKey *)obj)->ReadObj();
-    
-    //printf("obj->ClassName() = %s\n", obj->ClassName());
-    if(strcmp(obj->ClassName(),"TCutG")!=0)
-    {
-      continue;
-    }
-    
-    cutlist->Add(obj);
-    //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
-    ncuts++;
-  }
+//   TFile cf2("thetacuts.root");
+//   TIter *iter2 = new TIter(cf2.GetListOfKeys());
+//   
+//   while(TObject *obj = iter2->Next())
+//   {
+//     obj = ((TKey *)obj)->ReadObj();
+//     
+//     //printf("obj->ClassName() = %s\n", obj->ClassName());
+//     if(strcmp(obj->ClassName(),"TCutG")!=0)
+//     {
+//       continue;
+//     }
+//     
+//     cutlist->Add(obj);
+//     //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
+//     ncuts++;
+//   }
   
   if(ncuts==0)
     cout<<RED;
