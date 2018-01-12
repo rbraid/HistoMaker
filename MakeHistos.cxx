@@ -885,9 +885,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 if(hita->GetEEnergy() <  10 && hitb->GetEEnergy() < 10)
                 {
-                  TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
-                  duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
-                  duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                  TH2I *dualae = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
+                  dualae->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                  dualae->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
                 }
                 
                 TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
@@ -900,6 +900,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
                 dualex->Fill(excitecA);
                 dualex->Fill(excitecB);
+                
+                if(hita->GetEEnergy() <  10 && hitb->GetEEnergy() < 10)
+                {
+                  TH1I *dualexe = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_noE");
+                  dualexe->Fill(excitecA);
+                  dualexe->Fill(excitecB);
+                }
                 
                 double Be10Q = 6.310;
                 TH1I *dualtot = (TH1I*)outlist->FindObject("DualBe10_etot");
