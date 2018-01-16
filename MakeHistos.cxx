@@ -135,43 +135,43 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
          *      4DH = 220
          */
         
-        int offset = -1;
-        if(hit->GetDetectorNumber()==1)
-          offset=0;
-        else if(hit->GetDetectorNumber()==2)
-          offset=80;
-        else if(hit->GetDetectorNumber()==3)
-          offset=160;
-        else if(hit->GetDetectorNumber()==4)
-          offset=200;
-        
-        temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
-        if(hit->GetDVerticalEnergy()>10.)
-          temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalEnergy()/1000.);
-        if(hit->GetDHorizontalEnergy()>10.)
-          temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalEnergy()/1000.);
-        
-        if(hit->GetDetectorNumber()<3)
-        {
-          if(hit->GetEVerticalEnergy()>10.)
-            temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalEnergy()/1000.);
-          if(hit->GetEHorizontalEnergy()>10.)
-            temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalEnergy()/1000.);
-        }
-        
-        temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
-        if(hit->GetDVerticalCharge() != 0)
-          temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalCharge()/125.);
-        if(hit->GetDHorizontalCharge() != 0)
-          temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalCharge()/125.);
-        
-        if(hit->GetDetectorNumber()<3)
-        {
-          if(hit->GetEVerticalCharge() != 0)
-            temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalCharge()/125.);
-          if(hit->GetEHorizontalCharge() != 0)
-            temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalCharge()/125.);
-        }
+//         int offset = -1;
+//         if(hit->GetDetectorNumber()==1)
+//           offset=0;
+//         else if(hit->GetDetectorNumber()==2)
+//           offset=80;
+//         else if(hit->GetDetectorNumber()==3)
+//           offset=160;
+//         else if(hit->GetDetectorNumber()==4)
+//           offset=200;
+//         
+//         temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
+//         if(hit->GetDVerticalEnergy()>10.)
+//           temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalEnergy()/1000.);
+//         if(hit->GetDHorizontalEnergy()>10.)
+//           temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalEnergy()/1000.);
+//         
+//         if(hit->GetDetectorNumber()<3)
+//         {
+//           if(hit->GetEVerticalEnergy()>10.)
+//             temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalEnergy()/1000.);
+//           if(hit->GetEHorizontalEnergy()>10.)
+//             temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalEnergy()/1000.);
+//         }
+//         
+//         temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
+//         if(hit->GetDVerticalCharge() != 0)
+//           temp2->Fill(hit->GetDVerticalStrip()+offset,hit->GetDVerticalCharge()/125.);
+//         if(hit->GetDHorizontalCharge() != 0)
+//           temp2->Fill(hit->GetDHorizontalStrip()+offset+20,hit->GetDHorizontalCharge()/125.);
+//         
+//         if(hit->GetDetectorNumber()<3)
+//         {
+//           if(hit->GetEVerticalCharge() != 0)
+//             temp2->Fill(hit->GetEVerticalStrip()+offset+40,hit->GetEVerticalCharge()/125.);
+//           if(hit->GetEHorizontalCharge() != 0)
+//             temp2->Fill(hit->GetEHorizontalStrip()+offset+60,hit->GetEHorizontalCharge()/125.);
+//         }
         
         if(hit->GetDPosition().Z() != 1 && hit->GetDPosition().Y() != 0 && hit->GetDPosition().X() != 0)
         {
@@ -1041,41 +1041,41 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         }
       }
       
-      for(int y=0; y<csm->GetMultiplicity();y++)
-      {
-        TCSMHit* hit = csm->GetHit(y);
-        for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-        {
-          TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-          
-          TH1I* difp = (TH1I*)outlist->FindObject("TimeDiffAll");
-          difp->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-          TH2D* point = (TH2D*)outlist->FindObject("GEvT");
-          point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
-        }
-        
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              TH1I* difp12 = (TH1I*)outlist->FindObject("TimeDiff12Be");
-              difp12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-              TH2D* point12 = (TH2D*)outlist->FindObject("GEvT_12Be");
-              point12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
-              
-              TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
-              for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
-              {
-                matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-      }
+//       for(int y=0; y<csm->GetMultiplicity();y++)
+//       {
+//         TCSMHit* hit = csm->GetHit(y);
+//         for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+//         {
+//           TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+//           
+//           TH1I* difp = (TH1I*)outlist->FindObject("TimeDiffAll");
+//           difp->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+//           TH2D* point = (TH2D*)outlist->FindObject("GEvT");
+//           point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
+//         }
+//         
+//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
+//         {
+//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+//           {
+//             for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+//             {
+//               TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+//               
+//               TH1I* difp12 = (TH1I*)outlist->FindObject("TimeDiff12Be");
+//               difp12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+//               TH2D* point12 = (TH2D*)outlist->FindObject("GEvT_12Be");
+//               point12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
+//               
+//               TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
+//               for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
+//               {
+//                 matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
+//               }
+//             }
+//           }
+//         }
+//       }
       
       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
       {
@@ -1175,16 +1175,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 conditions++;
               if(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2]))
                 conditions++;
-              
-              // 	if(conditions>=1)
-              // 	{
-              // 	  cout<<"Energy: "<<hit->GetEnergy()<<" "<<CorrVals[0]<<"   "<<AlmostEqual(hit->GetEnergy(),CorrVals[0])<<endl;
-              // 	  cout<<"Theta: "<<hit->GetPosition().Theta()*180./TMath::Pi()<<" "<<CorrVals[1]*180./TMath::Pi()<<"   "<<AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])<<endl;
-              // 	  cout<<"Phi: "<<hit->GetPosition().Phi()*180./TMath::Pi()<<" "<<CorrVals[2]*180./TMath::Pi()<<"   "<<AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])<<endl<<endl;;
-              // 	}
-              
-              TH3I* diagpointer = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
-              diagpointer->Fill(int(AlmostEqual(hit->GetEnergy(),CorrVals[0])),int(AlmostEqual(hit->GetPosition().Theta(),CorrVals[1])),int(AlmostEqual(hit->GetPosition().Phi(),CorrVals[2])));
               
               if((conditions == 3 && int(BEAM_ENERGY)==55) || int(BEAM_ENERGY)==30)
               {

@@ -548,15 +548,15 @@ void SetupHistos(TList *outlist)
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
   temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
   
-  outlist->Add(new TH2D("EnergyCheck","Energy for each strip",240,0,240,7000,0,70));//
-  temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
-  temp2->GetXaxis()->SetTitle("Strip Number");
-  temp2->GetYaxis()->SetTitle("Energy");
-  
-  outlist->Add(new TH2D("ChargeCheck","Charge for each strip",240,0,240,3000,0,6000));//
-  temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
-  temp2->GetXaxis()->SetTitle("Strip Number");
-  temp2->GetYaxis()->SetTitle("Charge");
+//   outlist->Add(new TH2D("EnergyCheck","Energy for each strip",240,0,240,7000,0,70));//
+//   temp2 = (TH2D*)outlist->FindObject("EnergyCheck");
+//   temp2->GetXaxis()->SetTitle("Strip Number");
+//   temp2->GetYaxis()->SetTitle("Energy");
+//   
+//   outlist->Add(new TH2D("ChargeCheck","Charge for each strip",240,0,240,3000,0,6000));//
+//   temp2 = (TH2D*)outlist->FindObject("ChargeCheck");
+//   temp2->GetXaxis()->SetTitle("Strip Number");
+//   temp2->GetYaxis()->SetTitle("Charge");
 
   outlist->Add(new TH2D("EvTheta_12Be","EvTheta",100,0,100,350,0,70));
   temp2 = (TH2D*)outlist->FindObject("EvTheta_12Be");
@@ -568,12 +568,6 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1I("MultBlobLow","Multiplicity of the low energy blob in the dEvE",20,0,20));
 
   outlist->Add(new TH1I("AlphaMult","Number of identified alphas in an event",5,0,5));
-
-  outlist->Add(new TH3I("AlmostEqual_Diagnostic","Checking what conditions are most strict",4,0,2,4,0,2,4,0,2));
-  temp3INT = (TH3I*)outlist->FindObject("AlmostEqual_Diagnostic");
-  temp3INT->GetXaxis()->SetTitle("EnergyBool");
-  temp3INT->GetYaxis()->SetTitle("ThetaBool");
-  temp3INT->GetZaxis()->SetTitle("PhiBool");
 
   outlist->Add(new TH1D("GammaBe","Gamma spec for broad Be cut",30000,0,30));
   outlist->Add(new TH1D("GammaLi","Gamma spec for broad Li cut",30000,0,30));
@@ -596,25 +590,25 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1D("Be12Gammas_low","Gamma spec for 12Be cut Low Energy PID only",30000,0,30));
   outlist->Add(new TH1D("Be12Gammas_high","Gamma spec for 12Be cut High Energy PID only",30000,0,30));
 
-  outlist->Add(new TH2D("GEvT","Gamma energy vs time difference from charged particle",4100,-4000,100,5000,0,50));
-  temp2 = (TH2D*)outlist->FindObject("GEvT");
-  temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
-  temp2->GetYaxis()->SetTitle("Energy in MeV");
-
-  outlist->Add(new TH2D("GEvT_12Be","Gamma energy vs time difference from 12Be",4100,-4000,100,5000,0,50));
-  temp2 = (TH2D*)outlist->FindObject("GEvT_12Be");
-  temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
-  temp2->GetYaxis()->SetTitle("Energy in MeV");
+//   outlist->Add(new TH2D("GEvT","Gamma energy vs time difference from charged particle",4100,-4000,100,5000,0,50));
+//   temp2 = (TH2D*)outlist->FindObject("GEvT");
+//   temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
+//   temp2->GetYaxis()->SetTitle("Energy in MeV");
+// 
+//   outlist->Add(new TH2D("GEvT_12Be","Gamma energy vs time difference from 12Be",4100,-4000,100,5000,0,50));
+//   temp2 = (TH2D*)outlist->FindObject("GEvT_12Be");
+//   temp2->GetXaxis()->SetTitle("Time difference (Arb. Units)");
+//   temp2->GetYaxis()->SetTitle("Energy in MeV");
   
-  outlist->Add(new TH2D("GammaMatrix","Gamma energy vs gamma energy",1200,0,30,1200,0,30));
-  temp2 = (TH2D*)outlist->FindObject("GammaMatrix");
-  temp2->GetXaxis()->SetTitle("Energy in MeV");
-  temp2->GetYaxis()->SetTitle("Energy in MeV");
-
-  outlist->Add(new TH2D("GammaMatrix_12Be","Gamma energy vs gamma energy, cut on 12Be",1200,0,30,1200,0,30));
-  temp2 = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
-  temp2->GetXaxis()->SetTitle("Energy in MeV");
-  temp2->GetYaxis()->SetTitle("Energy in MeV");
+//   outlist->Add(new TH2D("GammaMatrix","Gamma energy vs gamma energy",1200,0,30,1200,0,30));
+//   temp2 = (TH2D*)outlist->FindObject("GammaMatrix");
+//   temp2->GetXaxis()->SetTitle("Energy in MeV");
+//   temp2->GetYaxis()->SetTitle("Energy in MeV");
+// 
+//   outlist->Add(new TH2D("GammaMatrix_12Be","Gamma energy vs gamma energy, cut on 12Be",1200,0,30,1200,0,30));
+//   temp2 = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
+//   temp2->GetXaxis()->SetTitle("Energy in MeV");
+//   temp2->GetYaxis()->SetTitle("Energy in MeV");
   
   outlist->Add(new TH1I("TimeDiffAll","Difference between charged particle and gamma",20000,-10000,10000));
   outlist->Add(new TH1I("TimeDiff12Be","Difference between 12Be and gamma",20000,-10000,10000));
