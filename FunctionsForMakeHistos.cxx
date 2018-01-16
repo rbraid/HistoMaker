@@ -475,70 +475,7 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("gCutE_%i",det));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH2D(Form("twohit_%i",det),Form("2 Hits in detector %i",det),400,0,40,400,0,40));//
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i",det));
-    temp2->SetContour(666);
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("twohit_twocut_cone_%i",det),Form("2 Hits in detector %i, cut on both Cone and Angle",det),400,0,40,400,0,40));//
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_cone_%i",det));
-    temp2->SetContour(666);
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("Energy deposited in MeV");
-    
-    outlist->Add(new TH2D(Form("twohit_%i_thetadiff",det),Form("Angle difference vs total energy for 2 hits in detector %i",det),200,-100,100,120,0,60));//
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff",det));
-    temp2->SetContour(666);
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Difference in Angle in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
-    outlist->Add(new TH2D(Form("twohit_%i_thetadiff_onecut",det),Form("2 Hits in detector %i, cut on the alpha cone",det),200,-100,100,120,0,60));//
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_%i_thetadiff_onecut",det));
-    temp2->SetContour(666);
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Difference in Angle in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("twohit_twocut_%i",det),Form("2 Hits in detector %i, cut on cone and angle",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i",det));
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_Be8",det),Form("2 Hits in detector %i, cut on cone and angle",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_Be8",det));
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr",det),Form("Correpsonding particle of 2 hits in detector %i",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr",det));
-    temp2->SetOption("colz");
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_cut",det),Form("Correpsonding particle of 2 hits in detector %i, cut on PID",det),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_cut",det));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH1D(Form("twohit_twocut_%i_corr_Etot",det),Form("Total energy under two cuts with corresponding particle, det %i",det),100,0,100));
-
-    outlist->Add(new TH2D(Form("twohit_twocut_%i_corr_PID",det),Form("Correpsonding particle of 2 hits in detector %i, PID",det),3200,0,160,1600,0,2000));
-    temp2 = (TH2D*)outlist->FindObject(Form("twohit_twocut_%i_corr_PID",det));
-    temp2->GetXaxis()->SetTitle("E Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
-    
-//     outlist->Add(new TH2D(Form("EvTheta_%i_HE",det),Form("EvTheta %i, cut on He",det),100,0,100,350,0,70));
-//     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_HE",det));
-//     temp2->GetXaxis()->SetTitle("Theta in Degrees");
-//     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
+        
     outlist->Add(new TH2D(Form("CheckCalD_%i",det),Form("Front Energy vs Back Energy, Detector %i D",det),600,0,60,600,0,60));
     temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",det));
     temp2->GetXaxis()->SetTitle("Energy deposited in Vertical (Back)");
