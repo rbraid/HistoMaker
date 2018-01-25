@@ -1564,6 +1564,23 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
   
+  if(SIMULATED_DATA)
+  {    
+    TH1* hist = (TH1*)outlist->First();
+    TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
+    while(hist)
+    {
+      nexthist = (TH1*)outlist->After(hist);
+      if(hist->GetEntries() < 1)
+      {
+        cout<<"For removal:"<<endl;
+        hist->Print();
+        outlist->Remove(hist);
+      }
+      hist = nexthist;
+    }
+  }
+  
   TString outputname;
   
   if(!ANGULAR_DISTRIBUTION)
