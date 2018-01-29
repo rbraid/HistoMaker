@@ -1564,7 +1564,7 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
   
-  //if(SIMULATED_DATA)
+  if(!DEBUG)
   {    
     TH1* hist = (TH1*)outlist->First();
     TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
