@@ -26,7 +26,7 @@
 
 #include "GlobalSettings.hh"
 
-#define DEBUG 1
+#define DEBUG 0
 
 extern double BEAM_ENERGY;
 extern bool ANGULAR_DISTRIBUTION;

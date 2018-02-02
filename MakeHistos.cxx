@@ -326,7 +326,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
           {
-            //hit->SetIsotope(11,"be");
+            hit->SetIsotope(11,"be");
             
             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
@@ -1082,36 +1082,36 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //         }
 //       }
       
-      for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-      {
-        TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-        TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix");
-        for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
-        {
-          matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
-        }
-      }
+//       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+//       {
+//         TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+//         TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix");
+//         for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
+//         {
+//           matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
+//         }
+//       }
       
-      for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-      {
-        TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-        
-        if(tigresshit->GetCore()->GetEnergy()>2120 && tigresshit->GetCore()->GetEnergy()<2130)
-        {
-          for(int q=0; q<csm->GetMultiplicity();q++)
-          {
-            TCSMHit* hit = csm->GetHit(q);
-            
-            if(hit->GetDetectorNumber()<3)
-            {
-              TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",hit->GetDetectorNumber()));
-              tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-            }
-            TH1D* gcutp = (TH1D*)outlist->FindObject(Form("gCutE_%i",hit->GetDetectorNumber()));
-            gcutp->Fill(hit->GetEnergyMeV());
-          }
-        }
-      }
+//       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+//       {
+//         TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+//         
+//         if(tigresshit->GetCore()->GetEnergy()>2120 && tigresshit->GetCore()->GetEnergy()<2130)
+//         {
+//           for(int q=0; q<csm->GetMultiplicity();q++)
+//           {
+//             TCSMHit* hit = csm->GetHit(q);
+//             
+//             if(hit->GetDetectorNumber()<3)
+//             {
+//               TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",hit->GetDetectorNumber()));
+//               tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+//             }
+//             TH1D* gcutp = (TH1D*)outlist->FindObject(Form("gCutE_%i",hit->GetDetectorNumber()));
+//             gcutp->Fill(hit->GetEnergyMeV());
+//           }
+//         }
+//       }
       
       //***********************
       //  Other 10Be
