@@ -1578,8 +1578,8 @@ int main(int argc, char **argv)
       nexthist = (TH1*)outlist->After(hist);
       if(hist->GetEntries() < 1)
       {
-        cout<<"For removal:"<<endl;
-        hist->Print();
+//         cout<<"For removal:"<<endl;
+//         hist->Print();
         outlist->Remove(hist);
       }
       hist = nexthist;
