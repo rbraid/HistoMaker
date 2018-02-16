@@ -196,6 +196,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
           {
+            hit->SetIsotope(10,"be");
+            
             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
             
@@ -325,9 +327,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
         {
           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            hit->SetIsotope(11,"be");
-            
+          {            
             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
             
@@ -827,7 +827,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
             continue;
-          
+                    
           if(hita->GetIsotope() == "10be") //This avoids double counting from the PID spectrum
             continue;
           if(hitb->GetIsotope() == "10be")
