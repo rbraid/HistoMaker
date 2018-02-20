@@ -324,169 +324,169 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         }
         //////////////////////////////////////////////////
         
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {            
-            temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
-            temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-            
-            temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_corrected",hit->GetDetectorNumber()));
-            temp2->Fill(hit->GetThetaDeg(),hit->GetCorrectedEnergyMeV("12Be"));
-            
-            temp2 = (TH2D*)outlist->FindObject("EvTheta_12Be");
-            temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-            
-            if(csm->GetMultiplicity()==1)
-            {
-              temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",hit->GetDetectorNumber()));
-              temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-            }
-            
-            TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
-            multpointer->Fill(csm->GetMultiplicity());
-            
-            double totalE = 0;
-            for(int i=0; i<csm->GetMultiplicity();i++)
-            {
-              totalE += csm->GetHit(i)->GetEnergyMeV();
-            }
-            
-            TH2I* derp = (TH2I*)outlist->FindObject("Be12TotalEnergy_v_Mult");
-            derp->Fill(totalE,csm->GetMultiplicity());
-            
-            TH2I* derp2 = (TH2I*)outlist->FindObject("Be12ExEnergy_v_Mult");
-            derp2->Fill(BEAM_ENERGY + 1.506 - totalE,csm->GetMultiplicity());
-            
-            double excite = GetExciteE_Heavy(hit,12);
-            temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
-            if(temp1) temp1->Fill(excite);
-            
-            double excite_corrected = GetExciteE_Heavy_Corrected(hit,12);
-            temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
-            if(temp1) temp1->Fill(excite_corrected);
-            
-            temp2INT = (TH2I*)outlist->FindObject(Form("Be12Ex_Vs_Theta_%i",hit->GetDetectorNumber()));
-            temp2INT->Fill(excite_corrected,hit->GetThetaDeg());
-            
-            temp2INT = (TH2I*)outlist->FindObject(Form("BeEx%i_mult",hit->GetDetectorNumber()));
-            temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,12),csm->GetMultiplicity());
-            
-            // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
-            // 	  stat->Fill(hit->GetDetectorNumber()+1);
-            
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                
-                if(excite_corrected > 8)
-                {
-                  temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",hit->GetDetectorNumber()));
-                  temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                }
-                else
-                {
-                  temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",hit->GetDetectorNumber()));
-                  temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                }
-                
-                temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                
-                temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_eff",hit->GetDetectorNumber()));
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
-                temp1 = (TH1D*)outlist->FindObject("Be12Gammas_eff");
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
-                
-                if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -140)
-                {
-                  temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt");
-                  temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                  temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt_doppler");
-                  temp1->Fill(Doppler(tigresshit,hit,12));
-                }
-                
-                else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -150 && hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -400 )
-                {
-                  temp1 = (TH1D*)outlist->FindObject("Be12Gammas_medium");
-                  temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                }
-                
-                else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -500)
-                {
-                  temp1 = (TH1D*)outlist->FindObject("Be12Gammas_delayed");
-                  temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                }
-                
-                double doppE = Doppler(tigresshit,hit,12);
-                
-                temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
-                temp1->Fill(doppE);
-                temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
-                temp1->Fill(doppE,EfficiencyWeight(tigresshit));
-                
-                temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp");
-                temp1->Fill(doppE);
-                temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp_eff");
-                temp1->Fill(doppE,EfficiencyWeight(tigresshit));
-                
-                if( (doppE > 2.09 && doppE < 2.14) ||
-                  (doppE > 2.70 && doppE < 2.76))
-                {
-                  TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut_dopp",hit->GetDetectorNumber()));
-                  evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-                  
-                  TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut_dopp",hit->GetDetectorNumber()));
-                  tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-                }
-                
-                if(doppE>=2.090 && doppE<= 2.135)
-                {
-                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2102",hit->GetDetectorNumber()));
-                  expg->Fill(excite_corrected);
-                }
-                else if(doppE>=2.700 && doppE<=2.760)
-                {
-                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2702",hit->GetDetectorNumber()));
-                  expg->Fill(excite_corrected);
-                }
-                
-                if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
-                {
-                  TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
-                  delta->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-                }
-                if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2150)
-                {
-                  TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",hit->GetDetectorNumber()));
-                  evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-                }
-              }
-            }
-          }
-        }
+//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
+//         {
+//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+//           {            
+//             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",hit->GetDetectorNumber()));
+//             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+//             
+//             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_corrected",hit->GetDetectorNumber()));
+//             temp2->Fill(hit->GetThetaDeg(),hit->GetCorrectedEnergyMeV("12Be"));
+//             
+//             temp2 = (TH2D*)outlist->FindObject("EvTheta_12Be");
+//             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+//             
+//             if(csm->GetMultiplicity()==1)
+//             {
+//               temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",hit->GetDetectorNumber()));
+//               temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+//             }
+//             
+//             TH1I* multpointer = (TH1I*)outlist->FindObject(Form("Be12Mult_%i",hit->GetDetectorNumber()));
+//             multpointer->Fill(csm->GetMultiplicity());
+//             
+//             double totalE = 0;
+//             for(int i=0; i<csm->GetMultiplicity();i++)
+//             {
+//               totalE += csm->GetHit(i)->GetEnergyMeV();
+//             }
+//             
+//             TH2I* derp = (TH2I*)outlist->FindObject("Be12TotalEnergy_v_Mult");
+//             derp->Fill(totalE,csm->GetMultiplicity());
+//             
+//             TH2I* derp2 = (TH2I*)outlist->FindObject("Be12ExEnergy_v_Mult");
+//             derp2->Fill(BEAM_ENERGY + 1.506 - totalE,csm->GetMultiplicity());
+//             
+//             double excite = GetExciteE_Heavy(hit,12);
+//             temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i",hit->GetDetectorNumber()));
+//             if(temp1) temp1->Fill(excite);
+//             
+//             double excite_corrected = GetExciteE_Heavy_Corrected(hit,12);
+//             temp1 = (TH1D*)outlist->FindObject(Form("BeEx%i_corr",hit->GetDetectorNumber()));
+//             if(temp1) temp1->Fill(excite_corrected);
+//             
+//             temp2INT = (TH2I*)outlist->FindObject(Form("Be12Ex_Vs_Theta_%i",hit->GetDetectorNumber()));
+//             temp2INT->Fill(excite_corrected,hit->GetThetaDeg());
+//             
+//             temp2INT = (TH2I*)outlist->FindObject(Form("BeEx%i_mult",hit->GetDetectorNumber()));
+//             temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,12),csm->GetMultiplicity());
+//             
+//             // 	  TH1I* stat = (TH1I*)outlist->FindObject("counts");
+//             // 	  stat->Fill(hit->GetDetectorNumber()+1);
+//             
+//             for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+//             {
+//               TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+//               
+//               if(tigresshit->GetCore()->GetEnergy()>10)
+//               {
+//                 
+//                 if(excite_corrected > 8)
+//                 {
+//                   temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_gt8",hit->GetDetectorNumber()));
+//                   temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 }
+//                 else
+//                 {
+//                   temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_lt8",hit->GetDetectorNumber()));
+//                   temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 }
+//                 
+//                 temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i",hit->GetDetectorNumber()));
+//                 temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 temp1 = (TH1D*)outlist->FindObject("Be12Gammas");
+//                 temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 
+//                 temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_eff",hit->GetDetectorNumber()));
+//                 temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+//                 temp1 = (TH1D*)outlist->FindObject("Be12Gammas_eff");
+//                 temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+//                 
+//                 if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -140)
+//                 {
+//                   temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt");
+//                   temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                   temp1 = (TH1D*)outlist->FindObject("Be12Gammas_prompt_doppler");
+//                   temp1->Fill(Doppler(tigresshit,hit,12));
+//                 }
+//                 
+//                 else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -150 && hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() > -400 )
+//                 {
+//                   temp1 = (TH1D*)outlist->FindObject("Be12Gammas_medium");
+//                   temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 }
+//                 
+//                 else if(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD() < -500)
+//                 {
+//                   temp1 = (TH1D*)outlist->FindObject("Be12Gammas_delayed");
+//                   temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+//                 }
+//                 
+//                 double doppE = Doppler(tigresshit,hit,12);
+//                 
+//                 temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp",hit->GetDetectorNumber()));
+//                 temp1->Fill(doppE);
+//                 temp1 = (TH1D*)outlist->FindObject(Form("Be12_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
+//                 temp1->Fill(doppE,EfficiencyWeight(tigresshit));
+//                 
+//                 temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp");
+//                 temp1->Fill(doppE);
+//                 temp1 = (TH1D*)outlist->FindObject("Be12GammasDopp_eff");
+//                 temp1->Fill(doppE,EfficiencyWeight(tigresshit));
+//                 
+//                 if( (doppE > 2.09 && doppE < 2.14) ||
+//                   (doppE > 2.70 && doppE < 2.76))
+//                 {
+//                   TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut_dopp",hit->GetDetectorNumber()));
+//                   evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+//                   
+//                   TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut_dopp",hit->GetDetectorNumber()));
+//                   tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+//                 }
+//                 
+//                 if(doppE>=2.090 && doppE<= 2.135)
+//                 {
+//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2102",hit->GetDetectorNumber()));
+//                   expg->Fill(excite_corrected);
+//                 }
+//                 else if(doppE>=2.700 && doppE<=2.760)
+//                 {
+//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be12Ex%i_gcut_2702",hit->GetDetectorNumber()));
+//                   expg->Fill(excite_corrected);
+//                 }
+//                 
+//                 if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2140)
+//                 {
+//                   TH1D* delta = (TH1D*)outlist->FindObject("deltaGamma");
+//                   delta->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
+//                 }
+//                 if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2150)
+//                 {
+//                   TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCut",hit->GetDetectorNumber()));
+//                   evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+//                 }
+//               }
+//             }
+//           }
+//         }
         
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
-          {
-            if(csm->GetMultiplicity()>=3)
-            {
-              TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
-              double TotalE = 0;
-              for(int asdf=0;asdf<csm->GetMultiplicity();asdf++)
-              {
-                TotalE+=csm->GetHit(asdf)->GetEnergyMeV();
-              }
-              totalenergypointer->Fill(TotalE);
-            }
-          }
-        }
+//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
+//         {
+//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) )//&& csm->GetMultiplicity()>=3)
+//           {
+//             if(csm->GetMultiplicity()>=3)
+//             {
+//               TH1D* totalenergypointer=(TH1D*)outlist->FindObject(Form("TotalEnergy_%i_12Be",hit->GetDetectorNumber()));
+//               double TotalE = 0;
+//               for(int asdf=0;asdf<csm->GetMultiplicity();asdf++)
+//               {
+//                 TotalE+=csm->GetHit(asdf)->GetEnergyMeV();
+//               }
+//               totalenergypointer->Fill(TotalE);
+//             }
+//           }
+//         }
         
         
         if(DEBUG) cout<<"EVTheta"<<endl;
@@ -563,18 +563,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
           }
         }
-        
-        if(hit->GetDVerticalEnergy()>0 && hit->GetDHorizontalEnergy()>0)
-        {
-          temp2 = (TH2D*)outlist->FindObject(Form("CheckCalD_%i",hit->GetDetectorNumber()));
-          if(temp2) temp2->Fill(hit->GetDVerticalEnergy()/1000.,hit->GetDHorizontalEnergy()/1000.);
-        }
-        if(hit->GetEVerticalEnergy()>0 && hit->GetEHorizontalEnergy()>0)
-        {
-          temp2 = (TH2D*)outlist->FindObject(Form("CheckCalE_%i",hit->GetDetectorNumber()));
-          if(temp2) temp2->Fill(hit->GetEVerticalEnergy()/1000.,hit->GetEHorizontalEnergy()/1000.);
-        }
-        
+
         //Multiplicity cut plots
         
         if(hit->GetEEnergy()>100.)
@@ -598,224 +587,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           }
         }
       }
-      //***********************
-      //    Gamma Plots
-      //***********************
-      for(int I=0;I<csm->GetMultiplicity();I++)
-      {
-        TCSMHit *hit = csm->GetHit(I);
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_allbe_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                TH1D* gpointer = (TH1D*)outlist->FindObject("GammaBe");
-                gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-        
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_allli_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                TH1D* gpointer = (TH1D*)outlist->FindObject("GammaLi");
-                gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_7Li_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                TH1D* gpointer = (TH1D*)outlist->FindObject("GammaLi7");
-                gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_alpha_thickness_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                TH1D* gpointer = (TH1D*)outlist->FindObject("GammaAlpha");
-                gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-      }
-      //***********************
-      //looking for non id 12Be
-      //***********************
-      
-      //if(csm->GetMultiplicity()>=2)
-      {
-        for(int i=0;i<csm->GetMultiplicity();i++)
-        {
-          TCSMHit *hit = csm->GetHit(i);
-          if(hit->GetDetectorNumber()<3 && hit->GetEEnergy() < 10)
-          {
-            for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-            {
-              TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
-              if(tigresshit->GetCore()->GetEnergy()>10)
-              {
-                TH1D* gpointer = (TH1D*)outlist->FindObject("Be12GammasNoID");
-                gpointer->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-                gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID");
-                gpointer->Fill(Doppler(tigresshit,hit,12));
-                
-                if(tigresshit->GetCore()->GetEnergy()/1000. < 2.12 || tigresshit->GetCore()->GetEnergy()/1000. > 2.13)
-                {
-                  gpointer = (TH1D*)outlist->FindObject("Be12GammasDoppNoID_suppressed");
-                  gpointer->Fill(Doppler(tigresshit,hit,12));
-                }
-              }
-              if(tigresshit->GetCore()->GetEnergy()>2100 && tigresshit->GetCore()->GetEnergy()<2150)
-              {
-                TH2D* evtp = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE_gammaCutNoID",hit->GetDetectorNumber()));
-                evtp->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-              }
-            }
-            break;
-          }
-        }
-      }
-      
-      //***********************
-      //  looking for 2 alphas
-      //***********************
-      
-      if(csm->GetMultiplicity()>=3)
-      {
-        vector<int> aloc;
-        for(int i=0;i<csm->GetMultiplicity();i++)
-        {
-          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_alpha_thickness_%i_v1",csm->GetHit(i)->GetDetectorNumber()))))
-          {
-            if(cut->IsInside(csm->GetHit(i)->GetEnergyMeV(),csm->GetHit(i)->GetDdE_dx()) && csm->GetHit(i)->GetEEnergy() > 10)
-            {
-              aloc.push_back(i);
-            }
-          }
-        }
-        
-        if(aloc.size()>0)
-        {
-          TH1D* etotalphapointer = (TH1D*)outlist->FindObject(Form("ETot_%i_2alpha",csm->GetHit(aloc.at(0))->GetDetectorNumber()));
-          double etot=0;
-          for(int ee = 0; ee<csm->GetMultiplicity(); ee++)
-          {
-            etot += csm->GetHit(ee)->GetEnergyMeV();
-          }
-          etotalphapointer->Fill(etot);
-          
-          TH1I* numalphaptr = (TH1I*)outlist->FindObject("AlphaMult");
-          numalphaptr->Fill(aloc.size());
-        }
-      }
-      //***********************
-      //      Fancy dE v E
-      //***********************
-      
-      for(int xx = 0;xx<csm->GetMultiplicity();xx++)
-      {
-        TCSMHit *hit = csm->GetHit(xx);
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("highblob_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobHigh");
-            blobpointer->Fill(csm->GetMultiplicity());
-          }
-        }
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("lowblob_%i_v1",hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {
-            TH1I* blobpointer = (TH1I*)outlist->FindObject("MultBlobLow");
-            blobpointer->Fill(csm->GetMultiplicity());
-          }
-        }
-      }
-      
-      if(csm->GetMultiplicity()>=2)
-      {
-        for(int aa=0;aa<csm->GetMultiplicity();aa++)
-        {
-          TCSMHit *hita = csm->GetHit(aa);
-          if(hita->GetEEnergy()>0.)
-          {
-            for(int bb=aa+1;bb<csm->GetMultiplicity();bb++)
-            {
-              TCSMHit *hitb = csm->GetHit(bb);
-              if(hitb->GetEEnergy()>0.)
-              {
-                if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
-                {
-                  TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit",hita->GetDetectorNumber()));
-                  hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
-                  hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-                  if(hita->GetDVerticalStrip()==hitb->GetDVerticalStrip() && hita->GetDHorizontalStrip() == hitb->GetDHorizontalStrip())
-                  {
-                    TH2D *hit2histo = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_2hit_samepix",hita->GetDetectorNumber()));
-                    hit2histo->Fill(hita->GetEnergyMeV(),hita->GetDdE_dx());
-                    hit2histo->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-                  }
-                }
-              }
-            }
-            if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hita->GetDetectorNumber()))))
-            {
-              if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
-              {
-                //we have a confirmed 12Be
-                for(int bb=0;bb<csm->GetMultiplicity();bb++)
-                {
-                  TCSMHit *hitb = csm->GetHit(bb);
-                  if(hitb==hita)
-                    continue;
-                  
-                  if(hitb->GetEEnergy()>10. && hitb->GetDEnergy() > 10. && hita->GetDetectorNumber() != hitb->GetDetectorNumber())
-                  {
-                    TH2D *corrpointer = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_corr12",hita->GetDetectorNumber()));
-                    corrpointer->Fill(hitb->GetEnergyMeV(),hitb->GetDdE_dx());
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      
-      
+    
       //***********************
       //Looking for below PID 10Be
       //***********************
@@ -1034,85 +806,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit));
         }
       }
-      
-      if(tigress->GetAddBackMultiplicity()>1)
-      {
-        for(int y=1; y<tigress->GetAddBackMultiplicity();y++)
-        {
-          TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-          
-          TH1I* difp = (TH1I*)outlist->FindObject("GvGTimeDiff");
-          difp->Fill(tigress->GetAddBackHit(0)->GetTimeCFD()-tigresshit->GetTimeCFD());
-        }
-      }
-      
-//       for(int y=0; y<csm->GetMultiplicity();y++)
-//       {
-//         TCSMHit* hit = csm->GetHit(y);
-//         for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-//         {
-//           TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-//           
-//           TH1I* difp = (TH1I*)outlist->FindObject("TimeDiffAll");
-//           difp->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-//           TH2D* point = (TH2D*)outlist->FindObject("GEvT");
-//           point->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
-//         }
-//         
-//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hit->GetDetectorNumber()))))
-//         {
-//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-//           {
-//             for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-//             {
-//               TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-//               
-//               TH1I* difp12 = (TH1I*)outlist->FindObject("TimeDiff12Be");
-//               difp12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD());
-//               TH2D* point12 = (TH2D*)outlist->FindObject("GEvT_12Be");
-//               point12->Fill(hit->GetDVerticalCFD()-tigresshit->GetTimeCFD(),tigresshit->GetCore()->GetEnergy()/1000.);
-//               
-//               TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix_12Be");
-//               for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
-//               {
-//                 matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
-//               }
-//             }
-//           }
-//         }
-//       }
-      
-//       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-//       {
-//         TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-//         TH2D* matp = (TH2D*)outlist->FindObject("GammaMatrix");
-//         for(int zz = y+1; zz<tigress->GetAddBackMultiplicity();zz++)
-//         {
-//           matp->Fill(tigresshit->GetCore()->GetEnergy()/1000.,tigress->GetAddBackHit(zz)->GetCore()->GetEnergy()/1000.);
-//         }
-//       }
-      
-//       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-//       {
-//         TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-//         
-//         if(tigresshit->GetCore()->GetEnergy()>2120 && tigresshit->GetCore()->GetEnergy()<2130)
-//         {
-//           for(int q=0; q<csm->GetMultiplicity();q++)
-//           {
-//             TCSMHit* hit = csm->GetHit(q);
-//             
-//             if(hit->GetDetectorNumber()<3)
-//             {
-//               TH2D* tp = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_gcut",hit->GetDetectorNumber()));
-//               tp->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-//             }
-//             TH1D* gcutp = (TH1D*)outlist->FindObject(Form("gCutE_%i",hit->GetDetectorNumber()));
-//             gcutp->Fill(hit->GetEnergyMeV());
-//           }
-//         }
-//       }
-      
+  
       //***********************
       //  Other 10Be
       //***********************
@@ -1210,78 +904,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           
         }
       }
-      
-      //***********************
-      //  Multiplicity plots
-      //***********************
-      if(csm->GetMultiplicity()!=0 || tigress->GetAddBackMultiplicity()!=0)
-      {
-        bool be12=0;
-        for(int aa=0;aa<csm->GetMultiplicity();aa++)
-        {
-          TCSMHit *hita = csm->GetHit(aa);
-          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be12Cut,hita->GetDetectorNumber()))))
-          {
-            if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
-            {
-              be12=1;
-            }
-          }
-        }
-        
-        TH2I* cvgp = (TH2I*)outlist->FindObject("CvGmult");
-        cvgp->Fill(csm->GetMultiplicity(),tigress->GetAddBackMultiplicity());
-        
-        if(be12)
-        {
-          TH2I* cvgpbe = (TH2I*)outlist->FindObject("CvGmult_12be");
-          cvgpbe->Fill(csm->GetMultiplicity(),tigress->GetAddBackMultiplicity());
-        }
-      }
-      
-      //***********************
-      //    One-off Low PID and High PID plots
-      //***********************
-      
-      if(int(BEAM_ENERGY) == 55)
-      {
-        for(int xx = 0;xx<csm->GetMultiplicity();xx++)
-        {
-          TCSMHit *hit = csm->GetHit(xx);
-          
-          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_HighEnergyOnly_%i_v1",hit->GetDetectorNumber()))))
-          {
-            if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-            {
-              TH2D* EvTPtr = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",hit->GetDetectorNumber()));
-              EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
-              
-              TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_high");
-              
-              for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-              {
-                geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-          if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("pid_high_thick_12Be_LowEnergyOnly_%i_v1",hit->GetDetectorNumber()))))
-          {
-            if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-            {
-              TH2D* EvTPtr = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",hit->GetDetectorNumber()));
-              EvTPtr->Fill( hit->GetThetaDeg(), hit->GetEnergyMeV());
-              
-              TH1D* geSpec = (TH1D*)outlist->FindObject("Be12Gammas_low");
-              
-              for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-              {
-                geSpec->Fill(tigress->GetAddBackHit(y)->GetCore()->GetEnergy()/1000.);
-              }
-            }
-          }
-        }
-      }
-      
+  
       //***********************
       //         End
       //***********************
