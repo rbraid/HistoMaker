@@ -543,6 +543,11 @@ void SetupHistos(TList *outlist)
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
   temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
   
+  outlist->Add(new TH1D("GammaSum_supp","Gamma Spectrum BGO Suppressed",30000,0,30));
+  temp1 = (TH1D*)outlist->FindObject("GammaSum_supp");
+  temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
+  temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
+  
   outlist->Add(new TH1D("GammaSum_eff","Efficiency Corrected Gamma Spectrum",30000,0,30));
   temp1 = (TH1D*)outlist->FindObject("GammaSum_eff");
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
@@ -761,6 +766,7 @@ void SetupHistos(TList *outlist)
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_low","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on Low E 10Be",30000,0,30));
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_high","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on High E 10Be",30000,0,30));
   outlist->Add(new TH1I("DualBe10_allcut_gammas","Gamma Spectrum with 2 non-PID 10Be",30000,0,30));
+  outlist->Add(new TH1I("DualBe10_allcut_gammas_supp","Gamma Spectrum with 2 non-PID 10Be, BGO suppressed",30000,0,30));
   
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_low_eff","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on Low E 10Be, with Efficiency",30000,0,30));
   outlist->Add(new TH1I("DualBe10_allcut_gammas_dopp_high_eff","Gamma Spectrum with 2 non-PID 10Be, Doppler Corrected on High E 10Be, with Efficiency",30000,0,30));

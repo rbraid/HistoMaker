@@ -713,6 +713,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 
                 TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
+                TH1I *gamptrs = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_supp");
                 TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
                 TH1I *gamptrl = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low");
                 TH1I *gamptreff = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_eff");
@@ -751,6 +752,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   if(tigresshit->GetCore()->GetEnergy()>10)
                   {
                     gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+                    if(!tigresshit->Suppress())
+                      gamptrs->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
                     gamptrh->Fill(Doppler(tigresshit,Hhit,10));
                     gamptrl->Fill(Doppler(tigresshit,Lhit,10));
                     
@@ -804,6 +807,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         if(hit->GetCore()->GetEnergy() > 10 && hit->GetCore()->GetEnergy() < 3000){
           temp = (TH1D*)outlist->FindObject("GammaSum_eff");
           temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit));
+        }
+        
+        if(!hit->Suppress())
+        {          
+          TH1D* gss = (TH1D*)outlist->FindObject("GammaSum_supp");
+          gss->Fill(hit->GetCore()->GetEnergy()/1000.);
         }
       }
   
