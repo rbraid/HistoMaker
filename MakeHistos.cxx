@@ -660,6 +660,84 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                 duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
                 
+                if(true)
+                {
+                  if(hita->GetDetectorNumber()==1)
+                  {
+                    if(hita->GetDHorizontalStrip() < 3)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                    else if(hita->GetDHorizontalStrip() > 13)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                    else
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_else");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                  }
+                  if(hita->GetDetectorNumber()==2)
+                  {
+                    if(hita->GetDHorizontalStrip() < 3)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                    else if(hita->GetDHorizontalStrip() > 13)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                    else
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_else");
+                      dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                    }
+                  }
+                  
+                  if(hitb->GetDetectorNumber()==1)
+                  {
+                    if(hitb->GetDHorizontalStrip() < 3)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                    else if(hitb->GetDHorizontalStrip() > 14)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                    else
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_else");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                  }
+                  if(hitb->GetDetectorNumber()==2)
+                  {
+                    if(hitb->GetDHorizontalStrip() < 3)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                    else if(hitb->GetDHorizontalStrip() > 14)
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                    else
+                    {
+                      TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_else");
+                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                    }
+                  }
+                }
+                
+                
                 if(hita->GetEEnergy() <  10 && hitb->GetEEnergy() < 10)
                 {
                   TH2I *dualae = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
