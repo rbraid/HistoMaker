@@ -593,16 +593,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       //***********************
       if(csm->GetMultiplicity() == 2)
       {
+        TCSMHit *hita;
+        TCSMHit *hitb;
         TRandom *rdm = new TRandom(x);
         if(rdm->Integer(2))
         {
-          TCSMHit *hita = csm->GetHit(0);
-          TCSMHit *hitb = csm->GetHit(1);
+          hita = csm->GetHit(0);
+          hitb = csm->GetHit(1);
         }
         else
         {
-          TCSMHit *hita = csm->GetHit(1);
-          TCSMHit *hitb = csm->GetHit(0);
+          hita = csm->GetHit(1);
+          hitb = csm->GetHit(0);
         }
         delete rdm;
         
@@ -676,7 +678,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 {
                   if(hita->GetDetectorNumber()==1)
                   {
-                    cout<<"A1"<<endl;
                     if(hita->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
@@ -695,7 +696,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   }
                   if(hita->GetDetectorNumber()==2)
                   {
-                    cout<<"A2"<<endl;
                     if(hita->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
@@ -715,7 +715,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   
                   if(hitb->GetDetectorNumber()==1)
                   {
-                    cout<<"B1"<<endl;
                     if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
@@ -734,7 +733,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   }
                   if(hitb->GetDetectorNumber()==2)
                   {
-                    cout<<"B2"<<endl;
                     if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
