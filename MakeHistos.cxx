@@ -593,9 +593,21 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       //***********************
       if(csm->GetMultiplicity() == 2)
       {
-        TCSMHit *hita = csm->GetHit(0);
-        TCSMHit *hitb = csm->GetHit(1);
-        //if(hita->GetEEnergy()<10. && hitb->GetEEnergy()<10.)
+        TRandom *rdm = new TRandom(x);
+        if(rdm->Integer(2))
+        {
+          TCSMHit *hita = csm->GetHit(0);
+          TCSMHit *hitb = csm->GetHit(1);
+        }
+        else
+        {
+          TCSMHit *hita = csm->GetHit(1);
+          TCSMHit *hitb = csm->GetHit(0);
+        }
+        delete rdm;
+        
+        
+        //if(hita->GetEEnergy()<10. && hitb->GetEEnergy()<10.
         {
           if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
             continue;
@@ -664,12 +676,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 {
                   if(hita->GetDetectorNumber()==1)
                   {
-                    if(hita->GetDHorizontalStrip() < 3)
+                    cout<<"A1"<<endl;
+                    if(hita->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                     }
-                    else if(hita->GetDHorizontalStrip() > 13)
+                    else if(hita->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
@@ -682,12 +695,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   }
                   if(hita->GetDetectorNumber()==2)
                   {
-                    if(hita->GetDHorizontalStrip() < 3)
+                    cout<<"A2"<<endl;
+                    if(hita->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                     }
-                    else if(hita->GetDHorizontalStrip() > 13)
+                    else if(hita->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
@@ -701,12 +715,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   
                   if(hitb->GetDetectorNumber()==1)
                   {
-                    if(hitb->GetDHorizontalStrip() < 3)
+                    cout<<"B1"<<endl;
+                    if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
                       duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
                     }
-                    else if(hitb->GetDHorizontalStrip() > 14)
+                    else if(hitb->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
                       duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
@@ -719,12 +734,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   }
                   if(hitb->GetDetectorNumber()==2)
                   {
-                    if(hitb->GetDHorizontalStrip() < 3)
+                    cout<<"B2"<<endl;
+                    if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
                       duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
                     }
-                    else if(hitb->GetDHorizontalStrip() > 14)
+                    else if(hitb->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
                       duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
