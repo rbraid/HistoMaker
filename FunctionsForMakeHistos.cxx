@@ -543,6 +543,11 @@ void SetupHistos(TList *outlist)
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
   temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
   
+  outlist->Add(new TH1D("GammaSum_NoAddB","Gamma Spectrum, Addback not Enabled",30000,0,30));
+  temp1 = (TH1D*)outlist->FindObject("GammaSum_NoAddB");
+  temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");
+  temp1->GetYaxis()->SetTitle("Counts per .1 MeV bin");
+  
   outlist->Add(new TH1D("GammaSum_supp","Gamma Spectrum BGO Suppressed",30000,0,30));
   temp1 = (TH1D*)outlist->FindObject("GammaSum_supp");
   temp1->GetXaxis()->SetTitle("Energy of Gamma in MeV");

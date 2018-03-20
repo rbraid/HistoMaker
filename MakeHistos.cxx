@@ -943,6 +943,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           gss->Fill(hit->GetCore()->GetEnergy()/1000.);
         }
       }
+      
+      for(int y=0; y<tigress->GetMultiplicity();y++)
+      {
+        TTigressHit *hit = tigress->GetTigressHit(y);
+        TH1D* temp = 0;
+        
+        temp = (TH1D*)outlist->FindObject("GammaSum_NoAddB");
+        temp->Fill(hit->GetCore()->GetEnergy()/1000.);
+      }
   
       //***********************
       //  Other 10Be
