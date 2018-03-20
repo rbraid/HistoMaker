@@ -682,16 +682,25 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_lt3");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                     else if(hita->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_gt14");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                     else
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_else");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_else");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                   }
                   if(hita->GetDetectorNumber()==2)
@@ -700,16 +709,25 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_lt3");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                     else if(hita->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_gt14");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                     else
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_else");
                       dualCheck->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_else");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hita,10));
                     }
                   }
                   
@@ -718,17 +736,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_lt3");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_lt3");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                     else if(hitb->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_gt14");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_gt14");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                     else
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_1_else");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_1_else");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                   }
                   if(hitb->GetDetectorNumber()==2)
@@ -736,17 +763,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     if(hitb->GetDHorizontalStrip() < 4)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_lt3");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_lt3");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                     else if(hitb->GetDHorizontalStrip() > 12)
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_gt14");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_gt14");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                     else
                     {
                       TH2I *dualCheck = (TH2I*)outlist->FindObject("Dual10Be_VCHECK_2_else");
-                      duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      dualCheck->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+                      
+                      TH1I *dualexCheck = (TH1I*)outlist->FindObject("DualBe10_VCHECK_ex_2_else");
+                      dualexCheck->Fill(GetExciteE_Heavy_Corrected(hitb,10));
                     }
                   }
                 }
