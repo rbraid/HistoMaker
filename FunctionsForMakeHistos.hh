@@ -13,6 +13,9 @@
 #include <TH3.h>
 #include <TH2.h>
 #include <TH1.h>
+#include <TGraphErrors.h>
+#include <TF1.h>
+#include <TFitResult.h>
 #include <TStopwatch.h>
 #include <TKey.h>
 #include <TTree.h>
@@ -50,8 +53,8 @@ bool AlmostEqual(double a, double b, double threshold = .2);
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z = 0);
 
-double EfficiencyWeight(double ekeV);
 double EfficiencyWeight(TTigressHit* thit);
+vector<double> GetEffAndError(double Energy, bool Error = 0);
 
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z = 0);
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
