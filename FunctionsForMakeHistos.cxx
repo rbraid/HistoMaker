@@ -421,6 +421,11 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp_math_supp",id),"Gamma spectrum for theoretical opposite particle, BGO suppressed",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_supp",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
     outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp_eff",id),"Gamma spectrum for opposite particle, Efficiency Corrected",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_eff",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");

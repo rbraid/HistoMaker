@@ -866,7 +866,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 dopptr->Fill(dopp);
                 TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
                 dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
-                
+                if(!tigresshit->Suppress())
+                {
+                  TH1D* dopptrsupp = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_supp",hit->GetDetectorNumber()));
+                  dopptrsupp->Fill(dopp);
+                }
                 double excite = GetExciteE_Heavy_Corrected(hit,10);
                 
                 if(dopp>=2.577 && dopp<=2.612)
