@@ -663,6 +663,14 @@ void SetupHistos(TList *outlist)
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
   temp2INT->GetYaxis()->SetTitle("Total Energy deposited in MeV");
   
+  outlist->Add(new TH2I("Dual10Be_VCHECK_1_lt3","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  outlist->Add(new TH2I("Dual10Be_VCHECK_1_gt14","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  outlist->Add(new TH2I("Dual10Be_VCHECK_1_else","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  outlist->Add(new TH2I("Dual10Be_VCHECK_2_lt3","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  outlist->Add(new TH2I("Dual10Be_VCHECK_2_gt14","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  outlist->Add(new TH2I("Dual10Be_VCHECK_2_else","EvTheta of 2 particles, cut on Theta, Phi, and Energy",100,0,100,350,0,70));
+  
+  
   outlist->Add(new TH2I("Dual10Be_allcut_noE","EvTheta of 2 particles, cut on Theta, Phi, and Energy, no E hits",100,0,100,350,0,70));
   temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_noE");
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
