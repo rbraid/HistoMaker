@@ -1134,8 +1134,21 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       
       if(csm->GetMultiplicity() == 2)
       {
-        TCSMHit *hita = csm->GetHit(0);
-        TCSMHit *hitb = csm->GetHit(1);
+        TCSMHit* hita;
+        TCSMHit* hitb;
+        
+        TRandom *rdm = new TRandom(x);
+        if(rdm->Integer(2))
+        {
+          hita = csm->GetHit(0);
+          hitb = csm->GetHit(1);
+        }
+        else
+        {
+          hita = csm->GetHit(1);
+          hitb = csm->GetHit(0);
+        }
+        delete rdm;
         
         if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
           continue;
