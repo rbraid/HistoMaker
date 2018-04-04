@@ -1071,7 +1071,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(hit->GetDHorizontalStrip()>0 && hit->GetDHorizontalStrip()<15)
           {
-            if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
+            if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))) && !SIMULATED_DATA)
             {
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
               {           
