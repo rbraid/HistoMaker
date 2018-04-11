@@ -980,11 +980,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 dopptr->Fill(dopp);
                 TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
                 dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
+                
                 if(!tigresshit->Suppress())
                 {
                   TH1D* dopptrsupp = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_supp",hit->GetDetectorNumber()));
                   dopptrsupp->Fill(dopp);
                 }
+                if(tigress->GetRawBGO()==0)
+                {
+                  TH1D* dopptrsupp = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_suppMax",hit->GetDetectorNumber()));
+                  dopptrsupp->Fill(dopp);
+                }
+                
                 double excite = GetExciteE_Heavy_Corrected(hit,10);
                 
                 if(dopp>=2.577 && dopp<=2.612)
@@ -1071,8 +1078,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(hit->GetDHorizontalStrip()>0 && hit->GetDHorizontalStrip()<15)
           {
-            if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))) && !SIMULATED_DATA)
+            if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
             {
+              if(SIMULATED_DATA)
+                continue;
+              
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
               {           
                 double ex11c =GetExciteE_Heavy_Corrected(hit,11);
