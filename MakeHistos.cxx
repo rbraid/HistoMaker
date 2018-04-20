@@ -1106,6 +1106,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             {
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
               {  
+                
+                TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_PID");
+                tmptvt->Fill(hit->GetThetaDeg(),CalcCOMThetaDeg(hit,10));
+                
+                TH2I* tmpevtcom = (TH2I*)outlist->FindObject("EnergyVThetaCOM_PID");
+                tmpevtcom->Fill(hit->getEnergyMeV(),CalcCOMThetaDeg(hit,10));
+                
                 // 0     -1 to 1.2     .1
                 // 3.3  2.5 to 4.4     3.45
                 // 6    5.5 to 7       6.25

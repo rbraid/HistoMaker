@@ -851,6 +851,10 @@ void SetupHistos(TList *outlist)
     temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
+    
+    outlist->Add(new TH2I("ThetaVThetaCOM_PID","Theta Vs Theta COM",180,0,180,180,0,180));
+    
+    outlist->Add(new TH2I("EnergyVThetaCOM_PID"," Energy Vs Theta COM",100,0,20,180,0,180));
   }
   
   if(DEBUG)
