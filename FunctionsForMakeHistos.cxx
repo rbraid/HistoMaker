@@ -1172,22 +1172,26 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
   {
     case 10:
       MASS = MASS_BE10;
+      type = "10be";
       break;
     case 12:
       MASS = MASS_BE12;
+      type = "12be";
       break;
     case 8:
       MASS = MASS_BE8;
+      type = "8be";
       break;
     case 0:
       MASS = Hit->GetMassMeV();
+      cout<<"I don't know what to do here, default mass set"<<endl;
       break;
     default:
       cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
       MASS = Z;
   }
   
-  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
   
 }
 
