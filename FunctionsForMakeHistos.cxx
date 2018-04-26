@@ -946,7 +946,7 @@ double GetExciteE_Heavy(TCSMHit* Hit, int Z)
       MASS = Hit->GetMassMeV();
       break;
     default:
-      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      cerr<<"unrecognized Z in GetExciteE_Heavy: "<<Z<<endl;
       MASS = Z;
   }
   
@@ -981,7 +981,7 @@ double GetExciteE_Heavy_Corrected(TCSMHit* Hit, int Z)
       isotope = Hit->GetIsotope();
       break;
     default:
-      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      cerr<<"unrecognized Z in GetExciteE_Heavy_Corrected: "<<Z<<endl;
       MASS = Z;
       isotope = "12be";
   }
@@ -1182,12 +1182,16 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
       MASS = MASS_BE8;
       type = "8be";
       break;
+    case 11:
+      MASS = MASS_BE11;
+      type = "11be";
+      break;
     case 0:
       MASS = Hit->GetMassMeV();
       cout<<"I don't know what to do here, default mass set"<<endl;
       break;
     default:
-      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+      cerr<<"Unrecognized Z in CalcCOMmomentum: "<<Z<<endl;
       MASS = Z;
   }
   
@@ -1217,7 +1221,7 @@ double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
       MASS = Hit->GetMassMeV();
       break;
     default:
-      cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
+      cerr<<"Unrecognized Z in CalcCOMEnergyMeV: "<<Z<<endl;
       MASS = Z;
   }
   
@@ -1393,7 +1397,7 @@ double* CorrParticle(TCSMHit* Hit, int Z)
 	MASS = Hit->GetMassMeV();
 	break;
       default:
-	cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+	cerr<<"Unrecognized Z in Corr Particle: "<<Z<<endl;
 	MASS = Z;
     }
 
