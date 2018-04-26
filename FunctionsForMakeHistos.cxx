@@ -1166,25 +1166,25 @@ TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
 {
   double MASS = 0.;
-  string type;
+  //string type;
   
   switch(Z)
   {
     case 10:
       MASS = MASS_BE10;
-      type = "10be";
+//       type = "10be";
       break;
     case 12:
       MASS = MASS_BE12;
-      type = "12be";
+//       type = "12be";
       break;
     case 8:
       MASS = MASS_BE8;
-      type = "8be";
+//       type = "8be";
       break;
     case 11:
       MASS = MASS_BE11;
-      type = "11be";
+//       type = "11be";
       break;
     case 0:
       MASS = Hit->GetMassMeV();
@@ -1195,8 +1195,8 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
       MASS = Z;
   }
   
-  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
-  
+//   return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
+  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
 }
 
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
