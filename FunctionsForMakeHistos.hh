@@ -58,7 +58,7 @@ vector<double> GetEffAndError(double Energy, bool Error = 0);
 
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z = 0);
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
-double CalcCOMEnergyMeV(TVector3 pvec, int Z = 0);
-double CalcCOMThetaDeg(TVector3 pvec, int Z = 0);
+// double CalcCOMEnergyMeV(TVector3 pvec, int Z = 0);
+// double CalcCOMThetaDeg(TVector3 pvec, int Z = 0);
 
 #endif

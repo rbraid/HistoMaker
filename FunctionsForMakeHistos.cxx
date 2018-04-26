@@ -1166,6 +1166,7 @@ TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
 {
   double MASS = 0.;
+  string type;
   
   switch(Z)
   {
@@ -1216,93 +1217,69 @@ double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
       MASS = Z;
   }
   
-  TVector3 pvec = CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+  TVector3 pvec = CalcCOMmomentum(Hit,Z);
 
-  return CalcCOMEnergyMeV(pvec, Z);
+  return(pvec.Mag2()/(2*MASS));
 }
 
-double CalcCOMEnergyMeV(TVector3 pvec, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    default:
-      cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-  return pvec.Mag2()/(2*MASS);
-}
+// double CalcCOMEnergyMeV(TVector3 pvec, int Z)
+// {
+//   double MASS = 0.;
+//   
+//   switch(Z)
+//   {
+//     case 10:
+//       MASS = MASS_BE10;
+//       break;
+//     case 12:
+//       MASS = MASS_BE12;
+//       break;
+//     case 8:
+//       MASS = MASS_BE8;
+//       break;
+//     case 11:
+//       MASS = MASS_BE11;
+//       break;
+//     default:
+//       cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
+//       MASS = Z;
+//   }
+//   
+//   return pvec.Mag2()/(2*MASS);
+// }
 
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      break;
-    default:
-      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-  TVector3 pvec = CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+{ 
+  TVector3 pvec = CalcCOMmomentum(Hit,Z);
 
-  return CalcCOMThetaDeg(pvec, Z);
-}
-
-double CalcCOMThetaDeg(TVector3 pvec, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    default:
-      cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
-      MASS = Z;
-  }
-  
   return pvec.Theta()*180./TMath::Pi();
 }
+
+// double CalcCOMThetaDeg(TVector3 pvec, int Z)
+// {
+//   double MASS = 0.;
+//   
+//   switch(Z)
+//   {
+//     case 10:
+//       MASS = MASS_BE10;
+//       break;
+//     case 12:
+//       MASS = MASS_BE12;
+//       break;
+//     case 8:
+//       MASS = MASS_BE8;
+//       break;
+//     case 11:
+//       MASS = MASS_BE11;
+//       break;
+//     default:
+//       cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
+//       MASS = Z;
+//   }
+//   
+//   return pvec.Theta()*180./TMath::Pi();
+// }
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {
