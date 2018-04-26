@@ -543,11 +543,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDdE_dx());
             
           }
-          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
-          temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
         }
         
-        if(hit->GetDetectorNumber()==3)
+        if(hit->GetDetectorNumber()<3)
+        {
+        temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
+        temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+        }
+        else if(hit->GetDetectorNumber()==3)
         {
           if(hit->GetDEnergy()>0)
           {
