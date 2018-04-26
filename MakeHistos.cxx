@@ -497,16 +497,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         if(temp2) temp2->Fill(hit->GetEPosition().Theta()*180/TMath::Pi(),hit->GetEEnergy()/1000.);
         if(DEBUG) cout<<"HitPattern"<<endl;
         
-        if(hit->GetDetectorNumber() == 2)
-        {
-          TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
-          blehptr->Fill(15-hit->GetDVerticalStrip());
-        }
-        else if(hit->GetDetectorNumber() == 1)
-        {
-          TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
-          blehptr->Fill(hit->GetDVerticalStrip());
-        }
+//         if(hit->GetDetectorNumber() == 2)
+//         {
+//           TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
+//           blehptr->Fill(15-hit->GetDVerticalStrip());
+//         }
+//         else if(hit->GetDetectorNumber() == 1)
+//         {
+//           TH1I *blehptr = (TH1I*)outlist->FindObject(Form("CenterCheck_%i",hit->GetDetectorNumber()));
+//           blehptr->Fill(hit->GetDVerticalStrip());
+//         }
         
         
         if(hit->GetDEnergy()>500)
@@ -515,11 +515,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
         }
         
-        temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
-        if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
+        if(hit->GetEEnergy()>500)
+        {
+          temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
+          if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
+        }
+        
         if(DEBUG) cout<<"PID"<<endl;
-        
-        
         if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
         {
           temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
@@ -569,26 +571,26 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
         //Multiplicity cut plots
         
-        if(hit->GetEEnergy()>100.)
-        {
-          temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
-          if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-          
-          temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
-          temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-        }
-        
-        temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
-        if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
-        
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
-          {
-            temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE11",hit->GetDetectorNumber()));
-            if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());	  
-          }
-        }
+//         if(hit->GetEEnergy()>100.)
+//         {
+//           temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+//           if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
+//           
+//           temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+//           temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
+//         }
+//         
+//         temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal_mult%i",hit->GetDetectorNumber(),csm->GetMultiplicity()));
+//         if(temp2) temp2->Fill(hit->GetThetaDeg(),(hit->GetEEnergy()+hit->GetDEnergy())/1000.);
+//         
+//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form("thetas_Be11_%i_%02i",hit->GetDetectorNumber(),int(hit->GetThetaDeg())))))
+//         {
+//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()))
+//           {
+//             temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE11",hit->GetDetectorNumber()));
+//             if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());	  
+//           }
+//         }
       }
     
       //***********************
