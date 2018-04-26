@@ -61,4 +61,7 @@ double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
 // double CalcCOMEnergyMeV(TVector3 pvec, int Z = 0);
 // double CalcCOMThetaDeg(TVector3 pvec, int Z = 0);
 
+TVector3 GetPositionsNew(int detector,char pos, int horizontalstrip, int verticalstrip);
+TVector3 GetPositionsNew(TCSMHit* Hit, char pos);
+
 #endif

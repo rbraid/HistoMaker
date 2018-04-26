@@ -1103,7 +1103,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
             {
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-              {                  
+              { 
+                
                 TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_PID");
                 tmptvtcom->Fill(CalcCOMThetaDeg(hit,10),hit->GetThetaDeg());
                 
