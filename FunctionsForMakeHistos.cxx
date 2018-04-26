@@ -853,8 +853,15 @@ void SetupHistos(TList *outlist)
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
     outlist->Add(new TH2I("ThetaVThetaCOM_PID","Theta Vs Theta COM",180,0,180,180,0,180));
+    outlist->Add(new TH2I("ThetaVThetaCOM_DUAL","Theta Vs Theta COM",180,0,180,180,0,180));
     
-    outlist->Add(new TH2I("EnergyVThetaCOM_PID"," Energy Vs Theta COM",100,0,20,180,0,180));
+    outlist->Add(new TH2I("EnergyVThetaCOM_PID"," Energy Vs Theta COM",180,0,180,80,0,40));
+    outlist->Add(new TH2I("EnergyVThetaCOM_DUAL"," Energy Vs Theta COM",180,0,180,80,0,40));
+    
+    outlist->Add(new TH2I("ThetaVTheta_DUAL","Theta Vs Theta",180,0,180,180,0,180));
+    outlist->Add(new TH2I("ThetaCOMVThetaCOM_DUAL","Theta COM Vs Theta COM",180,0,180,180,0,180));
+    
+    
   }
   
   if(DEBUG)

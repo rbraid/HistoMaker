@@ -1080,9 +1080,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           {
             if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
             {
-              if(SIMULATED_DATA)
-                continue;
-              
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
               {           
                 double ex11c =GetExciteE_Heavy_Corrected(hit,11);
@@ -1102,16 +1099,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               }
             }
             
+            
             if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
             {
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-              {  
-                
+              {                  
                 TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_PID");
-                tmptvt->Fill(hit->GetThetaDeg(),CalcCOMThetaDeg(hit,10));
+                tmptvtcom->Fill(CalcCOMThetaDeg(hit,10),hit->GetThetaDeg());
                 
                 TH2I* tmpevtcom = (TH2I*)outlist->FindObject("EnergyVThetaCOM_PID");
-                tmpevtcom->Fill(hit->getEnergyMeV(),CalcCOMThetaDeg(hit,10));
+                tmpevtcom->Fill(CalcCOMThetaDeg(hit,10),hit->GetEnergyMeV());
                 
                 // 0     -1 to 1.2     .1
                 // 3.3  2.5 to 4.4     3.45
@@ -1216,6 +1213,20 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               // 6    4.5 to 7.5
               // 9.3   7.5 to 10
               // 12   11.2 to 12.7
+              
+              TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_DUAL");
+              tmptvtcom->Fill(CalcCOMThetaDeg(hita,10),hita->GetThetaDeg());
+              tmptvtcom->Fill(CalcCOMThetaDeg(hitb,10),hitb->GetThetaDeg());
+              
+              TH2I* tmpevtcom = (TH2I*)outlist->FindObject("EnergyVThetaCOM_DUAL");
+              tmpevtcom->Fill(CalcCOMThetaDeg(hita,10),hita->GetEnergyMeV());
+              tmpevtcom->Fill(CalcCOMThetaDeg(hitb,10),hitb->GetEnergyMeV());
+              
+              TH2I* tmptcomvtcom = (TH2I*)outlist->FindObject("ThetaCOMVThetaCOM_DUAL");
+              tmptcomvtcom->Fill(CalcCOMThetaDeg(hita,10),CalcCOMThetaDeg(hitb,10));
+              
+              TH2I* tmptvt = (TH2I*)outlist->FindObject("ThetaVTheta_DUAL");
+              tmptvt->Fill(hita->GetThetaDeg(),hitb->GetThetaDeg());
               
               if(SIMULATED_DATA)
               {
