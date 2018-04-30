@@ -1121,38 +1121,29 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 // 6    5.5 to 7       6.25
                 //9.3     9 to 10.5    9.75
                 double ex10c =GetExciteE_Heavy_Corrected(hit,10);
-                
-                TH3D* interPtr;
-                TH1I* tmpangdist;
+
+                int state = -1;
                 
                 if(SIMULATED_DATA)
                 {
                   if(ex10c >= -1.5 && ex10c<= 1.2)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_0_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_0_pid");
+                    state = 0;
                   }
                   
                   else if(ex10c >= 2. && ex10c<= 4.)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_3.3_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_3_pid");
+                    state = 3;
                   }
                   
                   else if(ex10c >= 4.5 && ex10c<= 7.7)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_6_pid");
+                    state = 6;
                   }
                   
                   else if(ex10c >= 7.7 && ex10c<= 10.5)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_9_pid");
+                    state = 9;
                   }
                 }
                 
@@ -1160,35 +1151,35 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 {
                   if(ex10c >= -1 && ex10c<= 1.2)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_0_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_0_pid");
+                    state = 0;
                   }
                   
                   else if(ex10c >= 2.5 && ex10c<= 4.4)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_3.3_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_3_pid");
+                    state = 3;
                   }
                   
                   else if(ex10c >= 5.5 && ex10c<= 7)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_6_pid");
+                    state = 6;
                   }
                   
                   else if(ex10c >= 9 && ex10c<= 10.5)
                   {
-                    tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
-                    
-                    interPtr = (TH3D*)outlist->FindObject("perPixel_10be_9_pid");
+                    state = 9;
                   }
                 }
-                interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
-                tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
                 
+                if(state != -1)
+                {
+                  TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_pid",state));
+                  TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_pid_proj",state));
+                  TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
+                  
+                  interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+                  interPtrProj->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+                  tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+                }
               }
             }
           }
@@ -1257,7 +1248,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 else if(ex10cA >= 8 && ex10cA <= 10.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
                   tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
                 }
                 else if(ex10cA >= 10.7 && ex10cA <= 14)
@@ -1273,7 +1264,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 else if(ex10cB >= 8 && ex10cB <= 10.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
                   tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
                 }
                 else if(ex10cB >= 10.7 && ex10cB <= 14)
@@ -1292,7 +1283,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 else if(ex10cA >= 7.5 && ex10cA <= 10)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
                   tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
                 }
                 else if(ex10cA >= 11.2 && ex10cA <= 12.7)
@@ -1308,7 +1299,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 else if(ex10cB >= 7.5 && ex10cB <= 10)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
                   tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
                 }
                 else if(ex10cB >= 11.2 && ex10cB <= 12.7)

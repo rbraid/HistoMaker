@@ -831,6 +831,26 @@ void SetupHistos(TList *outlist)
     temp3->GetYaxis()->SetTitle("Y Strip");
     temp3->GetZaxis()->SetTitle("COM Theta");   
     
+    outlist->Add(new TH2D("perPixel_10be_9_pid_proj","Intermediate Histogram for Angular Distributions 9 MeV",16,0,16,16,0,16));
+    temp2 = (TH2D*)outlist->FindObject("perPixel_10be_9_pid_proj");
+    temp2->GetXaxis()->SetTitle("X Strip");
+    temp2->GetYaxis()->SetTitle("Y Strip");
+    
+    outlist->Add(new TH2D("perPixel_10be_6_pid_proj","Intermediate Histogram for Angular Distributions 6 MeV",16,0,16,16,0,16));
+    temp2 = (TH2D*)outlist->FindObject("perPixel_10be_9_pid_proj");
+    temp2->GetXaxis()->SetTitle("X Strip");
+    temp2->GetYaxis()->SetTitle("Y Strip");
+    
+    outlist->Add(new TH2D("perPixel_10be_3_pid_proj","Intermediate Histogram for Angular Distributions 3 MeV",16,0,16,16,0,16));
+    temp2 = (TH2D*)outlist->FindObject("perPixel_10be_9_pid_proj");
+    temp2->GetXaxis()->SetTitle("X Strip");
+    temp2->GetYaxis()->SetTitle("Y Strip");
+    
+    outlist->Add(new TH2D("perPixel_10be_0_pid_proj","Intermediate Histogram for Angular Distributions 0 MeV",16,0,16,16,0,16));
+    temp2 = (TH2D*)outlist->FindObject("perPixel_10be_9_pid_proj");
+    temp2->GetXaxis()->SetTitle("X Strip");
+    temp2->GetYaxis()->SetTitle("Y Strip");
+    
     outlist->Add(new TH1I("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",180,0,180));
     temp1INT = (TH1I*)outlist->FindObject("ang_dist_11be_0");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
@@ -846,8 +866,8 @@ void SetupHistos(TList *outlist)
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1I("ang_dist_10be_3.3_pid","Angular Distribution of ^{10}Be 3.368",180,0,180));
-    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_3.3_pid");
+    outlist->Add(new TH1I("ang_dist_10be_3_pid","Angular Distribution of ^{10}Be 3.368",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_3_pid");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
@@ -856,8 +876,8 @@ void SetupHistos(TList *outlist)
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1I("ang_dist_10be_9.3_pid","Angular Distribution of ^{10}Be 6 + 3.368",180,0,180));
-    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_pid");
+    outlist->Add(new TH1I("ang_dist_10be_9_pid","Angular Distribution of ^{10}Be 6 + 3.368",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9_pid");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
@@ -866,8 +886,8 @@ void SetupHistos(TList *outlist)
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1I("ang_dist_10be_9.3_dual","Angular Distribution of ^{10}Be 9.3 dual",180,0,180));
-    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9.3_dual");
+    outlist->Add(new TH1I("ang_dist_10be_9_dual","Angular Distribution of ^{10}Be 9.3 dual",180,0,180));
+    temp1INT = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1INT->GetYaxis()->SetTitle("Counts in arb. units");
     
