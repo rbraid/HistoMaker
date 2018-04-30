@@ -807,6 +807,30 @@ void SetupHistos(TList *outlist)
   }
   else if(ANGULAR_DISTRIBUTION)
   {
+    outlist->Add(new TH3D("perPixel_10be_0_pid","Intermediate Histogram for Angular Distributions 0 MeV",16,0,16,16,0,16,360,0,360);
+    temp3 = (TH3D*)outlist->FindObject("perPixel_10be_0_pid");
+    temp3->GetXaxis()->SetTitle("X Strip");
+    temp3->GetYaxis()->SetTitle("Y Strip");
+    temp3->GetZaxis()->SetTitle("COM Theta");    
+    
+    outlist->Add(new TH3D("perPixel_10be_3_pid","Intermediate Histogram for Angular Distributions 3 MeV",16,0,16,16,0,16,360,0,360);
+    temp3 = (TH3D*)outlist->FindObject("perPixel_10be_3_pid");
+    temp3->GetXaxis()->SetTitle("X Strip");
+    temp3->GetYaxis()->SetTitle("Y Strip");
+    temp3->GetZaxis()->SetTitle("COM Theta");   
+    
+    outlist->Add(new TH3D("perPixel_10be_6_pid","Intermediate Histogram for Angular Distributions 6 MeV",16,0,16,16,0,16,360,0,360);
+    temp3 = (TH3D*)outlist->FindObject("perPixel_10be_6_pid");
+    temp3->GetXaxis()->SetTitle("X Strip");
+    temp3->GetYaxis()->SetTitle("Y Strip");
+    temp3->GetZaxis()->SetTitle("COM Theta"); 
+    
+    outlist->Add(new TH3D("perPixel_10be_9_pid","Intermediate Histogram for Angular Distributions 9 MeV",16,0,16,16,0,16,360,0,360);
+    temp3 = (TH3D*)outlist->FindObject("perPixel_10be_9_pid");
+    temp3->GetXaxis()->SetTitle("X Strip");
+    temp3->GetYaxis()->SetTitle("Y Strip");
+    temp3->GetZaxis()->SetTitle("COM Theta");   
+    
     outlist->Add(new TH1I("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",180,0,180));
     temp1INT = (TH1I*)outlist->FindObject("ang_dist_11be_0");
     temp1INT->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
