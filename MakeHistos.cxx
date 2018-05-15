@@ -1172,11 +1172,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 if(state != -1)
                 {
-                  TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_pid",state));
-                  TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_pid_proj",state));
+                  TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid_proj",state,hit->GetDetectorNumber()));
                   TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
                   
+                  TH3D* interPtrDeg = (TH3D*)outlist->FindObject(Form("perDeg_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  
                   interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+                  interPtrDeg->Fill(abs(hit->GetThetaDeg()),abs(hit->GetDPosition().Phi()*180/TMath::Pi()),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+                  
                   interPtrProj->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
                   tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
                 }
