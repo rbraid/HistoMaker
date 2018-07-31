@@ -1,4 +1,4 @@
-// g++ -g -O0 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
+// g++ -pg -g -O0 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #include "FunctionsForMakeHistos.hh"
 
@@ -1079,10 +1079,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       for(int i = 0;i<csm->GetMultiplicity();i++)
       {
         TCSMHit *hit = csm->GetHit(i);
-        if(hit->GetDVerticalStrip()>0 && hit->GetDVerticalStrip()<15)//For now, suppress the perimeter strips, as there is a loss of solid angle there.
-        {
-          if(hit->GetDHorizontalStrip()>0 && hit->GetDHorizontalStrip()<15)
-          {
+//         if(hit->GetDVerticalStrip()>0 && hit->GetDVerticalStrip()<15)//For now, suppress the perimeter strips, as there is a loss of solid angle there.
+//         {
+//           if(hit->GetDHorizontalStrip()>0 && hit->GetDHorizontalStrip()<15)
+//           {
             if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
             {
               if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
@@ -1173,21 +1173,28 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 if(state != -1)
                 {
                   TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid_proj",state,hit->GetDetectorNumber()));
                   TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
+                  TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
-                  TH3D* interPtrDeg = (TH3D*)outlist->FindObject(Form("perDeg_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
-                  
-                  interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
-                  interPtrDeg->Fill(abs(hit->GetThetaDeg()),abs(hit->GetDPosition().Phi()*180/TMath::Pi()),CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
-                  
+                  double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
+                  interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10));
+                  interPtrLab->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetThetaDeg());
+                  hpPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
                   interPtrProj->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
-                  tmpangdist->Fill(CalcCOMThetaDeg(hit,10),1./hit->GetSolidAngleD());
+                  tmpangdist->Fill(CalcCOMThetaDeg(hit,10));
+                  
+                  TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  
+                  double *info = RingInfo(hit,state,'p');
+                  
+                  comPtr->Fill(CalcCOMThetaDeg(hit,10),int(info[0]));
                 }
               }
             }
-          }
-        }
+//           }
+//         }
       }
       
       
@@ -1243,38 +1250,35 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               TH2I* tmptvt = (TH2I*)outlist->FindObject("ThetaVTheta_DUAL");
               tmptvt->Fill(hita->GetThetaDeg(),hitb->GetThetaDeg());
               
+              int stateA = -1;
+              int stateB = -1;
+              
               if(SIMULATED_DATA)
               {
                 if(ex10cA >= 5 && ex10cA <= 8)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 6;
                 }
                 else if(ex10cA >= 8 && ex10cA <= 10.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 9;
                 }
                 else if(ex10cA >= 10.7 && ex10cA <= 14)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 12;
                 }
                 
                 if(ex10cB >= 5 && ex10cB <= 8)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 6;
                 }
                 else if(ex10cB >= 8 && ex10cB <= 10.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 9;
                 }
                 else if(ex10cB >= 10.7 && ex10cB <= 14)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 12;
                 }
               }
               
@@ -1282,35 +1286,109 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               {
                 if(ex10cA >= 4.5 && ex10cA <= 7.5)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 6;
                 }
                 else if(ex10cA >= 7.5 && ex10cA <= 10)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 9;
                 }
                 else if(ex10cA >= 11.2 && ex10cA <= 12.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hita,10),1./hita->GetSolidAngleD());
+                  stateA = 12;
                 }
                 
                 if(ex10cB >= 4.5 && ex10cB <= 7.5)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_6_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 6;
                 }
                 else if(ex10cB >= 7.5 && ex10cB <= 10)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_9_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 9;
                 }
                 else if(ex10cB >= 11.2 && ex10cB <= 12.7)
                 {
-                  TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_10be_12_dual");
-                  tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),1./hitb->GetSolidAngleD());
+                  stateB = 12;
                 }
+                
+              }
+              if(stateA != -1)
+              {
+//                 if(hita->GetDVerticalStrip() == 14 && hita->GetDHorizontalStrip() == 3)
+//                 {
+//                   if(CalcCOMThetaDeg(hita,10)<90.)
+//                     cout<<DGREEN;
+//                   else
+//                     cout<<DRED;
+//                   cout<<"Debug output for COM: "<<endl;
+//                   cout<<"Hit A"<<endl;
+//                   cout<<"  ComTheta: "<<CalcCOMThetaDeg(hita,10)<<endl;
+//                   cout<<"  SolidAngle: "<<hita->GetSolidAngleD()<<endl;
+//                   hita->Print();
+//                   cout<<RESET_COLOR;
+//                 }
+
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_dual",stateA));
+                TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                
+                TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateA,hita->GetDetectorNumber()));
+                
+                double weight = 1./(hita->GetSolidAngleD()*GetfCOM(hita,10));
+
+                tmpangdist->Fill(CalcCOMThetaDeg(hita,10));
+                
+//                 cout<<"Diag for Fractions, HitA:"<<endl;
+//                 hita->Print();
+//                 cout<<"GetK_Corrected: "<<GetK_Corrected(hita,10)<<endl;
+//                 cout<<"GetfCOM: "<<GetfCOM(hita,10)<<endl;
+//                 cout<<"GetfLab: "<<GetfLab(hita,10)<<endl;
+//                 cout<<endl<<endl;
+                
+                interPtr->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip(),CalcCOMThetaDeg(hita,10));
+                interPtrLab->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip(),hita->GetThetaDeg());
+                hpPtr->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
+                
+                interPtrProj->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
+                
+                TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                double *info = RingInfo(hita,stateA,'d');
+                comPtr->Fill(CalcCOMThetaDeg(hita,10),int(info[0]));
+              }
+              if(stateB != -1)
+              {
+//                 if(hitb->GetDVerticalStrip() == 14 && hitb->GetDHorizontalStrip() == 3)
+//                 {
+//                   if(CalcCOMThetaDeg(hitb,10)<90.)
+//                     cout<<DGREEN;
+//                   else
+//                     cout<<DRED;
+//                   cout<<"Debug output for COM: "<<endl;
+//                   cout<<"Hit B"<<endl;
+//                   cout<<"  ComTheta: "<<CalcCOMThetaDeg(hitb,10)<<endl;
+//                   cout<<"  SolidAngle: "<<hitb->GetSolidAngleD()<<endl;
+//                   hitb->Print();
+//                   cout<<RESET_COLOR;
+//                 }
+                
+                TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_dual",stateB));
+                TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                
+                double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
+                
+                TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateB,hitb->GetDetectorNumber()));
+                tmpangdist->Fill(CalcCOMThetaDeg(hitb,10));
+                interPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),CalcCOMThetaDeg(hitb,10));
+                interPtrLab->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),hitb->GetThetaDeg());
+                hpPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
+                
+                interPtrProj->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
+                
+                TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                double *info = RingInfo(hitb,stateB,'d');
+                comPtr->Fill(CalcCOMThetaDeg(hitb,10),int(info[0]));
               }
             }
           }
@@ -1455,7 +1533,7 @@ int main(int argc, char **argv)
   if(!SIMULATED_DATA)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
-  
+    
   TList *outlist = new TList;
   SetupHistos(outlist);
   ProcessChain(chain,outlist);

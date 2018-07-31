@@ -64,4 +64,13 @@ double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
 TVector3 GetPositionsNew(int detector,char pos, int horizontalstrip, int verticalstrip);
 TVector3 GetPositionsNew(TCSMHit* Hit, char pos);
 
+double GetfCOM(TCSMHit* Hit, int Z);
+double GetfLab(TCSMHit* Hit, int Z);
+double GetK(double energy, double theta, double mass);
+double GetK(TCSMHit* Hit, int Z);
+double GetK_Corrected(TCSMHit* Hit, int Z);
+int GetRingNo(TCSMHit *Hit, int state,char detTypeChar);
+double* RingInfo(TCSMHit *Hit, int state, char detTypeChar);
+
+
 #endif

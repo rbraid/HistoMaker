@@ -817,64 +817,100 @@ void SetupHistos(TList *outlist)
         temp3 = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid",state,det));
         temp3->GetXaxis()->SetTitle("X Strip");
         temp3->GetYaxis()->SetTitle("Y Strip");
-        temp3->GetZaxis()->SetTitle("COM Theta");   
+        temp3->GetZaxis()->SetTitle("COM Theta"); 
         
-        if(DEBUG) cout<<"  "<<Form("perDeg_10be_%i_d%i_pid",state,det)<<endl;
-        outlist->Add(new TH3D(Form("perDeg_10be_%i_d%i_pid",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i",state,det),40,0,40,80,0,80,100,0,100));
-        temp3 = (TH3D*)outlist->FindObject(Form("perDeg_10be_%i_d%i_pid",state,det));
-        temp3->GetXaxis()->SetTitle("Theta");
-        temp3->GetYaxis()->SetTitle("Phi");
-        temp3->GetZaxis()->SetTitle("COM Theta");
+        outlist->Add(new TH3D(Form("perPixel_lab_10be_%i_d%i_pid",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i",state,det),16,0,16,16,0,16,360,0,360));
+        temp3 = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_pid",state,det));
+        temp3->GetXaxis()->SetTitle("X Strip");
+        temp3->GetYaxis()->SetTitle("Y Strip");
+        temp3->GetZaxis()->SetTitle("Lab Theta"); 
+        
+        outlist->Add(new TH3D(Form("perPixel_10be_%i_d%i_dual",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i",state,det),16,0,16,16,0,16,360,0,360));
+        temp3 = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual",state,det));
+        temp3->GetXaxis()->SetTitle("X Strip");
+        temp3->GetYaxis()->SetTitle("Y Strip");
+        temp3->GetZaxis()->SetTitle("COM Theta"); 
+        
+        outlist->Add(new TH3D(Form("perPixel_lab_10be_%i_d%i_dual",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i",state,det),16,0,16,16,0,16,360,0,360));
+        temp3 = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",state,det));
+        temp3->GetXaxis()->SetTitle("X Strip");
+        temp3->GetYaxis()->SetTitle("Y Strip");
+        temp3->GetZaxis()->SetTitle("Lab Theta"); 
         
         if(DEBUG) cout<<"  "<<Form("perPixel_10be_%i_d%i_pid_proj",state,det)<<endl;
         outlist->Add(new TH2D(Form("perPixel_10be_%i_d%i_pid_proj",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i, projected",state, det),16,0,16,16,0,16));
         temp2 = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid_proj",state,det));
         temp2->GetXaxis()->SetTitle("X Strip");
         temp2->GetYaxis()->SetTitle("Y Strip");
+        
+        outlist->Add(new TH2D(Form("perPixel_10be_%i_d%i_dual_proj",state,det),Form("Intermediate Histogram for Angular Distributions %i MeV, detector %i, projected",state, det),16,0,16,16,0,16));
+        temp2 = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",state,det));
+        temp2->GetXaxis()->SetTitle("X Strip");
+        temp2->GetYaxis()->SetTitle("Y Strip");
+        
+        outlist->Add(new TH2D(Form("HP_10be_%i_d%i_dual",state,det),Form("Hit Pattern for state %i MeV, detector %i, dual detection",state, det),16,0,16,16,0,16));
+        temp2 = (TH2D*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",state,det));
+        temp2->GetXaxis()->SetTitle("X Strip");
+        temp2->GetYaxis()->SetTitle("Y Strip");
+        
+        outlist->Add(new TH2D(Form("HP_10be_%i_d%i_pid",state,det),Form("Hit Pattern for state %i MeV, detector %i, PID detection",state, det),16,0,16,16,0,16));
+        temp2 = (TH2D*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,det));
+        temp2->GetXaxis()->SetTitle("X Strip");
+        temp2->GetYaxis()->SetTitle("Y Strip");
+        
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),180,0,180,16,0,16));
+        temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,det));
+        temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+        temp2->GetYaxis()->SetTitle("Ring Number");
+        
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),180,0,180,16,0,16));
+        temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
+        temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
+        temp2->GetYaxis()->SetTitle("Ring Number");
       }
     }
     
-    outlist->Add(new TH1D("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",180,0,180));
+    outlist->Add(new TH1D("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_11be_0");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_11be_2.6","Angular Distribution of ^{11}Be inelastic scattering",180,0,180));
+    outlist->Add(new TH1D("ang_dist_11be_2.6","Angular Distribution of ^{11}Be inelastic scattering",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_11be_2.6");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
 
-    outlist->Add(new TH1D("ang_dist_10be_0_pid","Angular Distribution of ^{10}Be GS",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_0_pid","Angular Distribution of ^{10}Be GS",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_0_pid");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_3_pid","Angular Distribution of ^{10}Be 3.368",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_3_pid","Angular Distribution of ^{10}Be 3.368",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_3_pid");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_6_pid","Angular Distribution of ^{10}Be 6",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_6_pid","Angular Distribution of ^{10}Be 6",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_6_pid");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_9_pid","Angular Distribution of ^{10}Be 6 + 3.368",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_9_pid","Angular Distribution of ^{10}Be 6 + 3.368",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_9_pid");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_6_dual","Angular Distribution of ^{10}Be 6 dual",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_6_dual","Angular Distribution of ^{10}Be 6 dual",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_6_dual");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_9_dual","Angular Distribution of ^{10}Be 9.3 dual",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_9_dual","Angular Distribution of ^{10}Be 9.3 dual",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_9_dual");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
     
-    outlist->Add(new TH1D("ang_dist_10be_12_dual","Angular Distribution of ^{10}Be 12 dual",180,0,180));
+    outlist->Add(new TH1D("ang_dist_10be_12_dual","Angular Distribution of ^{10}Be 12 dual",25,0,180));
     temp1 = (TH1D*)outlist->FindObject("ang_dist_10be_12_dual");
     temp1->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
     temp1->GetYaxis()->SetTitle("Counts in arb. units");
@@ -949,6 +985,121 @@ double GetExciteE_Heavy(double energy, double theta, double mass)
   
   return(ExcitedState);
   
+}
+
+double GetK(double energy, double theta, double mass)
+{
+  energy=energy/1000.;
+  const double pi = TMath::Pi();
+  
+  double othermass;
+  
+  switch(int(mass))
+  {
+    case 7456: //be8
+      othermass = MASS_BE12;
+      break;
+    case 8394: //be9
+      othermass = MASS_BE11;
+      break;
+    case 9327: //be10
+      othermass = MASS_BE10;
+      break; 
+    case 10266: //be11
+      othermass = MASS_BE9;
+      break;
+    case 11203: //be12
+      othermass = MASS_BE8;
+      break;
+    default:
+      cerr<<"Unknown mass in GetExciteE_Heavy: "<<mass<<endl;
+      return(-1);
+  }
+  
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = othermass;
+  const double M4 = mass;
+  double mQ = M1+M2-M3-M4;
+  
+  double V1 = sqrt(2*BEAM_ENERGY/M1);
+  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
+  double V4 = sqrt(2*energy/M4);
+  double kPrimeM4 = COMV / V4;
+  
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
+  double COMEnergyM4 = energy * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( theta ) );
+  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
+  double ExcitedState = mQ - QVal;
+  
+  
+  double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
+  return(K);
+}
+
+double GetK(TCSMHit* Hit, int Z)
+{
+  double MASS = 0.;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      break;
+    case 11:
+      MASS = MASS_BE11;
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      break;
+    default:
+      cerr<<"unrecognized Z in GetExciteE_Heavy: "<<Z<<endl;
+      MASS = Z;
+  }
+  
+  return(GetK(Hit->GetEnergy(),Hit->GetPosition().Theta(),MASS));
+}
+
+double GetK_Corrected(TCSMHit* Hit, int Z)
+{
+  double MASS = 0.;
+  TString isotope;
+  
+  switch(Z)
+  {
+    case 10:
+      MASS = MASS_BE10;
+      isotope = "10be";
+      break;
+    case 12:
+      MASS = MASS_BE12;
+      isotope = "12be";
+      break;
+    case 11:
+      MASS = MASS_BE11;
+      isotope = "11be";
+      break;
+    case 8:
+      MASS = MASS_BE8;
+      isotope = "8be";
+      break;
+    case 0:
+      MASS = Hit->GetMassMeV();
+      isotope = Hit->GetIsotope();
+      break;
+    default:
+      cerr<<"unrecognized Z in GetExciteE_Heavy_Corrected: "<<Z<<endl;
+      MASS = Z;
+      isotope = "12be";
+  }
+  
+  return(GetK(Hit->GetCorrectedEnergy(isotope),Hit->GetPosition().Theta(),MASS));
 }
 
 double GetExciteE_Heavy(TCSMHit* Hit, int Z)
@@ -1193,25 +1344,25 @@ TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
 {
   double MASS = 0.;
-  //string type;
+  string type;
   
   switch(Z)
   {
     case 10:
       MASS = MASS_BE10;
-//       type = "10be";
+      type = "10be";
       break;
     case 12:
       MASS = MASS_BE12;
-//       type = "12be";
+      type = "12be";
       break;
     case 8:
       MASS = MASS_BE8;
-//       type = "8be";
+      type = "8be";
       break;
     case 11:
       MASS = MASS_BE11;
-//       type = "11be";
+      type = "11be";
       break;
     case 0:
       MASS = Hit->GetMassMeV();
@@ -1223,7 +1374,7 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
   }
   
 //   return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
-  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
+  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
 }
 
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
@@ -1657,4 +1808,92 @@ TVector3 GetPositionsNew(int detector,char pos, int horizontalstrip, int vertica
   delete rndm;
   
   return(RetPos[4]);
+}
+
+double GetfCOM(TCSMHit *Hit, int Z)
+{
+  double K = GetK_Corrected(Hit,Z);
+  double ThetaCM = CalcCOMmomentum(Hit, Z).Theta();
+  
+  double Num = 1. + K * cos(ThetaCM);
+  double Den = pow(1. + K*K + 2*K*cos(ThetaCM),1.5);
+  return (abs(Num/Den));
+}
+
+double GetfLab(TCSMHit *Hit, int Z)
+{
+  double K = GetK_Corrected(Hit,Z);
+  double ThetaLab = Hit->GetPosition().Theta();
+  
+  double Num = sqrt(1.-pow(K*sin(ThetaLab),2.));
+  double Den = pow(Num+K*cos(ThetaLab),2.);
+  return (abs(Num/Den));
+}
+
+// int GetRingNo(TCSMHit *Hit, int state,char detTypeChar)
+// {
+//   TString detType;
+//   if(detTypeChar == 'p' || detTypeChar == 'P')
+//     detType = "pid";
+//   else if(detTypeChar == 'd' || detTypeChar == 'D')
+//     detType = "dual";
+//   else
+//   {
+//     cerr<<"Unknown detType in GetRingNo: "<<detTypeChar<<", did you accidentally send the full thing instead of just the first letter?"<<endl;
+//     detType = "pid";
+//   }
+//     
+//   TFile *ringFile = new TFile;
+//   ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/rings_Flat.root","read");
+//   
+//   TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
+//   
+//   int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
+//   int retInt = histo->GetBinContent(binNo);
+//   retInt -= 1;
+// 
+//   ringFile->Close();
+//   delete ringFile;
+//   
+//   return retInt;
+// }
+
+double* RingInfo(TCSMHit *Hit, int state, char detTypeChar)
+{
+  double *retVals = new double[2];
+  TString detType;
+  if(detTypeChar == 'p' || detTypeChar == 'P')
+    detType = "pid";
+  else if(detTypeChar == 'd' || detTypeChar == 'D')
+    detType = "dual";
+  else
+  {
+    cerr<<"Unknown detType in GetRingNo: "<<detTypeChar<<", did you accidentally send the full thing instead of just the first letter?"<<endl;
+    detType = "pid";
+  }
+    
+  TFile *ringFile = new TFile;
+  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/rings_Flat.root","read");
+  
+  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
+  
+  int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
+  int Ring = histo->GetBinContent(binNo);
+  Ring -= 1;
+  
+  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
+  double TotalSolidAngle = spec->GetBinContent(Ring);
+
+  ringFile->Close();
+  delete ringFile;
+  
+  retVals[0] = Ring;
+  retVals[1] = TotalSolidAngle;
+  
+  return retVals;
+}
+
+int GetRingNo(TCSMHit *Hit, int state, char detTypeChar)
+{
+  return(int(RingInfo(Hit, state, detTypeChar)[0]));  
 }
