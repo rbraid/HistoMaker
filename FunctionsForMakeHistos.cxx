@@ -867,6 +867,26 @@ void SetupHistos(TList *outlist)
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
+        
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_dual",state,det),Form("Counts per ring for state %i, detector %i, dual detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid",state,det),Form("Counts per ring for state %i, detector %i, pid detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingWeight_s%i_d%i_dual",state,det),Form("Weight factor per ring for state %i, detector %i, dual detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingWeight_s%i_d%i_pid",state,det),Form("Weight factor per ring for state %i, detector %i, pid detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_pid",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
       }
     }
     
@@ -1858,30 +1878,20 @@ double GetfLab(TCSMHit *Hit, int Z)
 //   return retInt;
 // }
 
-double* RingInfo(TCSMHit *Hit, int state, char detTypeChar)
+double* RingInfo(TCSMHit *Hit)
 {
   double *retVals = new double[2];
-  TString detType;
-  if(detTypeChar == 'p' || detTypeChar == 'P')
-    detType = "pid";
-  else if(detTypeChar == 'd' || detTypeChar == 'D')
-    detType = "dual";
-  else
-  {
-    cerr<<"Unknown detType in GetRingNo: "<<detTypeChar<<", did you accidentally send the full thing instead of just the first letter?"<<endl;
-    detType = "pid";
-  }
-    
+
   TFile *ringFile = new TFile;
-  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/rings_Flat.root","read");
+  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
   
-  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
+  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid",Hit->GetDetectorNumber()));
   
   int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
   int Ring = histo->GetBinContent(binNo);
   Ring -= 1;
   
-  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
+  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Hit->GetDetectorNumber()));
   double TotalSolidAngle = spec->GetBinContent(Ring);
 
   ringFile->Close();
@@ -1895,5 +1905,5 @@ double* RingInfo(TCSMHit *Hit, int state, char detTypeChar)
 
 int GetRingNo(TCSMHit *Hit, int state, char detTypeChar)
 {
-  return(int(RingInfo(Hit, state, detTypeChar)[0]));  
+  return(int(RingInfo(Hit)[0]));  
 }

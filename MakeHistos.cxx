@@ -1178,7 +1178,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
                   TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
-                  double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
+//                   double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
                   interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10));
                   interPtrLab->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetThetaDeg());
                   hpPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
@@ -1187,9 +1187,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   
                   TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
-                  double *info = RingInfo(hit,state,'p');
+                  double *info = RingInfo(hit);
                   
                   comPtr->Fill(CalcCOMThetaDeg(hit,10),int(info[0]));
+                  
+                  TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  tmpptr->Fill(int(info[0]));
+                  tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_pid",state,hit->GetDetectorNumber()));
+                  tmpptr->Fill(int(info[0]),GetfCOM(hit,10));
                 }
               }
             }
@@ -1334,7 +1339,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateA,hita->GetDetectorNumber()));
                 
-                double weight = 1./(hita->GetSolidAngleD()*GetfCOM(hita,10));
+//                 double weight = 1./(hita->GetSolidAngleD()*GetfCOM(hita,10));
 
                 tmpangdist->Fill(CalcCOMThetaDeg(hita,10));
                 
@@ -1352,8 +1357,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 interPtrProj->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-                double *info = RingInfo(hita,stateA,'d');
+                double *info = RingInfo(hita);
                 comPtr->Fill(CalcCOMThetaDeg(hita,10),int(info[0]));
+                
+                TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                tmpptr->Fill(int(info[0]));
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                tmpptr->Fill(int(info[0]),GetfCOM(hita,10));
               }
               if(stateB != -1)
               {
@@ -1376,7 +1386,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 
-                double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
+//                 double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
                 
                 TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateB,hitb->GetDetectorNumber()));
                 tmpangdist->Fill(CalcCOMThetaDeg(hitb,10));
@@ -1387,8 +1397,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 interPtrProj->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-                double *info = RingInfo(hitb,stateB,'d');
+                double *info = RingInfo(hitb);
                 comPtr->Fill(CalcCOMThetaDeg(hitb,10),int(info[0]));
+                
+                TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                tmpptr->Fill(int(info[0]));
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                tmpptr->Fill(int(info[0]),GetfCOM(hitb,10));
               }
             }
           }
@@ -1411,6 +1426,42 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
   cout<<endl;
+  
+  if(ANGULAR_DISTRIBUTION)
+  {
+    cout<<"Making Graphs"<<endl;
+    
+    TFile *ringF = TFile::Open("DumbRings_Flat.root","read");
+    TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringF->Get("COM_d1_s0");
+    ringG->Print();
+    
+    vector<double> center;
+    vector<double> centererr;
+    
+    for(int i =0; i<ringG->GetN(); i++)
+    {
+      center.push_back(ringG->GetY()[i]);
+      centererr.push_back((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
+    }
+    
+    for(int i =0; i<center.size();i++)
+    {
+      cout<<center.at(i)<<", "<<centererr.at(i)<<endl; 
+    }
+  
+//     TGraphErrors *TG = new TGraphErrors(44,&(center[0]),counts,&(centererr[0]),countserr);
+    //Center is the center in COM of the pixel.  This comes from geometry
+    //CenterErr is the error in COM of the pixel.  We can use min and max thetaCOM
+      //Generate the above in lab and use splines or something to convert?  None of this info is from the looped data. just kinematics and geometry (need excitation value though)
+    //Counts is the number of counts, weighted with the fraction and the solid angle
+    //CountsErr is the counts error, and THEN scaled with fraction and solid angle.
+//     TG->SetTitle("Angular Distribution");
+//     TG->SetName("AD");
+//   
+//     outlist->Add(TG);
+  }
+  
+  
   return;
 }
 

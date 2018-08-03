@@ -14,6 +14,7 @@
 #include <TH2.h>
 #include <TH1.h>
 #include <TGraphErrors.h>
+#include <TGraphAsymmErrors.h>
 #include <TF1.h>
 #include <TFitResult.h>
 #include <TStopwatch.h>
@@ -69,8 +70,8 @@ double GetfLab(TCSMHit* Hit, int Z);
 double GetK(double energy, double theta, double mass);
 double GetK(TCSMHit* Hit, int Z);
 double GetK_Corrected(TCSMHit* Hit, int Z);
-int GetRingNo(TCSMHit *Hit, int state,char detTypeChar);
-double* RingInfo(TCSMHit *Hit, int state, char detTypeChar);
+int GetRingNo(TCSMHit *Hit);
+double* RingInfo(TCSMHit *Hit);
 
 
 #endif
