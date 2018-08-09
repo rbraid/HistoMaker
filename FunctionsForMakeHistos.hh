@@ -36,6 +36,8 @@ extern double BEAM_ENERGY;
 extern bool ANGULAR_DISTRIBUTION;
 extern bool SIMULATED_DATA;
 
+extern TFile* ringFile;
+
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);
 double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, int mass);
@@ -70,8 +72,8 @@ double GetfLab(TCSMHit* Hit, int Z);
 double GetK(double energy, double theta, double mass);
 double GetK(TCSMHit* Hit, int Z);
 double GetK_Corrected(TCSMHit* Hit, int Z);
-int GetRingNo(TCSMHit *Hit);
-double* RingInfo(TCSMHit *Hit);
-
+int RingNumber(TCSMHit *Hit);
+double RingSA(int Det, int Ring);
+double RingSA(TCSMHit* Hit);
 
 #endif

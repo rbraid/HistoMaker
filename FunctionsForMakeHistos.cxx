@@ -858,12 +858,12 @@ void SetupHistos(TList *outlist)
         temp2->GetXaxis()->SetTitle("X Strip");
         temp2->GetYaxis()->SetTitle("Y Strip");
         
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),180,0,180,16,0,16));
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),180,0,180,50,0,50));
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
         
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),180,0,180,16,0,16));
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),180,0,180,50,0,50));
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
@@ -888,6 +888,29 @@ void SetupHistos(TList *outlist)
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
       }
+    }
+    
+    for(int state = 0; state<13;state += 3)
+    {      
+      outlist->Add(new TH1D(Form("RingCounts_s%i_dual",state),Form("Counts per ring for state %i, dual detection",state),100,0,100));
+      temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",state));
+      temp1->GetXaxis()->SetTitle("Ring Number");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("RingCounts_s%i_pid",state),Form("Counts per ring for state %i, pid detection",state),100,0,100));
+      temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_pid",state));
+      temp1->GetXaxis()->SetTitle("Ring Number");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("RingWeight_s%i_dual",state),Form("Weight factor per ring for state %i, dual detection",state),100,0,100));
+      temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",state));
+      temp1->GetXaxis()->SetTitle("Ring Number");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("RingWeight_s%i_pid",state),Form("Weight factor per ring for state %i, pid detection",state),100,0,100));
+      temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_pid",state));
+      temp1->GetXaxis()->SetTitle("Ring Number");
+      temp1->GetYaxis()->SetTitle("Counts");
     }
     
     outlist->Add(new TH1D("ang_dist_11be_0","Angular Distribution of ^{11}Be elastic scattering",25,0,180));
@@ -1878,32 +1901,26 @@ double GetfLab(TCSMHit *Hit, int Z)
 //   return retInt;
 // }
 
-double* RingInfo(TCSMHit *Hit)
+int RingNumber(TCSMHit *Hit)
 {
-  double *retVals = new double[2];
-
-  TFile *ringFile = new TFile;
-  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
-  
   TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid",Hit->GetDetectorNumber()));
   
   int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
   int Ring = histo->GetBinContent(binNo);
   Ring -= 1;
-  
-  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Hit->GetDetectorNumber()));
-  double TotalSolidAngle = spec->GetBinContent(Ring);
 
-  ringFile->Close();
-  delete ringFile;
-  
-  retVals[0] = Ring;
-  retVals[1] = TotalSolidAngle;
-  
-  return retVals;
+  return Ring;
 }
 
-int GetRingNo(TCSMHit *Hit, int state, char detTypeChar)
+double RingSA(int Det, int Ring)
+{  
+  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Det));
+  double TotalSolidAngle = spec->GetBinContent(Ring);
+  
+  return TotalSolidAngle;
+}
+
+double RingSA(TCSMHit* Hit)
 {
-  return(int(RingInfo(Hit)[0]));  
+  return(RingSA(Hit->GetDetectorNumber(),RingNumber(Hit)));
 }

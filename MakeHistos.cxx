@@ -1,10 +1,12 @@
-// g++ -pg -g -O0 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
+// g++ -g -O0 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #include "FunctionsForMakeHistos.hh"
 
 double BEAM_ENERGY;
 bool ANGULAR_DISTRIBUTION;
 bool SIMULATED_DATA;
+
+TFile* ringFile;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -18,7 +20,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   //   cout<<RESET_COLOR;
   TStopwatch w;
   w.Start();
-  
+    
   //   ofstream ofile;
   //   ofile.open("interesting.h");
   //   ofile<<"bool IsInteresting["<<nentries<<"] = {";
@@ -1178,23 +1180,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
                   TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
-//                   double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
+                  double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
                   interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10));
                   interPtrLab->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetThetaDeg());
                   hpPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
                   interPtrProj->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
-                  tmpangdist->Fill(CalcCOMThetaDeg(hit,10));
+                  tmpangdist->Fill(CalcCOMThetaDeg(hit,10),weight);
                   
                   TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
-                  double *info = RingInfo(hit);
+                  int ring = RingNumber(hit);
                   
-                  comPtr->Fill(CalcCOMThetaDeg(hit,10),int(info[0]));
+                  comPtr->Fill(CalcCOMThetaDeg(hit,10),ring,weight);
                   
                   TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));
-                  tmpptr->Fill(int(info[0]));
+                  tmpptr->Fill(ring);
+                  tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_pid",state));
+                  tmpptr->Fill(ring);
                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_pid",state,hit->GetDetectorNumber()));
-                  tmpptr->Fill(int(info[0]),GetfCOM(hit,10));
+                  tmpptr->Fill(ring,GetfCOM(hit,10));
+                  tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_pid",state));
+                  tmpptr->Fill(ring,GetfCOM(hit,10));
                 }
               }
             }
@@ -1339,9 +1345,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateA,hita->GetDetectorNumber()));
                 
-//                 double weight = 1./(hita->GetSolidAngleD()*GetfCOM(hita,10));
+                double weight = 1./(hita->GetSolidAngleD()*GetfCOM(hita,10));
 
-                tmpangdist->Fill(CalcCOMThetaDeg(hita,10));
+                tmpangdist->Fill(CalcCOMThetaDeg(hita,10),weight);
                 
 //                 cout<<"Diag for Fractions, HitA:"<<endl;
 //                 hita->Print();
@@ -1357,13 +1363,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 interPtrProj->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-                double *info = RingInfo(hita);
-                comPtr->Fill(CalcCOMThetaDeg(hita,10),int(info[0]));
+                int ring = RingNumber(hita);
+                comPtr->Fill(CalcCOMThetaDeg(hita,10),ring,weight);
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-                tmpptr->Fill(int(info[0]));
+                tmpptr->Fill(ring);
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateA));
+                tmpptr->Fill(ring);
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-                tmpptr->Fill(int(info[0]),GetfCOM(hita,10));
+                tmpptr->Fill(ring,GetfCOM(hita,10));
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateA));
+                tmpptr->Fill(ring,GetfCOM(hita,10));
               }
               if(stateB != -1)
               {
@@ -1386,10 +1396,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 
-//                 double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
+                double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
                 
                 TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateB,hitb->GetDetectorNumber()));
-                tmpangdist->Fill(CalcCOMThetaDeg(hitb,10));
+                tmpangdist->Fill(CalcCOMThetaDeg(hitb,10),weight);
                 interPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),CalcCOMThetaDeg(hitb,10));
                 interPtrLab->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),hitb->GetThetaDeg());
                 hpPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
@@ -1397,13 +1407,17 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 interPtrProj->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-                double *info = RingInfo(hitb);
-                comPtr->Fill(CalcCOMThetaDeg(hitb,10),int(info[0]));
+                int ring = RingNumber(hitb);
+                comPtr->Fill(CalcCOMThetaDeg(hitb,10),ring,weight);
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-                tmpptr->Fill(int(info[0]));
+                tmpptr->Fill(ring);
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateB));
+                tmpptr->Fill(ring);
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-                tmpptr->Fill(int(info[0]),GetfCOM(hitb,10));
+                tmpptr->Fill(ring,GetfCOM(hitb,10));
+                tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateB));
+                tmpptr->Fill(ring,GetfCOM(hitb,10));
               }
             }
           }
@@ -1423,7 +1437,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   
   //   ofile<<"};"<<endl;
   //   ofile.close();
-  
+    
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
   cout<<endl;
   
@@ -1431,34 +1445,125 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     cout<<"Making Graphs"<<endl;
     
-    TFile *ringF = TFile::Open("DumbRings_Flat.root","read");
-    TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringF->Get("COM_d1_s0");
-    ringG->Print();
+    TFile *ringF = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
     
-    vector<double> center;
-    vector<double> centererr;
+    //detector //state //dettype
     
-    for(int i =0; i<ringG->GetN(); i++)
+    for(int dettypeI = 0; dettypeI<2;dettypeI++)
     {
-      center.push_back(ringG->GetY()[i]);
-      centererr.push_back((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
+      for(int state = 0; state<=12;state += 3)
+      {
+        for(int det = 1;det<3;det++)
+        {
+          string dettype = "def";
+          if(dettypeI == 0)
+            dettype = "pid";
+          else if(dettypeI == 1)
+            dettype = "dual";
+          else
+            cerr<<"Overshot on Dettype"<<endl;
+          
+          cout<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<endl;
+          
+          TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringF->Get(Form("COM_d%i_s%i",det,state));
+          if (!ringG)
+            continue;
+          
+          cout<<ringG->GetName()<<endl;
+          ringG->Print();
+          
+          vector<double> center;
+          vector<double> centererr;
+          vector<double> counts;
+          vector<double> countserr;
+          
+          TH1D* countHptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.c_str()));
+          TH1D* weightHptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_%s",state,det,dettype.c_str()));
+          
+          if(!countHptr)
+            continue;
+          if(!weightHptr)
+            continue;
+          
+          for(int i =0;i<ringG->GetN();i++)
+          {
+            double c = countHptr->GetBinContent(i);
+            if(c<1)
+              continue;
+            double s = RingSA(det,i);
+            double w = weightHptr->GetBinContent(i) / c;
+            counts.push_back(c/(s*w));
+            countserr.push_back(sqrt(c)/(s*w));
+            
+            
+            double cen = ringG->GetY()[i];
+            double cerr = (ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.;
+//             cout<<"Ring: "<<i<<", counts: "<<c<<", solidAngle: "<<s<<", weight:"<<w<<", weighted counts: "<<c/(s*w)<<", error: "<<sqrt(c)/(s*w)<<", center: "<<cen<<", error: "<<cerr<<endl;
+            
+//             printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f, center: %5.1f, error: %3.1f\n",i,c,s,w,c/(s*w),sqrt(c)/(s*w),cen,cerr);
+            center.push_back(cen);
+            centererr.push_back(cerr);
+          }
+          
+          if(center.size() != centererr.size())
+            cerr<<DRED<<"Size mismatch between center and centererr"<<RESET_COLOR<<endl;
+          
+          if(counts.size() != countserr.size())
+            cerr<<DRED<<"Size mismatch between counts and countserr"<<RESET_COLOR<<endl;
+          
+          if(center.size() != counts.size())
+            cerr<<DRED<<"Size mismatch between center and counts"<<RESET_COLOR<<endl;
+          
+          if(center.size() < 1)
+            continue;
+          
+          TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(counts[0]),&(centererr[0]),&(countserr[0]));
+          //Center is the center in COM of the pixel.  This comes from geometry
+          //CenterErr is the error in COM of the pixel.  We can use min and max thetaCOM
+          //Generate the above in lab and use splines or something to convert?  None of this info is from the looped data. just kinematics and geometry (need excitation value though)
+          //Counts is the number of counts, weighted with the fraction and the solid angle
+          //CountsErr is the counts error, and THEN scaled with fraction and solid angle.
+          TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.c_str()));
+          TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.c_str()));
+          cout<<TG->GetName()<<endl;
+          TG->Print();
+          outlist->Add(TG);
+          
+//           if(det == 1)
+//           {
+//             vector<double> countsSum;
+//             vector<double> countsSumerr;
+//             
+//             TH1D* countHptrS = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_%s",state,dettype.c_str()));
+//             TH1D* weightHptrS = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_%s",state,dettype.c_str()));
+//             
+//             if(!countHptrS)
+//               continue;
+//             if(!weightHptrS)
+//               continue;
+//             
+//             for(int i =0;i<ringG->GetN();i++)
+//             {
+//               double c = countHptrS->GetBinContent(i);
+//               if(c<1)
+//                 continue;
+//               double s = RingSA(det,i);
+//               double w = weightHptrS->GetBinContent(i);
+//               cout<<"TOTAL ********* Ring: "<<i<<", counts: "<<c<<", solidAngle: "<<s<<", weight:"<<w<<", weighted counts: "<<c/(s*w)<<", error: "<<sqrt(c)/(s*w)<<endl;
+//               countsSum.push_back(c/(2*s*w));
+//               countsSumerr.push_back(sqrt(c)/(2*s*w));
+//             }
+//             
+//             TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(countsSum[0]),&(centererr[0]),&(countsSumerr[0]));
+//             TG->SetTitle(Form("Angular Distribution Sum, state %i, %s detection type",state,dettype.c_str()));
+//             TG->SetName(Form("AD_T_s%i_%s",state,dettype.c_str()));
+//             TG->Print();
+//             outlist->Add(TG);
+//           }
+        }
+      }
     }
     
-    for(int i =0; i<center.size();i++)
-    {
-      cout<<center.at(i)<<", "<<centererr.at(i)<<endl; 
-    }
-  
-//     TGraphErrors *TG = new TGraphErrors(44,&(center[0]),counts,&(centererr[0]),countserr);
-    //Center is the center in COM of the pixel.  This comes from geometry
-    //CenterErr is the error in COM of the pixel.  We can use min and max thetaCOM
-      //Generate the above in lab and use splines or something to convert?  None of this info is from the looped data. just kinematics and geometry (need excitation value though)
-    //Counts is the number of counts, weighted with the fraction and the solid angle
-    //CountsErr is the counts error, and THEN scaled with fraction and solid angle.
-//     TG->SetTitle("Angular Distribution");
-//     TG->SetName("AD");
-//   
-//     outlist->Add(TG);
   }
   
   
@@ -1546,25 +1651,6 @@ int main(int argc, char **argv)
     ncuts++;
   }
   
-  
-//   TFile cf2("thetacuts.root");
-//   TIter *iter2 = new TIter(cf2.GetListOfKeys());
-//   
-//   while(TObject *obj = iter2->Next())
-//   {
-//     obj = ((TKey *)obj)->ReadObj();
-//     
-//     //printf("obj->ClassName() = %s\n", obj->ClassName());
-//     if(strcmp(obj->ClassName(),"TCutG")!=0)
-//     {
-//       continue;
-//     }
-//     
-//     cutlist->Add(obj);
-//     //printf("found a cut! %s \n",((TNamed *)obj)->GetName());
-//     ncuts++;
-//   }
-  
   if(ncuts==0)
     cout<<RED;
   else
@@ -1584,7 +1670,10 @@ int main(int argc, char **argv)
   if(!SIMULATED_DATA)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
-    
+      
+  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
+  
+  
   TList *outlist = new TList;
   SetupHistos(outlist);
   ProcessChain(chain,outlist);
@@ -1595,22 +1684,22 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
   
-  if(!DEBUG)
-  {    
-    TH1* hist = (TH1*)outlist->First();
-    TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
-    while(hist)
-    {
-      nexthist = (TH1*)outlist->After(hist);
-      if(hist->GetEntries() < 1)
-      {
-//         cout<<"For removal:"<<endl;
-//         hist->Print();
-        outlist->Remove(hist);
-      }
-      hist = nexthist;
-    }
-  }
+//   if(!DEBUG)
+//   {    
+//     TH1* hist = (TH1*)outlist->First();
+//     TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
+//     while(hist)
+//     {
+//       nexthist = (TH1*)outlist->After(hist);
+//       if(hist->GetEntries() < 1)
+//       {
+// //         cout<<"For removal:"<<endl;
+// //         hist->Print();
+//         outlist->Remove(hist);
+//       }
+//       hist = nexthist;
+//     }
+//   }
   
   TString outputname;
   
