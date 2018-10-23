@@ -1417,7 +1417,7 @@ TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
   }
   
 //   return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
-  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
+  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
 }
 
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
@@ -1923,4 +1923,58 @@ double RingSA(int Det, int Ring)
 double RingSA(TCSMHit* Hit)
 {
   return(RingSA(Hit->GetDetectorNumber(),RingNumber(Hit)));
+}
+
+double ManualFracCOM(double ExcitedState, double ThetaCOM)
+{
+  if(ExcitedState > 15.)
+    cerr<<"ManualFracCOM takes MeV"<<endl;
+  const double M1 = MASS_BE11;
+  const double M2 = MASS_BE9;
+  const double M3 = MASS_BE10;
+  const double M4 = MASS_BE10;
+  
+  ExcitedState -= MASS_BE11 + MASS_BE9 - (MASS_BE10*2.);
+  ExcitedState = -ExcitedState;
+  
+  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
+  double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
+  
+  double Num = 1. + K * cos(ThetaCOM);
+  double Den = pow(1. + K*K + 2*K*cos(ThetaCOM),1.5);
+  return (abs(Num/Den));
+}
+
+double Keri_GetfCM(double Exstate, double ThetaCM)
+{
+  double K = Keri_GetKTransfer(Exstate);
+  
+  //   cout<< "Keri K: "<<K<<endl;
+  
+  double Num = 1. + K * cos(ThetaCM);
+  double Den = pow(1. + K*K + 2*K*cos(ThetaCM),1.5);
+  
+  //   cout<<"Keri Num: "<<Num<<", Den: "<<Den<<", Result: "<<abs(Num/Den)<<endl;
+  
+  if (Num>0)
+    return (Num/Den);
+  else
+    return (-Num/Den);
+}
+
+double Keri_GetKTransfer(double Exstate)
+{
+  double m1 = MASS_BE11;
+  double m2 = MASS_BE9;
+  double m3 = MASS_BE10;
+  double m4 = MASS_BE10;
+  
+  double ExciteM = (m4 + Exstate);
+  double QExcite = (m2 + m1 - m3 - ExciteM);
+  double CenterOfMassTotalE = (m2*BEAM_ENERGY)/(m1+m2);
+  double K = sqrt((m1*m4*CenterOfMassTotalE)/(m2*m3*(CenterOfMassTotalE+QExcite)));
+  //   cout<<"Keri QExcite: "<<QExcite<<endl;
+  //   double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
+  
+  return (K);
 }

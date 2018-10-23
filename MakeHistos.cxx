@@ -1445,7 +1445,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     cout<<"Making Graphs"<<endl;
     
-    TFile *ringF = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
+//     TFile *ringF = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings.root","read");
     
     //detector //state //dettype
     
@@ -1465,12 +1465,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           
           cout<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<endl;
           
-          TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringF->Get(Form("COM_d%i_s%i",det,state));
+          TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringFile->Get(Form("COM_d%i_s%i",det,state));
           if (!ringG)
             continue;
-          
-          cout<<ringG->GetName()<<endl;
-          ringG->Print();
           
           vector<double> center;
           vector<double> centererr;
@@ -1484,23 +1481,47 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             continue;
           if(!weightHptr)
             continue;
-          
+                    
           for(int i =0;i<ringG->GetN();i++)
           {
+            double cen = ringG->GetY()[i];
+            double cerr = .6827*((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
+            
             double c = countHptr->GetBinContent(i);
             if(c<1)
               continue;
+
+            
+            double exciteVal = -1;
+            switch(state)
+            {
+              case 0:
+                exciteVal = 0.;
+                break;
+              case 3:
+                exciteVal = 3.368;
+                break;
+              case 6:
+                exciteVal = 6.;
+                break;
+              case 9:
+                exciteVal = 9.368;
+                break;
+              case 12:
+                exciteVal = 12.;
+                break;
+            }
+
+//             cout<<"ManualFrac(exciteVal "<<exciteVal<<", cen "<<cen<<"): "<<ManualFracCOM(exciteVal, cen*TMath::Pi()/180.)<<", Average Weight :"<<weightHptr->GetBinContent(i) / c<<endl;
+            
             double s = RingSA(det,i);
-            double w = weightHptr->GetBinContent(i) / c;
-            counts.push_back(c/(s*w));
-            countserr.push_back(sqrt(c)/(s*w));
+            double w = Keri_GetfCM(exciteVal, cen*TMath::Pi()/180.);
+            counts.push_back(c/s*w);
+            countserr.push_back(sqrt(c)/s*w);
             
-            
-            double cen = ringG->GetY()[i];
-            double cerr = (ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.;
 //             cout<<"Ring: "<<i<<", counts: "<<c<<", solidAngle: "<<s<<", weight:"<<w<<", weighted counts: "<<c/(s*w)<<", error: "<<sqrt(c)/(s*w)<<", center: "<<cen<<", error: "<<cerr<<endl;
             
-//             printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f, center: %5.1f, error: %3.1f\n",i,c,s,w,c/(s*w),sqrt(c)/(s*w),cen,cerr);
+            printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f, center: %5.1f, error: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
             center.push_back(cen);
             centererr.push_back(cerr);
           }
@@ -1518,48 +1539,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             continue;
           
           TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(counts[0]),&(centererr[0]),&(countserr[0]));
-          //Center is the center in COM of the pixel.  This comes from geometry
-          //CenterErr is the error in COM of the pixel.  We can use min and max thetaCOM
-          //Generate the above in lab and use splines or something to convert?  None of this info is from the looped data. just kinematics and geometry (need excitation value though)
-          //Counts is the number of counts, weighted with the fraction and the solid angle
-          //CountsErr is the counts error, and THEN scaled with fraction and solid angle.
           TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.c_str()));
           TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.c_str()));
-          cout<<TG->GetName()<<endl;
-          TG->Print();
+//           cout<<TG->GetName()<<endl;
+//           TG->Print();
           outlist->Add(TG);
-          
-//           if(det == 1)
-//           {
-//             vector<double> countsSum;
-//             vector<double> countsSumerr;
-//             
-//             TH1D* countHptrS = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_%s",state,dettype.c_str()));
-//             TH1D* weightHptrS = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_%s",state,dettype.c_str()));
-//             
-//             if(!countHptrS)
-//               continue;
-//             if(!weightHptrS)
-//               continue;
-//             
-//             for(int i =0;i<ringG->GetN();i++)
-//             {
-//               double c = countHptrS->GetBinContent(i);
-//               if(c<1)
-//                 continue;
-//               double s = RingSA(det,i);
-//               double w = weightHptrS->GetBinContent(i);
-//               cout<<"TOTAL ********* Ring: "<<i<<", counts: "<<c<<", solidAngle: "<<s<<", weight:"<<w<<", weighted counts: "<<c/(s*w)<<", error: "<<sqrt(c)/(s*w)<<endl;
-//               countsSum.push_back(c/(2*s*w));
-//               countsSumerr.push_back(sqrt(c)/(2*s*w));
-//             }
-//             
-//             TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(countsSum[0]),&(centererr[0]),&(countsSumerr[0]));
-//             TG->SetTitle(Form("Angular Distribution Sum, state %i, %s detection type",state,dettype.c_str()));
-//             TG->SetName(Form("AD_T_s%i_%s",state,dettype.c_str()));
-//             TG->Print();
-//             outlist->Add(TG);
-//           }
         }
       }
     }
@@ -1671,7 +1655,7 @@ int main(int argc, char **argv)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
       
-  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings_Flat.root","read");
+  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings.root","read");
   
   
   TList *outlist = new TList;

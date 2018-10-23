@@ -75,5 +75,9 @@ double GetK_Corrected(TCSMHit* Hit, int Z);
 int RingNumber(TCSMHit *Hit);
 double RingSA(int Det, int Ring);
 double RingSA(TCSMHit* Hit);
+double ManualFracCOM(double ExcitedState, double ThetaCOM);
+double Keri_GetfCM(double Exstate, double ThetaCM);
+double Keri_GetKTransfer(double Exstate);
+
 
 #endif
