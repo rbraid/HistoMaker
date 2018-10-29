@@ -1706,8 +1706,8 @@ int main(int argc, char **argv)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
       
-  ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings.root","read");
-  edgeFile = TFile::Open("/home/ryan/nuclear/be9/1010/MathAngDist/edge.root","read");
+  ringFile = TFile::Open("DumbRings.root","read");
+  edgeFile = TFile::Open("edge.root","read");
   
   
   TList *outlist = new TList;
