@@ -7,6 +7,7 @@ bool ANGULAR_DISTRIBUTION;
 bool SIMULATED_DATA;
 
 TFile* ringFile;
+TFile* edgeFile;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -1174,15 +1175,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 if(state != -1)
                 {
-                  TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
-                  TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
+//                   TH3D* interPtr = (TH3D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
+//                   TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_pid_proj",state,hit->GetDetectorNumber()));
                   TH1I* tmpangdist = (TH1I*)outlist->FindObject(Form("ang_dist_10be_%i_pid",state));
                   TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
                   
                   double weight = 1./(hit->GetSolidAngleD()*GetfCOM(hit,10));
-                  interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10));
-                  interPtrLab->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetThetaDeg());
+//                   interPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),CalcCOMThetaDeg(hit,10));
+//                   interPtrLab->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetThetaDeg());
                   hpPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
                   interPtrProj->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
                   tmpangdist->Fill(CalcCOMThetaDeg(hit,10),weight);
@@ -1191,12 +1192,24 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   
                   int ring = RingNumber(hit);
                   
-                  comPtr->Fill(CalcCOMThetaDeg(hit,10),ring,weight);
+                  comPtr->Fill(CalcCOMThetaDeg(hit,10),ring);
                   
                   TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));
+/*                  if(hit->GetDVerticalStrip() <= 2 || hit->GetDVerticalStrip() >= 13);
+                  //                     cout<<"Skipping VerticalStrip: "<<hit->GetDVerticalStrip()<<endl;
+                  
+                  else if(hit->GetDHorizontalStrip() <= 2 || hit->GetDHorizontalStrip() >= 13);
+                  //                     cout<<"Skipping HorizontalStrip: "<<hit->GetDHorizontalStrip()<<endl;
+                  else
+                  {
+                    //                     cout<<"Filling XY: "<<hit->GetDVerticalStrip()<<","<<hit->GetDHorizontalStrip()<<endl;
+                    tmpptr->Fill(ring);
+                  } */          
                   tmpptr->Fill(ring);
+                  tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_edge",state,hit->GetDetectorNumber()));
+                  tmpptr->Fill(ring,EdgeEffectFactor(hit));
                   tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_pid",state));
-                  tmpptr->Fill(ring);
+                  tmpptr->Fill(ring);                  
                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_pid",state,hit->GetDetectorNumber()));
                   tmpptr->Fill(ring,GetfCOM(hit,10));
                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_pid",state));
@@ -1364,7 +1377,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
                 int ring = RingNumber(hita);
-                comPtr->Fill(CalcCOMThetaDeg(hita,10),ring,weight);
+                comPtr->Fill(CalcCOMThetaDeg(hita,10),ring);
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
                 tmpptr->Fill(ring);
@@ -1408,7 +1421,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 int ring = RingNumber(hitb);
-                comPtr->Fill(CalcCOMThetaDeg(hitb,10),ring,weight);
+                comPtr->Fill(CalcCOMThetaDeg(hitb,10),ring);
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 tmpptr->Fill(ring);
@@ -1443,19 +1456,20 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   
   if(ANGULAR_DISTRIBUTION)
   {
-    cout<<"Making Graphs"<<endl;
-    
-//     TFile *ringF = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings.root","read");
-    
-    //detector //state //dettype
+    bool DEBUGEND = 1;
+    TH1D* tmpPtr1D;
+    TH2D* tmpPtr2D;
     
     for(int dettypeI = 0; dettypeI<2;dettypeI++)
     {
       for(int state = 0; state<=12;state += 3)
       {
+        
+        //   int dettypeI = 0;
+        //   int state = 0;
         for(int det = 1;det<3;det++)
         {
-          string dettype = "def";
+          TString dettype = "def";
           if(dettypeI == 0)
             dettype = "pid";
           else if(dettypeI == 1)
@@ -1463,34 +1477,69 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           else
             cerr<<"Overshot on Dettype"<<endl;
           
-          cout<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<endl;
+          bool bendback = 1;
+          if(state == 0)
+            bendback = 0;
           
+          if(DEBUGEND) cout<<endl<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<endl;
           TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringFile->Get(Form("COM_d%i_s%i",det,state));
+          
+          TGraphAsymmErrors *labG = (TGraphAsymmErrors*)ringFile->Get(Form("Lab_d%i_s%i",det,state));
+          
+          TGraphAsymmErrors *ringGOther = new TGraphAsymmErrors();
+          if(bendback)
+            ringGOther = (TGraphAsymmErrors*)ringFile->Get(Form("COMOther_d%i_s%i",det,state));        
           if (!ringG)
             continue;
-          
           vector<double> center;
           vector<double> centererr;
           vector<double> counts;
           vector<double> countserr;
+          vector<double> centerLab;
+          vector<double> centererrLab;
           
-          TH1D* countHptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.c_str()));
-          TH1D* weightHptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_%s",state,det,dettype.c_str()));
           
-          if(!countHptr)
-            continue;
-          if(!weightHptr)
-            continue;
-                    
           for(int i =0;i<ringG->GetN();i++)
           {
+            //           cout<<" i: "<<i<<endl;
             double cen = ringG->GetY()[i];
-            double cerr = .6827*((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
             
-            double c = countHptr->GetBinContent(i);
-            if(c<1)
-              continue;
+            double labCen = labG->GetY()[i];
+            
+            double cerr = .6827*((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
+            double labCenerr = .6827*((labG->GetEYhigh()[i]+labG->GetEYlow()[i])/2.);
+//             double cenOther = 0.;
+//             double cerrOther = 0.;
+//             if(bendback)
+//             {
+//               cenOther = ringGOther->GetY()[i];
+//               if(DEBUGEND) cout<<"No Crash after ringGOther->GetY()"<<endl;
+//               
+//               cerrOther = .6827*((ringGOther->GetEYhigh()[i]+ringGOther->GetEYlow()[i])/2.);
+//               
+//               if(int(ringG->GetX()[i]) != int(ringGOther->GetX()[i]))
+//                 cout<<"X and X Other don't match: "<<ringG->GetX()[i]<<", "<<ringGOther->GetX()[i]<<endl;
+//             }
+            
+            double c = -1.;
 
+            tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.Data()));
+            c = tmpPtr1D->GetBinContent(i+1);
+            
+//             TH2D* tmpPtr2D = (TH2D*)outlist->FindObject(Form("RingVThetaCOM_s%02i_d%i_%s",state,det,dettype.Data()));
+//             tmpPtr1D = tmpPtr2D->ProjectionX(Form("Ring %i",i),i,i+1);
+            
+            //           if(tmpPtr1D->GetMean() > 1)
+            //             cout<<"Old Center: "<<cen<<", New Center: "<<tmpPtr1D->GetMean()<<", difference: "<<cen-tmpPtr1D->GetMean()<<endl;
+            //           
+            //           cen = tmpPtr1D->GetMean();
+            //           cerr = tmpPtr1D->GetRMS();
+            
+            if(c<1)
+            {
+              //             cout<<"contine due to no counts"<<endl;
+              continue;
+            }
             
             double exciteVal = -1;
             switch(state)
@@ -1511,47 +1560,49 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 exciteVal = 12.;
                 break;
             }
-
-//             cout<<"ManualFrac(exciteVal "<<exciteVal<<", cen "<<cen<<"): "<<ManualFracCOM(exciteVal, cen*TMath::Pi()/180.)<<", Average Weight :"<<weightHptr->GetBinContent(i) / c<<endl;
             
-            double s = RingSA(det,i);
-            double w = Keri_GetfCM(exciteVal, cen*TMath::Pi()/180.);
+            double s = RingSA(i);
+            if(s == 0.)
+            {
+              cout<<"continue due to no solid angle"<<endl;
+              continue;
+            }
+            double w = ManualFracCOM(exciteVal, toRadians(cen));
+            
             counts.push_back(c/s*w);
             countserr.push_back(sqrt(c)/s*w);
             
-//             cout<<"Ring: "<<i<<", counts: "<<c<<", solidAngle: "<<s<<", weight:"<<w<<", weighted counts: "<<c/(s*w)<<", error: "<<sqrt(c)/(s*w)<<", center: "<<cen<<", error: "<<cerr<<endl;
+//             printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f, centerOther: %5.1f, errorOther: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr,cenOther,cerrOther);
+            printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
             
-            printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f, center: %5.1f, error: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
             center.push_back(cen);
             centererr.push_back(cerr);
+            centerLab.push_back(labCen);
+            centererrLab.push_back(labCenerr);
           }
           
           if(center.size() != centererr.size())
-            cerr<<DRED<<"Size mismatch between center and centererr"<<RESET_COLOR<<endl;
+            cerr<<"Size mismatch between center and centererr"<<endl;
           
           if(counts.size() != countserr.size())
-            cerr<<DRED<<"Size mismatch between counts and countserr"<<RESET_COLOR<<endl;
+            cerr<<"Size mismatch between counts and countserr"<<endl;
           
           if(center.size() != counts.size())
-            cerr<<DRED<<"Size mismatch between center and counts"<<RESET_COLOR<<endl;
+            cerr<<"Size mismatch between center and counts"<<endl;
           
           if(center.size() < 1)
-            continue;
+            continue;     
           
           TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(counts[0]),&(centererr[0]),&(countserr[0]));
-          TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.c_str()));
-          TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.c_str()));
-//           cout<<TG->GetName()<<endl;
-//           TG->Print();
+          TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.Data()));
+          TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.Data()));
+//           TG->Write();
           outlist->Add(TG);
+          
         }
       }
-    }
-    
+    }  
   }
-  
-  
-  return;
 }
 
 
@@ -1656,6 +1707,7 @@ int main(int argc, char **argv)
   chain->SetBranchAddress("TCSM",&csm);
       
   ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/DumbRings.root","read");
+  edgeFile = TFile::Open("/home/ryan/nuclear/be9/1010/MathAngDist/edge.root","read");
   
   
   TList *outlist = new TList;

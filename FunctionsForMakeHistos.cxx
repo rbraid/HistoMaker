@@ -878,6 +878,11 @@ void SetupHistos(TList *outlist)
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
         
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid_edge",state,det),Form("Counts per ring for state %i, detector %i, pid detection, edge effect corrected",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_edge",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
         outlist->Add(new TH1D(Form("RingWeight_s%i_d%i_dual",state,det),Form("Weight factor per ring for state %i, detector %i, dual detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
@@ -1872,59 +1877,6 @@ double GetfLab(TCSMHit *Hit, int Z)
   double Den = pow(Num+K*cos(ThetaLab),2.);
   return (abs(Num/Den));
 }
-
-// int GetRingNo(TCSMHit *Hit, int state,char detTypeChar)
-// {
-//   TString detType;
-//   if(detTypeChar == 'p' || detTypeChar == 'P')
-//     detType = "pid";
-//   else if(detTypeChar == 'd' || detTypeChar == 'D')
-//     detType = "dual";
-//   else
-//   {
-//     cerr<<"Unknown detType in GetRingNo: "<<detTypeChar<<", did you accidentally send the full thing instead of just the first letter?"<<endl;
-//     detType = "pid";
-//   }
-//     
-//   TFile *ringFile = new TFile;
-//   ringFile = TFile::Open("/home/ryan/nuclear/mine/rb/angulardistribution/rings_Flat.root","read");
-//   
-//   TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_%i_d%i_%s",state,Hit->GetDetectorNumber(),detType.Data()));
-//   
-//   int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
-//   int retInt = histo->GetBinContent(binNo);
-//   retInt -= 1;
-// 
-//   ringFile->Close();
-//   delete ringFile;
-//   
-//   return retInt;
-// }
-
-int RingNumber(TCSMHit *Hit)
-{
-  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid",Hit->GetDetectorNumber()));
-  
-  int binNo = histo->GetBin(Hit->GetDVerticalStrip()+1,Hit->GetDHorizontalStrip()+1);
-  int Ring = histo->GetBinContent(binNo);
-  Ring -= 1;
-
-  return Ring;
-}
-
-double RingSA(int Det, int Ring)
-{  
-  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Det));
-  double TotalSolidAngle = spec->GetBinContent(Ring);
-  
-  return TotalSolidAngle;
-}
-
-double RingSA(TCSMHit* Hit)
-{
-  return(RingSA(Hit->GetDetectorNumber(),RingNumber(Hit)));
-}
-
 double ManualFracCOM(double ExcitedState, double ThetaCOM)
 {
   if(ExcitedState > 15.)
@@ -1937,12 +1889,58 @@ double ManualFracCOM(double ExcitedState, double ThetaCOM)
   ExcitedState -= MASS_BE11 + MASS_BE9 - (MASS_BE10*2.);
   ExcitedState = -ExcitedState;
   
+  //   cout<<"Excited State after: "<<ExcitedState<<endl;
+  
   double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
   double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
   
+  //   cout<<"ManualFracCOM ExcitedState: "<<ExcitedState<<endl;
+  //   
+  //   cout<<"ManualFracCOM K: "<<K<<endl;
+  
   double Num = 1. + K * cos(ThetaCOM);
   double Den = pow(1. + K*K + 2*K*cos(ThetaCOM),1.5);
+  
+  //   cout<<"ManualFracCOM Num: "<<Num<<", Den: "<<Den<<", Result: "<<abs(Num/Den)<<endl;
+  
   return (abs(Num/Den));
+}
+
+int RingNumber(int stripX, int stripY, int detector)
+{  
+  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid",detector));
+  
+  int binNo = histo->GetBin(stripX+1,stripY+1);
+  int Ring = histo->GetBinContent(binNo);
+  Ring -= 1;
+  
+  return Ring;
+}
+
+int RingNumber(TCSMHit* Hit)
+{
+  return(RingNumber(Hit->GetDVerticalStrip(),Hit->GetDHorizontalStrip(),Hit->GetDetectorNumber()));
+}
+
+double RingSA(int Ring)
+{  
+  TH1D* spec = (TH1D*)ringFile->Get("SA_0_d1_pid");
+  double TotalSolidAngle = spec->GetBinContent(Ring+1);
+  
+  return TotalSolidAngle;
+}
+
+double EdgeEffectFactor(int StripX, int StripY, int Detector)
+{
+  TH2D* histo = (TH2D*)edgeFile->Get(Form("Ratio%i",Detector));
+  int binNo = histo->GetBin(StripX+1,StripY+1);
+  double edgeFact = 1./histo->GetBinContent(binNo);
+  return edgeFact;
+}
+
+double EdgeEffectFactor(TCSMHit* hit)
+{
+  return(EdgeEffectFactor(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetDetectorNumber()));
 }
 
 double Keri_GetfCM(double Exstate, double ThetaCM)
@@ -1977,4 +1975,14 @@ double Keri_GetKTransfer(double Exstate)
   //   double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
   
   return (K);
+}
+
+double toDegrees(double ang)
+{
+  return ang*180./TMath::Pi();
+}
+
+double toRadians(double ang)
+{
+  return ang*TMath::Pi()/180.;
 }

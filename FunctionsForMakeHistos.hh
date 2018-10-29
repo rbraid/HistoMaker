@@ -37,6 +37,7 @@ extern bool ANGULAR_DISTRIBUTION;
 extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
+extern TFile* edgeFile;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);
@@ -73,11 +74,15 @@ double GetK(double energy, double theta, double mass);
 double GetK(TCSMHit* Hit, int Z);
 double GetK_Corrected(TCSMHit* Hit, int Z);
 int RingNumber(TCSMHit *Hit);
-double RingSA(int Det, int Ring);
+int RingNumber(int, int, int);
+double EdgeEffectFactor(int StripX, int StripY, int Detector);
+double EdgeEffectFactor(TCSMHit* hit);
+double RingSA(int Ring);
 double RingSA(TCSMHit* Hit);
 double ManualFracCOM(double ExcitedState, double ThetaCOM);
 double Keri_GetfCM(double Exstate, double ThetaCM);
 double Keri_GetKTransfer(double Exstate);
-
+double toDegrees(double);
+double toRadians(double);
 
 #endif
