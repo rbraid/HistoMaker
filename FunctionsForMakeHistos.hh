@@ -38,6 +38,7 @@ extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
 extern TFile* edgeFile;
+extern TFile* SAFile;
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);
@@ -75,6 +76,8 @@ double GetK(TCSMHit* Hit, int Z);
 double GetK_Corrected(TCSMHit* Hit, int Z);
 int RingNumber(TCSMHit *Hit);
 int RingNumber(int, int, int);
+double PixelSA(int StripX, int StripY);
+double PixelSA(TCSMHit* hit);
 double EdgeEffectFactor(int StripX, int StripY, int Detector);
 double EdgeEffectFactor(TCSMHit* hit);
 double RingSA(int Ring);

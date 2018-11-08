@@ -1930,9 +1930,21 @@ double RingSA(int Ring)
   return TotalSolidAngle;
 }
 
+double PixelSA(int StripX, int StripY)
+{  
+  TH1D* spec = (TH1D*)SAFile->Get("sa1d");
+  double SA = spec->GetBinContent(StripX+1,StripY+1);
+  return SA;
+}
+
+double PixelSA(TCSMHit* hit)
+{
+  return(PixelSA(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip()));
+}
+
 double EdgeEffectFactor(int StripX, int StripY, int Detector)
 {
-  TH2D* histo = (TH2D*)edgeFile->Get(Form("Ratio%i",Detector));
+  TH2D* histo = (TH2D*)edgeFile->Get("EdgeEffects_adjusted");
   int binNo = histo->GetBin(StripX+1,StripY+1);
   double edgeFact = 1./histo->GetBinContent(binNo);
   return edgeFact;

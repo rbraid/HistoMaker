@@ -8,6 +8,7 @@ bool SIMULATED_DATA;
 
 TFile* ringFile;
 TFile* edgeFile;
+TFile* SAFile;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -1452,7 +1453,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   //   ofile.close();
     
   //printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",x,nentries,w.RealTime());
-  cout<<endl;
+  cout<<endl;  
   
   if(ANGULAR_DISTRIBUTION)
   {
@@ -1477,6 +1478,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           else
             cerr<<"Overshot on Dettype"<<endl;
           
+          TH1D* spec = (TH1D*)ringFile->Get("SA_0_d1_pid");
+          TH1D* SolidAnglePerRingPtr = (TH1D*)spec->Clone("SolidAnglePerRingPtr");
+          SolidAnglePerRingPtr->SetName(Form("SA_%i_d%i_%s_subtracted",state,det,dettype.Data()));
+          TH2D* HitPatternPtr = (TH2D*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,det));
+          //           TH2D* SolidAnglePerPixelPtr = USE PixelSA()
+          
           bool bendback = 1;
           if(state == 0)
             bendback = 0;
@@ -1497,11 +1504,30 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           vector<double> countserr;
           vector<double> centerLab;
           vector<double> centererrLab;
+          vector<double> countsedge;
+          vector<double> countserredge;
           
           
-          for(int i =0;i<ringG->GetN();i++)
+          for(int i =0;i<ringG->GetN()+1;i++)
           {
-            //           cout<<" i: "<<i<<endl;
+            double deadSA = 0;
+            
+            for(int stripX = 0; stripX<16;stripX++)
+            {
+              for(int stripY = 0; stripY<16;stripY++) // How many loops deep am I right now? 6!
+              {
+                if(RingNumber(stripX, stripY, det) == i)
+                  if(HitPatternPtr->GetBinContent(stripX+1,stripY+1) < 1.)
+                    deadSA += PixelSA(stripX,stripY);
+              }
+            }
+
+            double tmpval = SolidAnglePerRingPtr->GetBinContent(i+1) - deadSA;
+
+            if(tmpval<0)
+              tmpval = 0.;
+            SolidAnglePerRingPtr->SetBinContent(i+1,tmpval);
+            
             double cen = ringG->GetY()[i];
             
             double labCen = labG->GetY()[i];
@@ -1522,10 +1548,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //             }
             
             double c = -1.;
+            double cedge = -1.;
 
             tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.Data()));
             c = tmpPtr1D->GetBinContent(i+1);
-            
+            if(dettype == "pid")
+              tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s_edge",state,det,dettype.Data()));
+            cedge = tmpPtr1D->GetBinContent(i+1);
 //             TH2D* tmpPtr2D = (TH2D*)outlist->FindObject(Form("RingVThetaCOM_s%02i_d%i_%s",state,det,dettype.Data()));
 //             tmpPtr1D = tmpPtr2D->ProjectionX(Form("Ring %i",i),i,i+1);
             
@@ -1535,7 +1564,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             //           cen = tmpPtr1D->GetMean();
             //           cerr = tmpPtr1D->GetRMS();
             
-            if(c<1)
+            if(c<1.)
             {
               //             cout<<"contine due to no counts"<<endl;
               continue;
@@ -1561,7 +1590,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 break;
             }
             
-            double s = RingSA(i);
+//             double s = RingSA(i);
+            double s = SolidAnglePerRingPtr->GetBinContent(i+1);
             if(s == 0.)
             {
               cout<<"continue due to no solid angle"<<endl;
@@ -1571,7 +1601,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             
             counts.push_back(c/s*w);
             countserr.push_back(sqrt(c)/s*w);
-            
+            countsedge.push_back(cedge/s*w);
+            countserredge.push_back(sqrt(cedge)/s*w);
 //             printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f, centerOther: %5.1f, errorOther: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr,cenOther,cerrOther);
             printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
             
@@ -1580,6 +1611,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             centerLab.push_back(labCen);
             centererrLab.push_back(labCenerr);
           }
+          
+          outlist->Add(SolidAnglePerRingPtr);
           
           if(center.size() != centererr.size())
             cerr<<"Size mismatch between center and centererr"<<endl;
@@ -1599,6 +1632,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //           TG->Write();
           outlist->Add(TG);
           
+          TGraphErrors *TGe = new TGraphErrors(center.size(),&(center[0]),&(countsedge[0]),&(centererr[0]),&(countserredge[0]));
+          TGe->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type edge effect corrected",det,state,dettype.Data()));
+          TGe->SetName(Form("AD_d%i_s%i_%s_edge",det,state,dettype.Data()));
+          //           TG->Write();
+          outlist->Add(TGe);
         }
       }
     }  
@@ -1708,6 +1746,7 @@ int main(int argc, char **argv)
       
   ringFile = TFile::Open("DumbRings.root","read");
   edgeFile = TFile::Open("edge.root","read");
+  SAFile = TFile::Open("solidAngleDiag.root","read");
   
   
   TList *outlist = new TList;
