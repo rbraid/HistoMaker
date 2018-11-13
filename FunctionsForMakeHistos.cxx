@@ -1944,7 +1944,7 @@ double PixelSA(TCSMHit* hit)
 
 double EdgeEffectFactor(int StripX, int StripY, int Detector)
 {
-  TH2D* histo = (TH2D*)edgeFile->Get("EdgeEffects_adjusted");
+  TH2D* histo = (TH2D*)edgeFile->Get(Form("Ratio%i_adjusted",Detector));
   int binNo = histo->GetBin(StripX+1,StripY+1);
   double edgeFact = 1./histo->GetBinContent(binNo);
   return edgeFact;
