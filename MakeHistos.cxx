@@ -1031,11 +1031,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 tmpptr->Fill(ring,GetfCOM(hitb,10));
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateB));
                 tmpptr->Fill(ring,GetfCOM(hitb,10));
+                if(DEBUGANG) cout<<"Done with B"<<endl;
+                
               }
             }
           }
         }
       }
+      if(DEBUGANG) cout<<"Moving to next event"<<endl;
+      
     }
     
     
