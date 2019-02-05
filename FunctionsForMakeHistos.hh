@@ -40,6 +40,7 @@ extern TFile* ringFile;
 extern TFile* edgeFile;
 extern TFile* SAFile;
 
+
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);
 double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, int mass);
@@ -80,8 +81,10 @@ double PixelSA(int StripX, int StripY);
 double PixelSA(TCSMHit* hit);
 double EdgeEffectFactor(int StripX, int StripY, int Detector);
 double EdgeEffectFactor(TCSMHit* hit);
-double RingSA(int Ring);
+double RingSA(int Ring, int Det);
 double RingSA(TCSMHit* Hit);
+double RingSA_err(int Ring, int Det);
+
 double ManualFracCOM(double ExcitedState, double ThetaCOM);
 double Keri_GetfCM(double Exstate, double ThetaCM);
 double Keri_GetKTransfer(double Exstate);

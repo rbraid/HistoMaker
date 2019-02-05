@@ -883,6 +883,16 @@ void SetupHistos(TList *outlist)
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
         
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid_kill1",state,det),Form("Counts per ring for state %i, detector %i, pid detection, edge strip suppressed",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_kill1",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid_kill2",state,det),Form("Counts per ring for state %i, detector %i, pid detection, 2 edge strip suppressed",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_kill2",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
         outlist->Add(new TH1D(Form("RingWeight_s%i_d%i_dual",state,det),Form("Weight factor per ring for state %i, detector %i, dual detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
@@ -1922,12 +1932,20 @@ int RingNumber(TCSMHit* Hit)
   return(RingNumber(Hit->GetDVerticalStrip(),Hit->GetDHorizontalStrip(),Hit->GetDetectorNumber()));
 }
 
-double RingSA(int Ring)
+double RingSA(int Ring, int Det)
 {  
-  TH1D* spec = (TH1D*)ringFile->Get("SA_0_d1_pid");
+  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Det));
   double TotalSolidAngle = spec->GetBinContent(Ring+1);
   
   return TotalSolidAngle;
+}
+
+double RingSA_err(int Ring, int Det)
+{  
+  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid_err",Det));
+  double TotalSolidAngle_err = spec->GetBinContent(Ring+1);
+  
+  return TotalSolidAngle_err;
 }
 
 double PixelSA(int StripX, int StripY)
@@ -1937,6 +1955,15 @@ double PixelSA(int StripX, int StripY)
   return SA;
 }
 
+// double PixelSAErr(int StripX, int StripY)
+// {  
+//   TH1D* spec_min = (TH1D*)SAFile_min->Get("sa1d");
+//   double SA_min = spec_min->GetBinContent(StripX+1,StripY+1);
+//   TH1D* spec_max = (TH1D*)SAFile_max->Get("sa1d");
+//   double SA_max = spec_max->GetBinContent(StripX+1,StripY+1);
+//   return sqrt(2)*(SA_max-SA_min);
+// }
+
 double PixelSA(TCSMHit* hit)
 {
   return(PixelSA(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip()));
@@ -1944,10 +1971,12 @@ double PixelSA(TCSMHit* hit)
 
 double EdgeEffectFactor(int StripX, int StripY, int Detector)
 {
-  TH2D* histo = (TH2D*)edgeFile->Get(Form("Ratio%i_adjusted",Detector));
+  TH2D* histo = (TH2D*)edgeFile->Get(Form("PunchThrough%i_D_normalized_adjusted",Detector));
   int binNo = histo->GetBin(StripX+1,StripY+1);
-  double edgeFact = 1./histo->GetBinContent(binNo);
-  return edgeFact;
+  double edgeFact = histo->GetBinContent(binNo);
+  if (edgeFact <=0)
+    return 0.;
+  return 1./edgeFact;
 }
 
 double EdgeEffectFactor(TCSMHit* hit)
