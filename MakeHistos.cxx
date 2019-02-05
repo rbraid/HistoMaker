@@ -670,7 +670,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     else if(ANGULAR_DISTRIBUTION)
     {
       bool DEBUGANG = 1;
-      if(DEBUGANG) csm->Print();
       if(DEBUGANG) cout<<" Multiplicity: "<<csm->GetMultiplicity()<<endl;
       for(int i = 0;i<csm->GetMultiplicity();i++)
       {
@@ -849,6 +848,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               
               double ex10cA =GetExciteE_Heavy_Corrected(hita,10);
               double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
+              
+              if(DEBUGANG) cout<<"Have Excited States"<<endl;
+              
               // 6    4.5 to 7.5
               // 9.3   7.5 to 10
               // 12   11.2 to 12.7
@@ -866,6 +868,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               
               TH2I* tmptvt = (TH2I*)outlist->FindObject("ThetaVTheta_DUAL");
               tmptvt->Fill(hita->GetThetaDeg(),hitb->GetThetaDeg());
+              
+              if(DEBUGANG) cout<<"Did prelim plots "<<stateA<<endl;
               
               int stateA = -1;
               int stateB = -1;
@@ -930,6 +934,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               }
               if(stateA != -1)
               {
+                if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
+                
 //                 if(hita->GetDVerticalStrip() == 14 && hita->GetDHorizontalStrip() == 3)
 //                 {
 //                   if(CalcCOMThetaDeg(hita,10)<90.)
@@ -983,6 +989,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               }
               if(stateB != -1)
               {
+                if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
 //                 if(hitb->GetDVerticalStrip() == 14 && hitb->GetDHorizontalStrip() == 3)
 //                 {
 //                   if(CalcCOMThetaDeg(hitb,10)<90.)
