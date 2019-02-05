@@ -669,6 +669,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
     else if(ANGULAR_DISTRIBUTION)
     {
+      bool DEBUGANG = 1;
+      if(DEBUGANG) csm->Print();
       for(int i = 0;i<csm->GetMultiplicity();i++)
       {
         TCSMHit *hit = csm->GetHit(i);
@@ -688,12 +690,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //             continue;
 //           }
 //         }
-        
+        if(DEBUGANG) cout<<"Have Hit"<<endl;
         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
         {
           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
           {           
             double ex11c =GetExciteE_Heavy_Corrected(hit,11);
+            if(DEBUGANG) cout<<"Have 11Be"<<endl;
             
             if(ex11c >= -1 && ex11c<= 1)//We are looking at an elastic scattered 11Be
             {
@@ -715,6 +718,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
           { 
+            if(DEBUGANG) cout<<"Have 10Be"<<endl;
             
             TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_PID");
             tmptvtcom->Fill(CalcCOMThetaDeg(hit,10),hit->GetThetaDeg());
@@ -727,7 +731,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             // 6    5.5 to 7       6.25
             //9.3     9 to 10.5    9.75
             double ex10c =GetExciteE_Heavy_Corrected(hit,10);
-
+            if(DEBUGANG) cout<<"Have 10Be Excite"<<endl;
+            
             int state = -1;
             
             if(SIMULATED_DATA)
@@ -778,7 +783,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             
             if(state != -1)
             {
-
+              if(DEBUGANG) cout<<"Have 10Be state assigned"<<endl;
+              
               TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_pid",state,hit->GetDetectorNumber()));
 
               hpPtr->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
@@ -805,6 +811,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
         TCSMHit* hita;
         TCSMHit* hitb;
+        if(DEBUGANG) cout<<"Have mult2"<<endl;
         
         TRandom *rdm = new TRandom(x);
         if(rdm->Integer(2))
@@ -823,6 +830,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           continue;
         
         double* CorrVals = CorrParticle(hita, 10);
+        if(DEBUGANG) cout<<"Have CorrVals"<<endl;
         
         double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
         double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
@@ -833,6 +841,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           {
             if(thetadiff >= -3 && thetadiff <= 5)
             {
+              if(DEBUGANG) cout<<"Have Correlated 2x 10Be"<<endl;
+              
               double ex10cA =GetExciteE_Heavy_Corrected(hita,10);
               double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
               // 6    4.5 to 7.5
