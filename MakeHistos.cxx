@@ -1009,6 +1009,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                 TH3D* interPtrLab = (TH3D*)outlist->FindObject(Form("perPixel_lab_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 
+                if(DEBUGANG) cout<<"Looking for "<<Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber())<<", found? "<<hpPtr<<endl;
+                
 //                 double weight = 1./(hitb->GetSolidAngleD()*GetfCOM(hitb,10));
                 
 //                 TH2D* interPtrProj = (TH2D*)outlist->FindObject(Form("perPixel_10be_%i_d%i_dual_proj",stateB,hitb->GetDetectorNumber()));
