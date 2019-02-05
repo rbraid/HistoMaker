@@ -1016,19 +1016,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                 interPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),CalcCOMThetaDeg(hitb,10));
 //                 interPtrLab->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip(),hitb->GetThetaDeg());
                 hpPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
+                if(DEBUGANG) cout<<"Done with hpPtr"<<endl;
                 
 //                 interPtrProj->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 int ring = RingNumber(hitb);
                 comPtr->Fill(CalcCOMThetaDeg(hitb,10),ring);
+                if(DEBUGANG) cout<<"Done with comPtr"<<endl;
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 tmpptr->Fill(ring);
+                if(DEBUGANG) cout<<"Done with ringcounts A"<<endl;
+                
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateB));
                 tmpptr->Fill(ring);
+                if(DEBUGANG) cout<<"Done with ringcounts B"<<endl;
+                
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 tmpptr->Fill(ring,GetfCOM(hitb,10));
+                if(DEBUGANG) cout<<"Done with ringweight A"<<endl;
+                
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateB));
                 tmpptr->Fill(ring,GetfCOM(hitb,10));
                 if(DEBUGANG) cout<<"Done with B"<<endl;
