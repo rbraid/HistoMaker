@@ -671,9 +671,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     {
       bool DEBUGANG = 1;
       if(DEBUGANG) csm->Print();
+      if(DEBUGANG) cout<<" Multiplicity: "<<csm->GetMultiplicity()<<endl;
       for(int i = 0;i<csm->GetMultiplicity();i++)
       {
         TCSMHit *hit = csm->GetHit(i);
+        
+        if(DEBUGANG) cout<<"I have hit "<<i<<endl;
+        if(DEBUGANG) hit->Print();
 //         if(hit->GetDVerticalStrip()<1 || hit->GetDVerticalStrip()>14)//For now, suppress the perimeter strip, as there is a loss of solid angle there.
 //         {
 //           continue;
