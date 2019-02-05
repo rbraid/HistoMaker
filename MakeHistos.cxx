@@ -869,7 +869,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               TH2I* tmptvt = (TH2I*)outlist->FindObject("ThetaVTheta_DUAL");
               tmptvt->Fill(hita->GetThetaDeg(),hitb->GetThetaDeg());
               
-              if(DEBUGANG) cout<<"Did prelim plots "<<stateA<<endl;
+              if(DEBUGANG) cout<<"Did prelim plots "<<endl;
               
               int stateA = -1;
               int stateB = -1;
@@ -989,7 +989,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               }
               if(stateB != -1)
               {
-                if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
+                if(DEBUGANG) cout<<"Have State B "<<stateB<<endl;
 //                 if(hitb->GetDVerticalStrip() == 14 && hitb->GetDHorizontalStrip() == 3)
 //                 {
 //                   if(CalcCOMThetaDeg(hitb,10)<90.)
