@@ -669,7 +669,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
     else if(ANGULAR_DISTRIBUTION)
     {
-      bool DEBUGANG = 1;
+      bool DEBUGANG = 0;
       if(DEBUGANG) cout<<" Multiplicity: "<<csm->GetMultiplicity()<<endl;
       for(int i = 0;i<csm->GetMultiplicity();i++)
       {
@@ -831,6 +831,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         
         if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
           continue;
+        
+        if(hita->GetDetectorNumber() > 2)
+          continue;
+        if(hitb->GetDetectorNumber() > 2)
+          continue;   
         
         double* CorrVals = CorrParticle(hita, 10);
         if(DEBUGANG) cout<<"Have CorrVals"<<endl;
