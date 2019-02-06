@@ -700,18 +700,27 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           {           
             double ex11c =GetExciteE_Heavy_Corrected(hit,11);
             if(DEBUGANG) cout<<"Have 11Be"<<endl;
-            
+            int state = -1;
             if(ex11c >= -1 && ex11c<= 1)//We are looking at an elastic scattered 11Be
             {
-              
-              TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_11be_0");
-              tmpangdist->Fill(CalcCOMThetaDeg(hit,11),1./hit->GetSolidAngleD());
+              state = 0;
             }
             else if(ex11c >= 1.8 && ex11c<= 3.4)//We are looking at an excited 9Be
             {
-              
+              state = 3;
+            }
+            //RingCounts_s{}_d{}_{}
+            
+            if(state != -1)
+            {
               TH1I* tmpangdist = (TH1I*)outlist->FindObject("ang_dist_11be_2.6");
               tmpangdist->Fill(CalcCOMThetaDeg(hit,11),1./hit->GetSolidAngleD());
+              
+              if(DEBUGANG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber())<<endl;
+              
+              int ring = RingNumber(hit);
+              TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber()));   
+              tmpptr->Fill(ring);
             }
           }
         }
@@ -1069,115 +1078,115 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 
   cout<<endl;  
   
-  if(ANGULAR_DISTRIBUTION)
-  {
-    bool DEBUGEND = 1;
-    TH1D* tmpPtr1D;
-    TH2D* tmpPtr2D;
-    
-    for(int dettypeI = 0; dettypeI<2;dettypeI++)
-    {
-      for(int state = 0; state<=12;state += 3)
-      {
-        for(int det = 1;det<3;det++)
-        {
-          TString dettype = "def";
-          if(dettypeI == 0)
-            dettype = "pid";
-          else if(dettypeI == 1)
-            dettype = "dual";
-          else
-            cerr<<"Overshot on Dettype"<<endl;
-          
-          TH1D* spec = (TH1D*)ringFile->Get("SA_0_d1_pid");
-          
-          if(DEBUGEND) cout<<DRED<<endl<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<RESET_COLOR<<endl;
-          TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringFile->Get(Form("COM_d%i_s%i",det,state));
-          
-          if (!ringG)
-            continue;
-          
-          vector<double> center;
-          vector<double> centererr;
-          vector<double> counts;
-          vector<double> countserr;
-          
-          for(int i =0;i<ringG->GetN()+1;i++)
-          {
-
-            double cen = ringG->GetY()[i];
-            double cerr = .6827*((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
-            
-            double c = -1.;
-
-            tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.Data()));
-            c = tmpPtr1D->GetBinContent(i+1);
-//             if(dettype == "pid")
-//               tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s_edge",state,det,dettype.Data()));
-
-            double exciteVal = -1;
-            switch(state)
-            {
-              case 0:
-                exciteVal = 0.;
-                break;
-              case 3:
-                exciteVal = 3.368;
-                break;
-              case 6:
-                exciteVal = 6.;
-                break;
-              case 9:
-                exciteVal = 9.368;
-                break;
-              case 12:
-                exciteVal = 12.;
-                break;
-            }
-            
-            double s = RingSA(i,det);
-            double serr = RingSA_err(i,det);
-
-            double w = ManualFracCOM(exciteVal, toRadians(cen));
-            
-            if(s>0.00001 && c >0)
-            {
-              counts.push_back(c/s*w);
-              countserr.push_back((c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s)));
-              cout<<"Great Big Error output: "<<endl;
-              cout<<"Counts: "<<c<<" +/- "<<sqrt(c)<<", %: "<<sqrt(c)/c*100<<endl;
-              cout<<"Solid Angle: "<<s<<" +/- "<<serr<<", %: "<<serr/s*100<<endl;
-              cout<<"Total: "<<c/s*w<<" +/- "<<(c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s))<<", %: "<<((c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s)))/(c/s*w)*100<<endl;
-              
-              printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f\n\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
-              
-              center.push_back(cen);
-              centererr.push_back(cerr);
-            }
-          }
-          
-          if(center.size() != centererr.size())
-            cerr<<"Size mismatch between center and centererr"<<endl;
-          
-          if(counts.size() != countserr.size())
-            cerr<<"Size mismatch between counts and countserr"<<endl;
-          
-          if(center.size() != counts.size())
-            cerr<<"Size mismatch between center and counts"<<endl;
-
-          if(center.size()>0)    
-          {
-            TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(counts[0]),&(centererr[0]),&(countserr[0]));
-            TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.Data()));
-            TG->GetXaxis()->SetTitle("Center of Mass Theta, in Degrees");
-            TG->GetYaxis()->SetTitle("Cross section in arb. units");
-            TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.Data()));
-            outlist->Add(TG);
-          }
-        }
-      }
-    }  
-  }
+//   if(ANGULAR_DISTRIBUTION)
+//   {
+//     bool DEBUGEND = 1;
+//     TH1D* tmpPtr1D;
+//     TH2D* tmpPtr2D;
+//     
+//     for(int dettypeI = 0; dettypeI<2;dettypeI++)
+//     {
+//       for(int state = 0; state<=12;state += 3)
+//       {
+//         for(int det = 1;det<3;det++)
+//         {
+//           TString dettype = "def";
+//           if(dettypeI == 0)
+//             dettype = "pid";
+//           else if(dettypeI == 1)
+//             dettype = "dual";
+//           else
+//             cerr<<"Overshot on Dettype"<<endl;
+//           
+//           TH1D* spec = (TH1D*)ringFile->Get("SA_0_d1_pid");
+//           
+//           if(DEBUGEND) cout<<DRED<<endl<<"Detector "<<det<<", state: "<<state<<", dettype: "<<dettype<<RESET_COLOR<<endl;
+//           TGraphAsymmErrors *ringG = (TGraphAsymmErrors*)ringFile->Get(Form("COM_d%i_s%i",det,state));
+//           
+//           if (!ringG)
+//             continue;
+//           
+//           vector<double> center;
+//           vector<double> centererr;
+//           vector<double> counts;
+//           vector<double> countserr;
+//           
+//           for(int i =0;i<ringG->GetN()+1;i++)
+//           {
+// 
+//             double cen = ringG->GetY()[i];
+//             double cerr = .6827*((ringG->GetEYhigh()[i]+ringG->GetEYlow()[i])/2.);
+//             
+//             double c = -1.;
+// 
+//             tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s",state,det,dettype.Data()));
+//             c = tmpPtr1D->GetBinContent(i+1);
+// //             if(dettype == "pid")
+// //               tmpPtr1D = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%s_edge",state,det,dettype.Data()));
+// 
+//             double exciteVal = -1;
+//             switch(state)
+//             {
+//               case 0:
+//                 exciteVal = 0.;
+//                 break;
+//               case 3:
+//                 exciteVal = 3.368;
+//                 break;
+//               case 6:
+//                 exciteVal = 6.;
+//                 break;
+//               case 9:
+//                 exciteVal = 9.368;
+//                 break;
+//               case 12:
+//                 exciteVal = 12.;
+//                 break;
+//             }
+//             
+//             double s = RingSA(i,det);
+//             double serr = RingSA_err(i,det);
+// 
+//             double w = ManualFracCOM(exciteVal, toRadians(cen));
+//             
+//             if(s>0.00001 && c >0)
+//             {
+//               counts.push_back(c/s*w);
+//               countserr.push_back((c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s)));
+//               cout<<"Great Big Error output: "<<endl;
+//               cout<<"Counts: "<<c<<" +/- "<<sqrt(c)<<", %: "<<sqrt(c)/c*100<<endl;
+//               cout<<"Solid Angle: "<<s<<" +/- "<<serr<<", %: "<<serr/s*100<<endl;
+//               cout<<"Total: "<<c/s*w<<" +/- "<<(c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s))<<", %: "<<((c/s*w) * sqrt( (sqrt(c)/c)*(sqrt(c)/c) + (serr/s)*(serr/s)))/(c/s*w)*100<<endl;
+//               
+//               printf("Ring: %2i, counts: %5.f, solidAngle: %5f, weight: %5f, weighted counts: %6.f, error: %5.f\n center: %8.3f, error: %3.1f\n\n",i,c,s,w,c/s*w,sqrt(c)/s*w,cen,cerr);
+//               
+//               center.push_back(cen);
+//               centererr.push_back(cerr);
+//             }
+//           }
+//           
+//           if(center.size() != centererr.size())
+//             cerr<<"Size mismatch between center and centererr"<<endl;
+//           
+//           if(counts.size() != countserr.size())
+//             cerr<<"Size mismatch between counts and countserr"<<endl;
+//           
+//           if(center.size() != counts.size())
+//             cerr<<"Size mismatch between center and counts"<<endl;
+// 
+//           if(center.size()>0)    
+//           {
+//             TGraphErrors *TG = new TGraphErrors(center.size(),&(center[0]),&(counts[0]),&(centererr[0]),&(countserr[0]));
+//             TG->SetTitle(Form("Angular Distribution detector %i, state %i, %s detection type",det,state,dettype.Data()));
+//             TG->GetXaxis()->SetTitle("Center of Mass Theta, in Degrees");
+//             TG->GetYaxis()->SetTitle("Cross section in arb. units");
+//             TG->SetName(Form("AD_d%i_s%i_%s",det,state,dettype.Data()));
+//             outlist->Add(TG);
+//           }
+//         }
+//       }
+//     }  
+//   }
 }
 
 
@@ -1309,7 +1318,7 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
   
-  if(!DEBUG && !ANGULAR_DISTRIBUTION)
+  if(!DEBUG)
   {    
     TH1* hist = (TH1*)outlist->First();
     TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
