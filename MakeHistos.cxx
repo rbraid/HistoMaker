@@ -42,6 +42,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   {
     Be12Cut = "pid_low_thick_12Be_%i_v2";
     Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
+    if(SIMULATED_DATA)
+      Be11Cut = "pid_low_thick_11Be_%i_v1_sim";
     Be10Cut = "pid_low_thick_10Be_%i_v2";
     if(SIMULATED_DATA)
       Be10Cut = "pid_low_thick_10Be_%i_sim";
