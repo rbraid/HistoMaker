@@ -858,12 +858,12 @@ void SetupHistos(TList *outlist)
         temp2->GetXaxis()->SetTitle("X Strip");
         temp2->GetYaxis()->SetTitle("Y Strip");
         
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),180,0,180,50,0,50));
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),50,0,50,180,0,180));
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
         
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),180,0,180,50,0,50));
+        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),50,0,50,180,0,180));
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
@@ -1542,6 +1542,10 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
     QVal = 1.50619;
   else if(int(Mass) == int(MASS_BE10))
     QVal = 6.310645;
+  else if(int(Mass) == int(MASS_BE11))
+    QVal = 0;
+  else if(int(Mass) == int(MASS_BE9))
+    QVal = 0;
   else
   {
     cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
@@ -1583,6 +1587,10 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
     cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
   else if(int(Mass) == int(MASS_BE10))
     CorrMass = MASS_BE10;
+  else if(int(Mass) == int(MASS_BE11))
+    CorrMass = MASS_BE9;
+  else if(int(Mass) == int(MASS_BE9))
+    CorrMass = MASS_BE11;
   else
     cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
   
@@ -1626,20 +1634,26 @@ double* CorrParticle(TCSMHit* Hit, int Z)
     switch(Z)
     {
       case 10:
-	MASS = MASS_BE10;
-	break;
+        MASS = MASS_BE10;
+        break;
       case 12:
-	MASS = MASS_BE12;
-	break;
+        MASS = MASS_BE12;
+        break;
       case 8:
-	MASS = MASS_BE8;
-	break;
+        MASS = MASS_BE8;
+        break;
+      case 11:
+        MASS = MASS_BE11;
+        break;
+      case 9:
+        MASS = MASS_BE9;
+        break;
       case 0:
-	MASS = Hit->GetMassMeV();
-	break;
+        MASS = Hit->GetMassMeV();
+        break;
       default:
-	cerr<<"Unrecognized Z in Corr Particle: "<<Z<<endl;
-	MASS = Z;
+        cerr<<"Unrecognized Z in Corr Particle: "<<Z<<endl;
+        MASS = Z;
     }
 
   return CorrParticle(Hit->GetEnergy(),Hit->GetDPosition().Theta(),Hit->GetDPosition().Phi(),MASS);
@@ -1943,6 +1957,14 @@ double RingSA(int Ring, int Det)
   double TotalSolidAngle = spec->GetBinContent(Ring+1);
   
   return TotalSolidAngle;
+}
+
+void RingRange(int Ring, int Det, int State)
+{
+  TGraph* g = (TGraph*)ringFile->Get(Form("COM_d%i_s%i",Det,State));
+  Double_t xp, yp;
+  g->GetPoint(Ring,xp,yp);
+  cout<<"PID RingRange: " <<yp<<" +/- "<<g->GetErrorY(Ring)<<endl;
 }
 
 double RingSA_err(int Ring, int Det)

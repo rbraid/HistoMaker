@@ -58,6 +58,7 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H);
 bool AlmostEqual(double a, double b, double threshold = .2);
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z = 0);
+void RingRange(int Ring, int Det, int State);
 
 double EfficiencyWeight(TTigressHit* thit);
 vector<double> GetEffAndError(double Energy, bool Error = 0);
