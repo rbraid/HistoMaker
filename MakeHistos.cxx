@@ -242,7 +242,23 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             temp2INT = (TH2I*)outlist->FindObject(Form("Be11Ex%i_mult",hit->GetDetectorNumber()));
             temp2INT->Fill(GetExciteE_Heavy_Corrected(hit,11),csm->GetMultiplicity());
           }
-        }        
+        }    
+        
+        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
+        {
+          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+          {
+            temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be9",hit->GetDetectorNumber()));
+            temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+            
+            temp1 = (TH1D*)outlist->FindObject(Form("Be9Ex%i",hit->GetDetectorNumber()));
+            if(temp1) temp1->Fill(GetExciteE_Heavy(hit,9));
+            
+            double ex11c =GetExciteE_Heavy_Corrected(hit,9);
+            temp1 = (TH1D*)outlist->FindObject(Form("Be9Ex%i_corr",hit->GetDetectorNumber()));
+            if(temp1) temp1->Fill(ex11c);
+          }
+        }     
         
         if(DEBUG) cout<<"EVTheta"<<endl;
         temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iD",hit->GetDetectorNumber()));
