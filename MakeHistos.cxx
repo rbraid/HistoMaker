@@ -740,6 +740,34 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           }
         }
         
+        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
+        {
+          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+          {           
+            double ex9c =GetExciteE_Heavy_Corrected(hit,9);
+            if(DEBUGANG) cout<<"Have 9Be"<<endl;
+            int state = -1;
+            if(ex9c >= -1 && ex9c<= 1)//We are looking at an elastic scattered 9Be
+            {
+              state = 0;
+            }
+            else if(ex9c >= 1.8 && ex9c<= 3.4)//We are looking at an excited 9Be
+            {
+              state = 3;
+            }
+            
+            if(state != -1)
+            {
+
+              if(DEBUGANG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
+              
+              int ring = RingNumber(hit);
+              TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber()));   
+              tmpptr->Fill(ring);
+            }
+          }
+        }
+        
         
         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
         {

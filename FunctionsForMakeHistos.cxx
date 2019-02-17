@@ -883,6 +883,11 @@ void SetupHistos(TList *outlist)
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
         
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_9Be",state,det),Form("9Be counts per ring for state %i, detector %i, pid detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid_edge",state,det),Form("Counts per ring for state %i, detector %i, pid detection, edge effect corrected",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_edge",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
