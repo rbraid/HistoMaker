@@ -49,6 +49,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       Be10Cut = "pid_low_thick_10Be_%i_sim";
     
     Be9Cut = "pid_low_thick_9Be_%i_v1";
+    if(SIMULATED_DATA)
+      Be11Cut = "pid_low_thick_9Be_%i_v1_sim";
     
     He4Cut = "pid_low_thick_4He_%i_v1";
     He6Cut = "pid_low_thick_6He_%i_v1";
