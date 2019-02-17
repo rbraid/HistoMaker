@@ -888,6 +888,16 @@ void SetupHistos(TList *outlist)
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
         
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_11Be_corr",state,det),Form("11Be counts per ring for state %i, detector %i, corr detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be_corr",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_9Be_corr",state,det),Form("9Be counts per ring for state %i, detector %i, corr detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be_corr",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_pid_edge",state,det),Form("Counts per ring for state %i, detector %i, pid detection, edge effect corrected",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_edge",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
@@ -1157,6 +1167,10 @@ double GetK_Corrected(TCSMHit* Hit, int Z)
       MASS = MASS_BE8;
       isotope = "8be";
       break;
+    case 9:
+      MASS = MASS_BE9;
+      isotope = "9be";
+      break;
     case 0:
       MASS = Hit->GetMassMeV();
       isotope = Hit->GetIsotope();
@@ -1187,6 +1201,9 @@ double GetExciteE_Heavy(TCSMHit* Hit, int Z)
       break;
     case 11:
       MASS = MASS_BE11;
+      break;
+    case 9:
+      MASS = MASS_BE9;
       break;
     case 0:
       MASS = Hit->GetMassMeV();
@@ -1221,6 +1238,10 @@ double GetExciteE_Heavy_Corrected(TCSMHit* Hit, int Z)
     case 8:
       MASS = MASS_BE8;
       isotope = "8be";
+      break;
+    case 9:
+      MASS = MASS_BE9;
+      isotope = "9be";
       break;
     case 0:
       MASS = Hit->GetMassMeV();

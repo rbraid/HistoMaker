@@ -705,15 +705,19 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             double ex11c =GetExciteE_Heavy_Corrected(hit,11);
             if(DEBUGANG) cout<<"Have 11Be"<<endl;
             int state = -1;
-            if(ex11c >= -1 && ex11c<= 1)//We are looking at an elastic scattered 11Be
+            if(SIMULATED_DATA)
             {
-              state = 0;
+              if(ex11c >= -3 && ex11c <= 1)
+                state = 0;
             }
-            else if(ex11c >= 1.8 && ex11c<= 3.4)//We are looking at an excited 9Be
+            
+            else
             {
-              state = 3;
+              if(ex11c >= -1.5 && ex11c <= 1)
+                state = 0;
+              else if(ex11c >= 1.5 && ex11c <= 3.5)
+                state = 3;
             }
-            //RingCounts_s{}_d{}_{}
             
             if(state != -1)
             {
@@ -747,13 +751,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             double ex9c =GetExciteE_Heavy_Corrected(hit,9);
             if(DEBUGANG) cout<<"Have 9Be"<<endl;
             int state = -1;
-            if(ex9c >= -1 && ex9c<= 1)//We are looking at an elastic scattered 9Be
+            if(SIMULATED_DATA)
             {
-              state = 0;
+              if(ex9c >= -3 && ex9c <= 1)
+                state = 0;
             }
-            else if(ex9c >= 1.8 && ex9c<= 3.4)//We are looking at an excited 9Be
+            
+            else
             {
-              state = 3;
+              if(ex9c >= -1.5 && ex9c <= 1)
+                state = 0;
+              else if(ex9c >= 1.5 && ex9c <= 3.5)
+                state = 3;
             }
             
             if(state != -1)
@@ -850,9 +859,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               
               comPtr->Fill(ring,CalcCOMThetaDeg(hit,10));
               
-              cout<<"PID CalcCOMThetaDeg: "<<CalcCOMThetaDeg(hit,10)<<endl;
-              RingRange(ring, hit->GetDetectorNumber(), state);  
-              cout<<endl;
+//               cout<<"PID CalcCOMThetaDeg: "<<CalcCOMThetaDeg(hit,10)<<endl;
+//               RingRange(ring, hit->GetDetectorNumber(), state);  
+//               cout<<endl;
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));   
               tmpptr->Fill(ring);
               tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid_edge",state,hit->GetDetectorNumber()));
@@ -1103,6 +1112,126 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 tmpptr->Fill(ring,GetfCOM(hitb,10));
                 if(DEBUGANG) cout<<"Done with B"<<endl;
                 
+              }
+            }
+          }
+        }
+        
+        for(int iso = 9; iso <12; iso +=2)
+        {
+          double* CorrVals = CorrParticle(hita, iso);
+          
+          if(phidiff >= -10 && phidiff <= 10)
+          {
+            if(energydiff >= -2.5 && energydiff <= .5)
+            {
+              if(thetadiff >= -3 && thetadiff <= 5)
+              {
+                if(DEBUGANG) cout<<"Have Correlated "<<iso<<"Be"<<endl;
+                
+                double ex10cA =GetExciteE_Heavy_Corrected(hita,iso);
+                double ex10cB =GetExciteE_Heavy_Corrected(hitb,iso);
+                
+                if(DEBUGANG) cout<<"Have Excited States"<<endl;
+                
+                int stateA = -1;
+                int stateB = -1;
+                
+                if(SIMULATED_DATA)
+                {
+                  if(ex10cA >= -3 && ex10cA <= 1)
+                  {
+                    stateA = 0;
+                  }
+//                   else if(ex10cA >= 8 && ex10cA <= 10.7)
+//                   {
+//                     stateA = 3;
+//                   }
+
+                  
+                  if(ex10cB >= -3 && ex10cB <= 1)
+                  {
+                    stateB = 0;
+                  }
+//                   else if(ex10cB >= 8 && ex10cB <= 10.7)
+//                   {
+//                     stateB = 3;
+//                   }
+
+                }
+                
+                else
+                {
+                  if(ex10cA >= -1.5 && ex10cA <= 1)
+                  {
+                    stateA = 0;
+                  }
+                  else if(ex10cA >= 1.5 && ex10cA <= 3.5)
+                  {
+                    stateA = 3;
+                  }
+
+                  
+                  if(ex10cB >= -1.5 && ex10cB <= 1)
+                  {
+                    stateB = 0;
+                  }
+                  else if(ex10cB >= 1.5 && ex10cB <= 3.5)
+                  {
+                    stateB = 3;
+                  }
+
+                  
+                }
+                if(stateA != -1)
+                {
+                  if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
+/*                  TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+
+                  hpPtr->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
+                  */                  
+//                   TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                  int ring = RingNumber(hita);
+//                   comPtr->Fill(ring,CalcCOMThetaDeg(hita,10));
+                  
+                  TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateA,hita->GetDetectorNumber(),iso));
+                  tmpptr->Fill(ring);
+//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_du",stateA));
+//                   tmpptr->Fill(ring);
+                }
+                if(stateB != -1)
+                {
+                  if(DEBUGANG) cout<<"Have State B "<<stateB<<endl;
+
+//                   TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                  
+//                   if(DEBUGANG) cout<<"Looking for "<<Form("HP_10be_%i_d%i_dual",stateB,hitb->GetDetectorNumber())<<", found? "<<hpPtr<<endl;
+
+//                   hpPtr->Fill(hitb->GetDVerticalStrip(),hitb->GetDHorizontalStrip());
+//                   if(DEBUGANG) cout<<"Done with hpPtr"<<endl;
+                                    
+//                   TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                  int ring = RingNumber(hitb);
+//                   comPtr->Fill(ring,CalcCOMThetaDeg(hitb,10));
+//                   if(DEBUGANG) cout<<"Done with comPtr"<<endl;
+                  
+                  TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateB,hitb->GetDetectorNumber(),iso));
+                  tmpptr->Fill(ring);
+                  if(DEBUGANG) cout<<"Done with ringcounts A"<<endl;
+                  
+//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateB));
+//                   tmpptr->Fill(ring);
+//                   if(DEBUGANG) cout<<"Done with ringcounts B"<<endl;
+                  
+//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+//                   tmpptr->Fill(ring,GetfCOM(hitb,10));
+//                   if(DEBUGANG) cout<<"Done with ringweight A"<<endl;
+//                   
+//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateB));
+//                   tmpptr->Fill(ring,GetfCOM(hitb,10));
+//                   if(DEBUGANG) cout<<"Done with B"<<endl;
+                  
+                }
               }
             }
           }
