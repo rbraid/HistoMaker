@@ -874,7 +874,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               int ring = RingNumber(hit);
               
               comPtr->Fill(ring,CalcCOMThetaDeg(hit,10));
-              TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_pid",state,hita->GetDetectorNumber()));
+              TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_pid",state,hit->GetDetectorNumber()));
               lPtr->Fill(ring,hit->GetThetaDeg());
               
 //               cout<<"PID CalcCOMThetaDeg: "<<CalcCOMThetaDeg(hit,10)<<endl;
