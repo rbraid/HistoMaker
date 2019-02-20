@@ -883,6 +883,16 @@ void SetupHistos(TList *outlist)
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
         
+        outlist->Add(new TH2D(Form("RingVLabT_s%i_d%i_pid",state,det),Form("Lab Theta vs Rings for state %i, detector %i, PID detection",state,det),50,0,50,180,0,180));
+        temp2 = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_pid",state,det));
+        temp2->GetXaxis()->SetTitle("Lab Theta in Degrees");
+        temp2->GetYaxis()->SetTitle("Ring Number");
+        
+        outlist->Add(new TH2D(Form("RingVLabT_s%i_d%i_dual",state,det),Form("Lab Theta vs Rings for state %i, detector %i, dual detection",state,det),50,0,50,180,0,180));
+        temp2 = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_dual",state,det));
+        temp2->GetXaxis()->SetTitle("Lab Theta in Degrees");
+        temp2->GetYaxis()->SetTitle("Ring Number");
+        
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_dual",state,det),Form("Counts per ring for state %i, detector %i, dual detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");

@@ -874,6 +874,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               int ring = RingNumber(hit);
               
               comPtr->Fill(ring,CalcCOMThetaDeg(hit,10));
+              TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_pid",state,hita->GetDetectorNumber()));
+              lPtr->Fill(ring,hit->GetThetaDeg());
               
 //               cout<<"PID CalcCOMThetaDeg: "<<CalcCOMThetaDeg(hit,10)<<endl;
 //               RingRange(ring, hit->GetDetectorNumber(), state);  
@@ -1063,6 +1065,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 int ring = RingNumber(hita);
                 comPtr->Fill(ring,CalcCOMThetaDeg(hita,10));
                 
+                TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                lPtr->Fill(ring,hita->GetThetaDeg());
+                
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
                 tmpptr->Fill(ring);
                 tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateA));
@@ -1110,6 +1115,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
                 int ring = RingNumber(hitb);
                 comPtr->Fill(ring,CalcCOMThetaDeg(hitb,10));
+                
+                TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+                lPtr->Fill(ring,hitb->GetThetaDeg());
                 if(DEBUGANG) cout<<"Done with comPtr"<<endl;
                 
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
