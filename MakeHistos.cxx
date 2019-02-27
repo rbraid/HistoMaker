@@ -50,7 +50,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     
     Be9Cut = "pid_low_thick_9Be_%i_v1";
     if(SIMULATED_DATA)
-      Be11Cut = "pid_low_thick_9Be_%i_v1_sim";
+      Be9Cut = "pid_low_thick_9Be_%i_v1_sim";
     
     He4Cut = "pid_low_thick_4He_%i_v1";
     He6Cut = "pid_low_thick_6He_%i_v1";
@@ -725,6 +725,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             {
               if(ex11c >= -3 && ex11c <= 1)
                 state = 0;
+              else if(ex11c >= 1.1 && ex11c <= 4)
+                state=3;
             }
             
             else
@@ -760,38 +762,38 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           }
         }
         
-        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
-        {
-          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-          {           
-            double ex9c =GetExciteE_Heavy_Corrected(hit,9);
-            if(DEBUGANG) cout<<"Have 9Be"<<endl;
-            int state = -1;
-            if(SIMULATED_DATA)
-            {
-              if(ex9c >= -3 && ex9c <= 1)
-                state = 0;
-            }
-            
-            else
-            {
-              if(ex9c >= -1.5 && ex9c <= 1)
-                state = 0;
-              else if(ex9c >= 1.5 && ex9c <= 3.5)
-                state = 3;
-            }
-            
-            if(state != -1)
-            {
-
-              if(DEBUGANG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
-              
-              int ring = RingNumber(hit);
-              TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber()));   
-              tmpptr->Fill(ring);
-            }
-          }
-        }
+//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
+//         {
+//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+//           {           
+//             double ex9c =GetExciteE_Heavy_Corrected(hit,9);
+//             if(DEBUGANG) cout<<"Have 9Be"<<endl;
+//             int state = -1;
+//             if(SIMULATED_DATA)
+//             {
+//               if(ex9c >= -3 && ex9c <= 1)
+//                 state = 0;
+//             }
+//             
+//             else
+//             {
+//               if(ex9c >= -1.5 && ex9c <= 1)
+//                 state = 0;
+//               else if(ex9c >= 1.5 && ex9c <= 3.5)
+//                 state = 3;
+//             }
+//             
+//             if(state != -1)
+//             {
+// 
+//               if(DEBUGANG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
+//               
+//               int ring = RingNumber(hit,9);
+//               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber()));   
+//               tmpptr->Fill(ring);
+//             }
+//           }
+//         }
         
         
         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
@@ -1021,7 +1023,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               }
               if(stateA != -1)
               {
-                if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
+                if(DEBUGANG) cout<<"Have State A 10Be "<<stateA<<endl;
                 
 //                 if(hita->GetDVerticalStrip() == 14 && hita->GetDHorizontalStrip() == 3)
 //                 {
@@ -1062,7 +1064,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                 interPtrProj->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
                 
                 TH2D* comPtr = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+                if(DEBUGANG) cout<<"Before Ring Calc"<<endl;
                 int ring = RingNumber(hita);
+                if(DEBUGANG) cout<<"After Ring Calc"<<endl;
+                
                 comPtr->Fill(ring,CalcCOMThetaDeg(hita,10));
                 
                 TH2D* lPtr = (TH2D*)outlist->FindObject(Form("RingVLabT_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
@@ -1141,7 +1146,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           }
         }
         
-        for(int iso = 9; iso <12; iso +=2)
+//         for(int iso = 9; iso <12; iso +=2)
+        int iso = 11;
         {
           double* CorrVals = CorrParticle(hita, iso);
           
@@ -1167,20 +1173,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   {
                     stateA = 0;
                   }
-//                   else if(ex10cA >= 8 && ex10cA <= 10.7)
-//                   {
-//                     stateA = 3;
-//                   }
+                  else if(ex10cA >= 1.1 && ex10cA <= 4)
+                    stateA=3;
 
                   
                   if(ex10cB >= -3 && ex10cB <= 1)
                   {
                     stateB = 0;
                   }
-//                   else if(ex10cB >= 8 && ex10cB <= 10.7)
-//                   {
-//                     stateB = 3;
-//                   }
+                  else if(ex10cB >= 1.1 && ex10cB <= 4)
+                    stateB=3;
 
                 }
                 
@@ -1209,7 +1211,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 }
                 if(stateA != -1)
                 {
-                  if(DEBUGANG) cout<<"Have State A "<<stateA<<endl;
+                  if(DEBUGANG) cout<<"Have State A "<<stateA<<", iso "<<iso<<endl;
 /*                  TH2I* hpPtr = (TH2I*)outlist->FindObject(Form("HP_10be_%i_d%i_dual",stateA,hita->GetDetectorNumber()));
 
                   hpPtr->Fill(hita->GetDVerticalStrip(),hita->GetDHorizontalStrip());
@@ -1241,20 +1243,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                   
                   TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateB,hitb->GetDetectorNumber(),iso));
                   tmpptr->Fill(ring);
-                  if(DEBUGANG) cout<<"Done with ringcounts A"<<endl;
-                  
-//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_dual",stateB));
-//                   tmpptr->Fill(ring);
-//                   if(DEBUGANG) cout<<"Done with ringcounts B"<<endl;
-                  
-//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-//                   tmpptr->Fill(ring,GetfCOM(hitb,10));
-//                   if(DEBUGANG) cout<<"Done with ringweight A"<<endl;
-//                   
-//                   tmpptr = (TH1D*)outlist->FindObject(Form("RingWeight_s%i_dual",stateB));
-//                   tmpptr->Fill(ring,GetfCOM(hitb,10));
-//                   if(DEBUGANG) cout<<"Done with B"<<endl;
-                  
+                  if(DEBUGANG) cout<<"Done with ringcounts A"<<endl;                  
                 }
               }
             }

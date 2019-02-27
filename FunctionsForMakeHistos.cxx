@@ -1988,8 +1988,7 @@ double ManualFracCOM(double ExcitedState, double ThetaCOM)
 
 int RingNumber(int stripX, int stripY, int detector)
 {  
-  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid",detector));
-  
+  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid_Be10",detector));
   int binNo = histo->GetBin(stripX+1,stripY+1);
   int Ring = histo->GetBinContent(binNo);
   Ring -= 1;
