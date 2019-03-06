@@ -426,6 +426,18 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
+    for(int iso = 9; iso <=11;iso +=2)
+    {
+      outlist->Add(new TH2D(Form("EvTheta_%i_%iBe_corr",id,iso),Form("EvTheta %i of the below PID %iBe",id,iso),100,0,100,350,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",id,iso));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+      
+      outlist->Add(new TH2D(Form("EvTheta_%i_%iBe_corr_high",id,iso),Form("EvTheta %i of the below PID 11Be and 9Be, highest energy only",id),100,0,100,350,0,70));
+      temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr_high",id,iso));
+      temp2->GetXaxis()->SetTitle("Theta in Degrees");
+      temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    }
     outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp_opp",id),"Gamma spectrum for opposite particle",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -915,6 +927,15 @@ void SetupHistos(TList *outlist)
         
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_11Be_corr",state,det),Form("11Be counts per ring for state %i, detector %i, corr detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be_corr",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_11Be_corr_Aonly",state,det),Form("11Be counts per ring for state %i, detector %i, corr detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be_corr_Aonly",state,det));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");
+        outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_11Be_corr_Bonly",state,det),Form("11Be counts per ring for state %i, detector %i, corr detection",state,det),100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be_corr_Bonly",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
         temp1->GetYaxis()->SetTitle("Counts");
         
@@ -1522,32 +1543,6 @@ double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
   return(pvec.Mag2()/(2*MASS));
 }
 
-// double CalcCOMEnergyMeV(TVector3 pvec, int Z)
-// {
-//   double MASS = 0.;
-//   
-//   switch(Z)
-//   {
-//     case 10:
-//       MASS = MASS_BE10;
-//       break;
-//     case 12:
-//       MASS = MASS_BE12;
-//       break;
-//     case 8:
-//       MASS = MASS_BE8;
-//       break;
-//     case 11:
-//       MASS = MASS_BE11;
-//       break;
-//     default:
-//       cerr<<"unrecognized Z in CalcCOM: "<<Z<<endl;
-//       MASS = Z;
-//   }
-//   
-//   return pvec.Mag2()/(2*MASS);
-// }
-
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
 { 
   TVector3 pvec = CalcCOMmomentum(Hit,Z);
@@ -1555,53 +1550,10 @@ double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
   return pvec.Theta()*180./TMath::Pi();
 }
 
-// double CalcCOMThetaDeg(TVector3 pvec, int Z)
-// {
-//   double MASS = 0.;
-//   
-//   switch(Z)
-//   {
-//     case 10:
-//       MASS = MASS_BE10;
-//       break;
-//     case 12:
-//       MASS = MASS_BE12;
-//       break;
-//     case 8:
-//       MASS = MASS_BE8;
-//       break;
-//     case 11:
-//       MASS = MASS_BE11;
-//       break;
-//     default:
-//       cerr<<"unrecognized Z in Corr Particle: "<<Z<<endl;
-//       MASS = Z;
-//   }
-//   
-//   return pvec.Theta()*180./TMath::Pi();
-// }
-
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {
   bool debug = 0;
   const double pi = TMath::Pi();
-  double QVal = 0.;
-
-  if(int(Mass) == int(MASS_BE12))
-    QVal = 1.50619;//from http://www.nndc.bnl.gov/qcalc/;
-  else if(int(Mass) == int(MASS_BE8))
-    QVal = 1.50619;
-  else if(int(Mass) == int(MASS_BE10))
-    QVal = 6.310645;
-  else if(int(Mass) == int(MASS_BE11))
-    QVal = 0;
-  else if(int(Mass) == int(MASS_BE9))
-    QVal = 0;
-  else
-  {
-    cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
-    QVal = 0;
-  }
   
   if(debug)
     cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<" or "<<MASS_BE10<<endl;
