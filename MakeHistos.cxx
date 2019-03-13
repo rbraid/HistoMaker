@@ -550,7 +550,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     }
                     else if(dopp>=2.86 && dopp<=2.87)
                     {
-                      TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2867");
+                      TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
                       dualexgcut->Fill(excitecA);
                       dualexgcut->Fill(excitecB);
                     }
