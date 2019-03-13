@@ -1707,7 +1707,11 @@ vector<double> GetEffAndError(double Energy, bool Error)
   GrandFit->SetParameter(6,0.0146214);
   GrandFit->SetParError(6,0.00163102);
   
-  retVec.push_back(GrandFit->Eval(Energy));
+  double retval = 1./GrandFit->Eval(Energy);
+  if(retval <=0.)
+    retval = -1.;
+  
+  retVec.push_back(1./GrandFit->Eval(Energy));
   if(!Error)
   {
     delete GrandFit;

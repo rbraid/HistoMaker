@@ -332,6 +332,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       //***********************
       //Looking for below PID 10Be
       //***********************
+      
+      if(DEBUG) cout<<"Below PID 10Be"<<endl;
       if(csm->GetMultiplicity() == 2)
       {
         TCSMHit *hita;
@@ -513,6 +515,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     gamptrl->Fill(Doppler(tigresshit,Lhit,10));
                     
                     gamptreff->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+//                     cout<<"EfficiencyWeight: "<<EfficiencyWeight(tigresshit)<<endl;
                     gamptrheff->Fill(Doppler(tigresshit,Hhit,10),EfficiencyWeight(tigresshit));
                     gamptrleff->Fill(Doppler(tigresshit,Lhit,10),EfficiencyWeight(tigresshit));
                     
@@ -538,7 +541,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     }
                     else if(dopp>=2.86 && dopp<=2.87)
                     {
-                      TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
+                      TH1I* dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2867");
                       dualexgcut->Fill(excitecA);
                       dualexgcut->Fill(excitecB);
                     }
@@ -548,7 +551,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             }
           }
         }
-        
+        if(DEBUG) cout<<"Below PID 11Be"<<endl;
         int iso = 11;
         {
           if(hita->GetEnergy() > hitb->GetEnergy())
@@ -557,6 +560,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             hita = hitb;
             hitb = tmp;
           }
+          if(hita->GetDetectorNumber() > 2 || hitb->GetDetectorNumber() > 2)
+            continue;
           
           double* CorrVals = CorrParticle(hita, 11);
           double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
@@ -569,7 +574,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             {
               if(thetadiff >= -3 && thetadiff <= 5)
               {
-                
+                if(DEBUG) cout<<"sectionA"<<endl;
                 TH2D* tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hita->GetDetectorNumber(),11));
                 tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                 tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hitb->GetDetectorNumber(),9));
@@ -593,6 +598,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             {
               if(thetadiff >= -3 && thetadiff <= 5)
               {
+                if(DEBUG) cout<<"sectionB"<<endl;
                 
                 TH2D* tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hita->GetDetectorNumber(),9));
                 tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
@@ -601,7 +607,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
 //                 tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr_high",hita->GetDetectorNumber(),9));
 //                 tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV()); 
-                
               }
             }
           }
@@ -611,6 +616,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       //***********************
       //        Gammas
       //***********************
+      if(DEBUG) cout<<"Gammas"<<endl;
       for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
       {
         TTigressHit *hit = tigress->GetAddBackHit(y);
