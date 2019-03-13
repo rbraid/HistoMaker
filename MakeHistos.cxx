@@ -380,7 +380,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           TH2I *dualn = (TH2I*)outlist->FindObject("Dual10Be_nocut");
           dualn->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
           dualn->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-          
+          if(DEBUG) cout<<"before diffs"<<endl;
           double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
           double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
           double phidiff = (hitb->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
@@ -416,6 +416,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               dualec->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
               if(thetadiff >= -3 && thetadiff <= 5)
               {
+                if(DEBUG) cout<<"all diffs"<<endl;
+                
                 TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
                 duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
                 duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
@@ -433,6 +435,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 
                 double excitecA = GetExciteE_Heavy_Corrected(hita,10);
                 double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
+                if(DEBUG) cout<<"excites"<<endl;
                 
                 TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
                 dualex->Fill(excitecA);
@@ -471,6 +474,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                     dualexr->Fill(excitecB);
 //                   }
 //                 }
+                if(DEBUG) cout<<"before gamptrs"<<endl;
                 
                 TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
                 TH1I *gamptrs = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_supp");
@@ -504,6 +508,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 dualexh->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
                 TH1I *dualexl = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
                 dualexl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
+                if(DEBUG) cout<<"before tigressloop"<<endl;
                 
                 for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
                 {
@@ -523,6 +528,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                     gamptrleff->Fill(Doppler(tigresshit,Lhit,10),EfficiencyWeight(tigresshit));
                     
                     double dopp = Doppler(tigresshit,Hhit,10);
+                    if(DEBUG) cout<<"after dopp"<<endl;
                     
                     if(dopp>=3.35 && dopp<=3.38)
                     {
