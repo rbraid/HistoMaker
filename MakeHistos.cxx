@@ -356,7 +356,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
         {
           if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
             continue;
-                    
+          
+          if(hita->GetDetectorNumber() > 2 || hitb->GetDetectorNumber() > 2)
+            continue;    
+          
           if(hita->GetIsotope() == "10be") //This avoids double counting from the PID spectrum
             continue;
           if(hitb->GetIsotope() == "10be")
