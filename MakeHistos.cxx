@@ -648,31 +648,31 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       //***********************
       //  Other 10Be
       //***********************
-//       for(int i =0; i<csm->GetMultiplicity();i++)
-//       {	
-//         TCSMHit *hit = csm->GetHit(i);
-//         if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
-//         {
-//           if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-//           {
-//             double* CorrVals = CorrParticle(hit, 10);
-//             //double* CorrVals = CorrParticle(hit->GetCorrectedEnergyMeV("10be")*1000., hit->GetPosition().Theta(), hit->GetPosition().Phi(),MASS_BE10);
-//             
-//             TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
-//             mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
-//             
-//             for(int asdf=0; asdf<tigress->GetAddBackMultiplicity();asdf++)
-//             {
-//               TTigressHit *tigresshit = tigress->GetAddBackHit(asdf);
-//               
-//               if(tigresshit->GetCore()->GetEnergy()>10)
-//               {
-//                 double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
-//                 TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
-//                 dopptr->Fill(dopp);
-//                 TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
-//                 dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
-//                 
+      for(int i =0; i<csm->GetMultiplicity();i++)
+      {	
+        TCSMHit *hit = csm->GetHit(i);
+        if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
+        {
+          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+          {
+            double* CorrVals = CorrParticle(hit, 10);
+            //double* CorrVals = CorrParticle(hit->GetCorrectedEnergyMeV("10be")*1000., hit->GetPosition().Theta(), hit->GetPosition().Phi(),MASS_BE10);
+            
+            TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
+            mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
+            
+            for(int asdf=0; asdf<tigress->GetAddBackMultiplicity();asdf++)
+            {
+              TTigressHit *tigresshit = tigress->GetAddBackHit(asdf);
+              
+              if(tigresshit->GetCore()->GetEnergy()>10)
+              {
+                double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
+                TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
+                dopptr->Fill(dopp);
+                TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
+                dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
+                
 //                 if(!tigresshit->Suppress())
 //                 {
 //                   TH1D* dopptrsupp = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_supp",hit->GetDetectorNumber()));
@@ -683,32 +683,32 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                   TH1D* dopptrsupp = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_suppMax",hit->GetDetectorNumber()));
 //                   dopptrsupp->Fill(dopp);
 //                 }
-//                 
-//                 double excite = GetExciteE_Heavy_Corrected(hit,10);
-//                 
-//                 if(dopp>=2.577 && dopp<=2.612)
-//                 {
-//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589_opp",hit->GetDetectorNumber()));
-//                   expg->Fill(excite);
-//                 }
-//                 else if(dopp>=2.876 && dopp<=2.913)
-//                 {
-//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894_opp",hit->GetDetectorNumber()));
-//                   expg->Fill(excite);
-//                 }
-//                 else if(dopp>=3.337 && dopp<=3.402)
-//                 {
-//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368_opp",hit->GetDetectorNumber()));
-//                   expg->Fill(excite);
-//                 }
-//                 else if(dopp>=5.951 && dopp<=5.986)
-//                 {
-//                   TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958_opp",hit->GetDetectorNumber()));
-//                   expg->Fill(excite);
-//                 }
-//               }
-//             }
-//             
+                
+                double excite = GetExciteE_Heavy_Corrected(hit,10);
+                
+                if(dopp>=2.577 && dopp<=2.612)
+                {
+                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589_opp",hit->GetDetectorNumber()));
+                  expg->Fill(excite);
+                }
+                else if(dopp>=2.876 && dopp<=2.913)
+                {
+                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894_opp",hit->GetDetectorNumber()));
+                  expg->Fill(excite);
+                }
+                else if(dopp>=3.337 && dopp<=3.402)
+                {
+                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368_opp",hit->GetDetectorNumber()));
+                  expg->Fill(excite);
+                }
+                else if(dopp>=5.951 && dopp<=5.986)
+                {
+                  TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958_opp",hit->GetDetectorNumber()));
+                  expg->Fill(excite);
+                }
+              }
+            }
+            
 //             for(int j = 0; j<csm->GetMultiplicity(); j++)
 //             {
 //               if(i==j)
@@ -749,9 +749,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
 //                 supexptr->Fill(GetExciteE_Heavy_Corrected(hit,10));
 //               }
 //             }
-//           }
-//           
-//         }
+          }
+          
+        }
   
       //***********************
       //         End
