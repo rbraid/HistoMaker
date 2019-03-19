@@ -32,8 +32,7 @@
 
 #define DEBUG 0
 
-extern double BEAM_ENERGY;
-extern bool ANGULAR_DISTRIBUTION;
+const double BEAM_ENERGY = 30.14;
 extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
