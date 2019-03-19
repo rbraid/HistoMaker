@@ -33,31 +33,6 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i",id),Form("EvTheta %i",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_corrected",id),Form("EvTheta %i, 12Be, with straggling correction",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_corrected",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_low",id),Form("EvTheta %i Low Energy PID only",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_low",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_high",id),Form("EvTheta %i High Energy PID only",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_high",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-
-    outlist->Add(new TH2D(Form("EvTheta_12Be_%i_mult1",id),Form("EvTheta %i with multiplicity 1",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_12Be_%i_mult1",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
     outlist->Add(new TH1D(Form("GammaCut_dopp_%i",id),"Gamma spectrum cut on Ex Spectrum, doppler corrected",3000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("GammaCut_dopp_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
@@ -68,14 +43,10 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH2I(Form("BeEx%i_mult",id),"Be-12 Excitation Energy vs multiplicity",1400,-10,60,4,0,4));
-
     outlist->Add(new TH1D(Form("Be10Ex%i",id),"Be-10 Excitation Energy",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH2I(Form("Be10Ex%i_mult",id),"Be-10 Excitation Energy vs multiplicity",1400,-10,60,4,0,4));
 
     outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2589",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",id));
@@ -141,8 +112,6 @@ void SetupHistos(TList *outlist)
     temp1 = (TH1D*)outlist->FindObject(Form("Be9Ex%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH2I(Form("Be11Ex%i_mult",id),"Be-11 Excitation Energy vs multiplicity",1400,-10,60,4,0,4));
 
     outlist->Add(new TH1D(Form("Be11Ex%i_corr",id),"Be-11 Excitation Energy, with energy corrections",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",id));
@@ -378,7 +347,7 @@ void SetupHistos(TList *outlist)
     {
       for(int state = 0; state<13; state +=3)
       {
-        
+/*        
         outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),50,0,50,180,0,180));
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
@@ -388,7 +357,7 @@ void SetupHistos(TList *outlist)
         temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
         temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
         temp2->GetYaxis()->SetTitle("Ring Number");
-        
+        */
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_dual",state,det),Form("Counts per ring for state %i, detector %i, dual detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
