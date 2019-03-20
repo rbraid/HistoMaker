@@ -129,7 +129,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               if(Gamma >0)
               {
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
-                if(expg) expg->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+                if(expg) expg->Fill(excite);
               }
             }
           }
