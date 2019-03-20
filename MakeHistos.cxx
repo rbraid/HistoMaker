@@ -108,32 +108,6 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
           if(temp1) temp1->Fill(excitec);
           
-          int Gamma = -1;
-          
-          for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
-          {
-            TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-            
-            if(tigresshit->GetCore()->GetEnergy()>10)
-            {
-              double dopp = Doppler(tigresshit,hit,10);
-              
-              if(dopp>=2.577 && dopp<=2.612)
-                Gamma = 2589;
-              else if(dopp>=2.876 && dopp<=2.913)
-                Gamma = 2894;
-              else if(dopp>=3.337 && dopp<=3.402)
-                Gamma = 3368;
-              else if(dopp>=5.951 && dopp<=5.986)
-                Gamma = 5958;
-            }
-            if(Gamma >0)
-            {
-              TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
-              if(expg) expg->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
-            }
-          }
-          
           for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -149,38 +123,22 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
               temp1->Fill(Doppler(tigresshit,hit,10),EfficiencyWeight(tigresshit));
+              
+              double dopp = Doppler(tigresshit,hit,10);
+              int Gamma = GetGamState(dopp);
+              if(Gamma >0)
+              {
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
+                if(expg) expg->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+              }
             }
           }
           
           double ex10c =GetExciteE_Heavy_Corrected(hit,10);
           if(DEBUG) cout<<"Have 10Be Excite"<<endl;
           
-          int state = -1;
-          
-          if(SIMULATED_DATA)
-          {
-            if(ex10c >= -1.5 && ex10c<= 1.2)
-              state = 0;
-            else if(ex10c >= 2. && ex10c<= 4.)
-              state = 3;
-            else if(ex10c >= 4.5 && ex10c<= 7.7)
-              state = 6;        
-            else if(ex10c >= 7.7 && ex10c<= 10.5)
-              state = 9;
-          }
-          
-          else
-          {
-            if(ex10c >= -1 && ex10c<= 1.2)
-              state = 0;              
-            else if(ex10c >= 2.5 && ex10c<= 4.4)
-              state = 3;              
-            else if(ex10c >= 5.5 && ex10c<= 7)
-              state = 6;
-            else if(ex10c >= 9 && ex10c<= 10.5)
-              state = 9;
-          }
-          
+          int state = GetExState(ex10c,10);
+
           if(state != -1)
           {
             if(DEBUG) cout<<"Have 10Be state assigned"<<endl;
@@ -210,23 +168,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           if(temp1) temp1->Fill(ex11c);
           
           if(DEBUG) cout<<"Have 11Be"<<endl;
-          int state = -1;
-          if(SIMULATED_DATA)
-          {
-            if(ex11c >= -3 && ex11c <= 1)
-              state = 0;
-            else if(ex11c >= 1.1 && ex11c <= 4)
-              state=3;
-          }
-          
-          else
-          {
-            if(ex11c >= -1.5 && ex11c <= 1)
-              state = 0;
-            else if(ex11c >= 1.5 && ex11c <= 3.5)
-              state = 3;
-          }
-          
+          int state = GetExState(ex11c,11);
+
           if(state != -1)
           {
             if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber())<<endl;
@@ -257,26 +200,10 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           
           double ex9c =GetExciteE_Heavy_Corrected(hit,9);
           if(DEBUG) cout<<"Have 9Be"<<endl;
-          int state = -1;
-          if(SIMULATED_DATA)
-          {
-            if(ex9c >= -3 && ex9c <= 1)
-              state = 0;
-            else if(ex9c >= 1.1 && ex9c <= 4)
-              state=3;
-          }
-          
-          else
-          {
-            if(ex9c >= -1.5 && ex9c <= 1)
-              state = 0;
-            else if(ex9c >= 1.5 && ex9c <= 3.5)
-              state = 3;
-          }
+          int state = GetExState(ex9c,9);
           
           if(state != -1)
           {
-            
             if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
             
             int ring = RingNumber(hit);
@@ -352,22 +279,15 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
               dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
               
-              int Doppler = -1;
-              
-              if(dopp>=2.577 && dopp<=2.612)
-                Doppler = 2589;
-              else if(dopp>=2.876 && dopp<=2.913)
-                Doppler = 2894;
-              else if(dopp>=3.337 && dopp<=3.402)
-                Doppler = 3368;
-              else if(dopp>=5.951 && dopp<=5.986)
-                Doppler = 5958;
-              
+              int Doppler = GetGamState(dopp);
+                            
               if(Doppler > 0)
               {
                 double excite = GetExciteE_Heavy_Corrected(hit,10);
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",hit->GetDetectorNumber(),Doppler));
                 if(expg) expg->Fill(excite);
+                TH1D* tp = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",hit->GetDetectorNumber(),Doppler));
+                if(tp) tp->Fill(RingNumber(hit));
               }
             }
           }
@@ -376,7 +296,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
     }
     
     //***********************
-    //   End of event loop
+    //   End of event loops
     //***********************
     
     if(csm->GetMultiplicity() == 2)
@@ -502,28 +422,23 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 gamptrheff->Fill(Doppler(tigresshit,Hhit,10),EfficiencyWeight(tigresshit));
                 gamptrleff->Fill(Doppler(tigresshit,Lhit,10),EfficiencyWeight(tigresshit));
                 
-                double dopp = Doppler(tigresshit,Hhit,10);
+                double doppH = Doppler(tigresshit,Hhit,10);
+                double doppL = Doppler(tigresshit,Lhit,10);
+                
                 if(DEBUG) cout<<"after dopp"<<endl;
                 
-                int Doppler = -1;
+                int DopplerIH = GetGamState(doppH);
+                int DopplerIL = GetGamState(doppL);
                 
-                if(dopp>=3.35 && dopp<=3.38)
-                  Doppler = 3368;
-                else if(dopp>=2.585 && dopp<=2.597)
-                  Doppler = 2589;
-                else if(dopp>=2.89 && dopp<=2.91)
-                  Doppler = 2894;
-                else if(dopp>=2.86 && dopp<=2.87)
-                  Doppler = 2867;
-                
-                if(Doppler > 0)
+                if(DopplerIH > 0)
                 {
-                  TH1I* dualexgcut = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i",Doppler));
-                  if(Doppler = 2867)
-                    dualexgcut = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
-                  
-                  if(dualexgcut) dualexgcut->Fill(excitecA);
-                  if(dualexgcut) dualexgcut->Fill(excitecB);
+                  TH1I* dualexgcuth = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_high",DopplerIH));
+                  if(dualexgcuth) dualexgcuth->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
+                }
+                if(DopplerIL > 0)
+                {
+                  TH1I* dualexgcutl = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_low",DopplerIL));
+                  if(dualexgcutl) dualexgcutl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
                 }
               }
             }         
@@ -535,59 +450,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
             
             if(DEBUG) cout<<"Have Excited States"<<endl;
-            
-//             TH2I* tmptvtcom = (TH2I*)outlist->FindObject("ThetaVThetaCOM_DUAL");
-//             tmptvtcom->Fill(CalcCOMThetaDeg(hita,10),hita->GetThetaDeg());
-//             tmptvtcom->Fill(CalcCOMThetaDeg(hitb,10),hitb->GetThetaDeg());
-//             
-//             TH2I* tmpevtcom = (TH2I*)outlist->FindObject("EnergyVThetaCOM_DUAL");
-//             tmpevtcom->Fill(CalcCOMThetaDeg(hita,10),hita->GetEnergyMeV());
-//             tmpevtcom->Fill(CalcCOMThetaDeg(hitb,10),hitb->GetEnergyMeV());
-//             
-//             TH2I* tmptcomvtcom = (TH2I*)outlist->FindObject("ThetaCOMVThetaCOM_DUAL");
-//             tmptcomvtcom->Fill(CalcCOMThetaDeg(hita,10),CalcCOMThetaDeg(hitb,10));
-//             
-//             TH2I* tmptvt = (TH2I*)outlist->FindObject("ThetaVTheta_DUAL");
-//             tmptvt->Fill(hita->GetThetaDeg(),hitb->GetThetaDeg());
-            
-            if(DEBUG) cout<<"Did prelim plots "<<endl;
-            
-            int stateA = -1;
-            int stateB = -1;
-            
-            if(SIMULATED_DATA)
-            {
-              if(ex10cA >= 5 && ex10cA <= 8)
-                stateA = 6;
-              else if(ex10cA >= 8 && ex10cA <= 10.7)
-                stateA = 9;
-              else if(ex10cA >= 10.7 && ex10cA <= 14)
-                stateA = 12;
-              
-              if(ex10cB >= 5 && ex10cB <= 8)
-                stateB = 6;
-              else if(ex10cB >= 8 && ex10cB <= 10.7)
-                stateB = 9;
-              else if(ex10cB >= 10.7 && ex10cB <= 14)
-                stateB = 12;
-            }
-            
-            else
-            {
-              if(ex10cA >= 4.5 && ex10cA <= 7.5)
-                stateA = 6;
-              else if(ex10cA >= 7.5 && ex10cA <= 10)
-                stateA = 9;
-              else if(ex10cA >= 11.2 && ex10cA <= 12.7)
-                stateA = 12;
-              
-              if(ex10cB >= 4.5 && ex10cB <= 7.5)
-                stateB = 6;
-              else if(ex10cB >= 7.5 && ex10cB <= 10)
-                stateB = 9;
-              else if(ex10cB >= 11.2 && ex10cB <= 12.7)
-                stateB = 12;              
-            }
+                        
+            int stateA = GetExState(ex10cA);
+            int stateB = GetExState(ex10cB);
             
             if(stateA != -1)
             {
@@ -647,37 +512,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hitb->GetDetectorNumber(),bNum));
               tmpptr2d->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
               
-              double ex10cA =GetExciteE_Heavy_Corrected(hita,aNum);
-              double ex10cB =GetExciteE_Heavy_Corrected(hitb,bNum);
+              double excA =GetExciteE_Heavy_Corrected(hita,aNum);
+              double excB =GetExciteE_Heavy_Corrected(hitb,bNum);
               
-              int stateA = -1;
-              int stateB = -1;
+              int stateA = GetExState(excA,11);
+              int stateB = GetExState(excB,11);
               
-              if(SIMULATED_DATA)
-              {
-                if(ex10cA >= -3 && ex10cA <= 1)
-                  stateA = 0;
-                else if(ex10cA >= 1.1 && ex10cA <= 4)
-                  stateA=3;
-                
-                if(ex10cB >= -3 && ex10cB <= 1)
-                  stateB = 0;
-                else if(ex10cB >= 1.1 && ex10cB <= 4)
-                  stateB=3;
-              }
-              
-              else
-              {
-                if(ex10cA >= -1.5 && ex10cA <= 1)
-                  stateA = 0;
-                else if(ex10cA >= 1.5 && ex10cA <= 3.5)
-                  stateA = 3;
-                
-                if(ex10cB >= -1.5 && ex10cB <= 1)
-                  stateB = 0;
-                else if(ex10cB >= 1.5 && ex10cB <= 3.5)
-                  stateB = 3;
-              }
               if(stateA != -1)
               {
                 int ring = RingNumber(hita);                  
@@ -802,20 +642,20 @@ int main(int argc, char **argv)
     cout<<"Done Sorting"<<endl;
   }
   
-//   if(!DEBUG)
-//   {    
-//     TH1* hist = (TH1*)outlist->First();
-//     TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
-//     while(hist)
-//     {
-//       nexthist = (TH1*)outlist->After(hist);
-//       if(hist->GetEntries() < 1)
-//       {
-//         outlist->Remove(hist);
-//       }
-//       hist = nexthist;
-//     }
-//   }
+  if(!DEBUG)
+  {    
+    TH1* hist = (TH1*)outlist->First();
+    TH1* nexthist;// = (TH1*)outlist->After(outlist->First());
+    while(hist)
+    {
+      nexthist = (TH1*)outlist->After(hist);
+      if(hist->GetEntries() < 1)
+      {
+        outlist->Remove(hist);
+      }
+      hist = nexthist;
+    }
+  }
   
   if(outputname != "default.root")
     cout<<"Setting output name to: "<<outputname<<endl;

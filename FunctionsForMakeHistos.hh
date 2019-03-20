@@ -62,6 +62,9 @@ void RingRange(int Ring, int Det, int State);
 double EfficiencyWeight(TTigressHit* thit);
 vector<double> GetEffAndError(double Energy, bool Error = 0);
 
+int GetGamState(double doppVal);
+int GetExState(double exVal, int iso = 10);
+
 double CalcCOMEnergyMeV(TCSMHit* Hit, int Z = 0);
 double CalcCOMThetaDeg(TCSMHit* Hit, int Z = 0);
 // double CalcCOMEnergyMeV(TVector3 pvec, int Z = 0);

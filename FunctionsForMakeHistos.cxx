@@ -48,58 +48,8 @@ void SetupHistos(TList *outlist)
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
 
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2589",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2894",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_3368",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_5958",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2589_opp",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2589",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_2894_opp",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_2894",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_3368_opp",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_3368",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-    
-    outlist->Add(new TH1D(Form("Be10Ex%i_gcut_5958_opp",id),"Be-10 Excitation Energy, cut on gamma rays",1400,-10,60));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_5958",id));
-    temp1->GetXaxis()->SetTitle("Energy in MeV");
-    temp1->GetYaxis()->SetTitle("Counts");
-
     outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
     temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i",id));
-    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
-    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
-    
-    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_SumE",id),Form("Corrected Excitation Energy vs Theta in Detector %i, from summed Energy",id),1400,-10,60,70,0,70));
-    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_SumE",id));
-    temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
-    temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
-
-    outlist->Add(new TH2I(Form("Be10Ex_Vs_Theta_%i_noid",id),Form("Corrected Excitation Energy vs Theta in Detector %i",id),1400,-10,60,70,0,70));
-    temp2INT = (TH2I*)outlist->FindObject(Form("Be10Ex_Vs_Theta_%i_noid",id));
     temp2INT->GetXaxis()->SetTitle("Excitation Energy in MeV");
     temp2INT->GetYaxis()->SetTitle("Theta in Degrees");
     
@@ -298,27 +248,7 @@ void SetupHistos(TList *outlist)
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
-  
-  outlist->Add(new TH1I("DualBe10Ex_gcut_3368","Be-10 Excitation Energy non-PID cut on 3368 #gamma ray",1400,-10,60));
-  temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_3368");
-  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
-  temp1INT->GetYaxis()->SetTitle("Counts");
-  
-  outlist->Add(new TH1I("DualBe10Ex_gcut_2589","Be-10 Excitation Energy non-PID cut on 2589 #gamma ray",1400,-10,60));
-  temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2589");
-  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
-  temp1INT->GetYaxis()->SetTitle("Counts");
-  
-  outlist->Add(new TH1I("DualBe10Ex_gcut_2894","Be-10 Excitation Energy non-PID cut on 2894 #gamma ray",1400,-10,60));
-  temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_2894");
-  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
-  temp1INT->GetYaxis()->SetTitle("Counts");
-  
-  outlist->Add(new TH1I("DualBe10Ex_gcut_286-7","Be-10 Excitation Energy non-PID cut on ??? #gamma ray",1400,-10,60));
-  temp1INT = (TH1I*)outlist->FindObject("DualBe10Ex_gcut_286-7");
-  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
-  temp1INT->GetYaxis()->SetTitle("Counts");
-  
+
   outlist->Add(new TH2I("Dual10Be_allcut_corrected","EvTheta of 2 particles, cut on Theta, Phi, and Energy, energy corrected",100,0,100,350,0,70));
   temp2INT = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
   temp2INT->GetXaxis()->SetTitle("Theta in Degrees");
@@ -347,17 +277,6 @@ void SetupHistos(TList *outlist)
     {
       for(int state = 0; state<13; state +=3)
       {
-/*        
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_pid",state,det),Form("COM Theta vs Rings for state %i, detector %i, PID detection",state,det),50,0,50,180,0,180));
-        temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_pid",state,det));
-        temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
-        temp2->GetYaxis()->SetTitle("Ring Number");
-        
-        outlist->Add(new TH2D(Form("RingVCOMT_s%i_d%i_dual",state,det),Form("COM Theta vs Rings for state %i, detector %i, dual detection",state,det),50,0,50,180,0,180));
-        temp2 = (TH2D*)outlist->FindObject(Form("RingVCOMT_s%i_d%i_dual",state,det));
-        temp2->GetXaxis()->SetTitle("Center of Mass Theta in Degrees");
-        temp2->GetYaxis()->SetTitle("Ring Number");
-        */
         outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_dual",state,det),Form("Counts per ring for state %i, detector %i, dual detection",state,det),100,0,100));
         temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",state,det));
         temp1->GetXaxis()->SetTitle("Ring Number");
@@ -389,7 +308,44 @@ void SetupHistos(TList *outlist)
         temp1->GetYaxis()->SetTitle("Counts");
       }
     }
-  
+    int gammas[5] = {3368,2589,2894,2867,5958};
+    for(int gammaiter = 0; gammaiter<5; gammaiter++)
+    {
+      for(int det = 1; det<3;det++)
+      {
+        outlist->Add(new TH1D(Form("RingCounts_d%i_10Be_opp_%i",det,gammas[gammaiter]),
+                              Form("10Be counts per ring for detector %i, pid detection cut on opposite doppler corrected %i gamma ray",det,gammas[gammaiter]),
+                              100,0,100));
+        temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",det,gammas[gammaiter]));
+        temp1->GetXaxis()->SetTitle("Ring Number");
+        temp1->GetYaxis()->SetTitle("Counts");        
+        
+        outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+        temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",det,gammas[gammaiter]));
+        temp1->GetXaxis()->SetTitle("Energy in MeV");
+        temp1->GetYaxis()->SetTitle("Counts");
+        
+        outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+        temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]));
+        temp1->GetXaxis()->SetTitle("Energy in MeV");
+        temp1->GetYaxis()->SetTitle("Counts");
+      }
+      
+      outlist->Add(new TH1I(Form("DualBe10Ex_gcut_%i",gammas[gammaiter]),Form("Be-10 Excitation Energy dual detection cut on %i #gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1INT = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i",gammas[gammaiter]));
+      temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+      temp1INT->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1I(Form("DualBe10Ex_gcut_%i_high",gammas[gammaiter]),Form("Be-10 Excitation Energy dual detection (high energy particle) cut on %i #gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1INT = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_high",gammas[gammaiter]));
+      temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+      temp1INT->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1I(Form("DualBe10Ex_gcut_%i_low",gammas[gammaiter]),Form("Be-10 Excitation Energy dual detection (low energy particle) cut on %i #gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1INT = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_low",gammas[gammaiter]));
+      temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+      temp1INT->GetYaxis()->SetTitle("Counts");
+    }
   
   if(DEBUG)
   {
@@ -1399,4 +1355,86 @@ double toDegrees(double ang)
 double toRadians(double ang)
 {
   return ang*TMath::Pi()/180.;
+}
+
+int GetGamState(double doppVal)
+{
+  int doppI = -2;
+  
+  if(doppVal>=3.337 && doppVal<=3.402)
+    doppI = 3368;
+  else if(doppVal>=2.577 && doppVal<=2.612)
+    doppI = 2589;
+  else if(doppVal>=2.876 && doppVal<=2.913)
+    doppI = 2894;
+  else if(doppVal>=2.86 && doppVal<=2.87)
+    doppI = 2867;
+  else if(doppVal>=5.951 && doppVal<=5.986)
+    doppI = 5958;
+  
+  //3368,2589,2894,2867,5958
+  
+  return doppI;
+}
+
+int GetExState(double exVal, int iso)
+{
+  int exI = -1;
+
+  if(iso == 10)
+  {
+    if(SIMULATED_DATA)
+    {
+      if(exVal >= -1.5 && exVal<= 1.2)
+        exI = 0;
+      else if(exVal >= 2. && exVal<= 4.)
+        exI = 3;      
+      else if(exVal >= 4.5 && exVal <= 8)
+        exI = 6;
+      else if(exVal >= 7.7 && exVal <= 10.7)
+        exI = 9;
+      else if(exVal >= 10.7 && exVal <= 14)
+        exI = 12;
+    }
+    else
+    {
+      if(exVal >= -1 && exVal<= 1.2)
+        exI = 0;              
+      else if(exVal >= 2.5 && exVal<= 4.4)
+        exI = 3;              
+      else if(exVal >= 4.5 && exVal<= 7.5)
+        exI = 6;
+      else if(exVal >= 7.5 && exVal<= 10.5)
+        exI = 9;
+      else if(exVal >= 11.2 && exVal <= 12.7)
+        exI = 12;
+    }
+  }
+  
+  else if(iso == 11 || iso == 9)
+  {
+    if(SIMULATED_DATA)
+    {
+      if(exVal >= -3 && exVal <= 1)
+        exI = 0;
+      else if(exVal >= 1.1 && exVal <= 4)
+        exI=3;
+    }
+    
+    else
+    {
+      if(exVal >= -1.5 && exVal <= 1)
+        exI = 0;
+      else if(exVal >= 1.5 && exVal <= 3.5)
+        exI = 3;
+    }
+  }
+  
+  else
+  {
+    cerr<<"GetExState not defined for "<<iso<<"Be"<<endl;
+    exI = -2;
+  }
+  
+  return exI;
 }
