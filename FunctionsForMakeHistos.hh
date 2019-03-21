@@ -2,7 +2,7 @@
 #define FUNCFORMAKEHISTOS_H
 
 #include <cstdio>
-#include <fstream>
+// #include <fstream>
 
 #include <TObject.h>
 #include <TFile.h>
@@ -47,7 +47,6 @@ double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, in
 double* CorrParticle(double E, double Theta, double Phi, double Mass);
 double* CorrParticle(TCSMHit*, int Z = 0);
 double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2);
-void SetupHistos(TList *outlist);
 double GetExciteE_Heavy(double be12E, double be12T,int Z);
 double GetExciteE_Heavy(TCSMHit* Hit,int Z);
 double GetExciteE_Heavy_Corrected(TCSMHit* Hit,int Z);

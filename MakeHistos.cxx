@@ -1,6 +1,7 @@
-// g++ -g -O3 MakeHistos.cxx FunctionsForMakeHistos.cxx -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
+// g++ -g -O3 MakeHistos.cxx SetupHistos_only.cxx FunctionsForMakeHistos.cxx  -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
 
 #include "FunctionsForMakeHistos.hh"
+#include "SetupHistos_only.hh"
 
 bool SIMULATED_DATA;
 
@@ -129,7 +130,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               if(Gamma >0)
               {
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
-                if(expg) expg->Fill(excite);
+                if(expg) expg->Fill(excitec);
               }
             }
           }
