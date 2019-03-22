@@ -1,5 +1,3 @@
-// g++ -g -O3 MakeHistos.cxx SetupHistos_only.cxx FunctionsForMakeHistos.cxx  -Wl,--no-as-needed -o RunMe `grsi-config --cflags --all-libs --root`
-
 #include "FunctionsForMakeHistos.hh"
 #include "SetupHistos_only.hh"
 
