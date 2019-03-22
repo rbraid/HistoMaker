@@ -1,1087 +1,134 @@
 #include "FunctionsForMakeHistos.hh"
 
-double GetExciteE_Heavy(double energy, double theta, double mass)
-{
-  //   cout<<"BeamE: "<<BeamE<<endl;
-  //   cout<<"BeE: "<<energy<<endl;
-  //   cout<<"BeT: "<<theta<<endl;
-  energy=energy/1000.;
-  const double pi = TMath::Pi();
 
-  double othermass;
 
-  switch(int(mass))
-  {
-    case 7456: //be8
-      othermass = MASS_BE12;
-      break;
-    case 8394: //be9
-      othermass = MASS_BE11;
-      break;
-    case 9327: //be10
-      othermass = MASS_BE10;
-      break; 
-    case 10266: //be11
-      othermass = MASS_BE9;
-      break;
-    case 11203: //be12
-      othermass = MASS_BE8;
-      break;
-    default:
-      cerr<<"Unknown mass in GetExciteE_Heavy: "<<mass<<endl;
-      return(-1);
-  }
-  
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = othermass;
-  const double M4 = mass;
-  double mQ = M1+M2-M3-M4;
-  
-  double V1 = sqrt(2*BEAM_ENERGY/M1);
-  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
-  double V4 = sqrt(2*energy/M4);
-  double kPrimeM4 = COMV / V4;
-  
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double COMEnergyM4 = energy * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( theta ) );
-  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
-  double ExcitedState = mQ - QVal;
-  
-  //   cout<<"EX: "<<ExcitedState<<endl<<endl;
-  
-  return(ExcitedState);
-  
-}
-
-double GetK(double energy, double theta, double mass)
-{
-  energy=energy/1000.;
-  const double pi = TMath::Pi();
-  
-  double othermass;
-  
-  switch(int(mass))
-  {
-    case 7456: //be8
-      othermass = MASS_BE12;
-      break;
-    case 8394: //be9
-      othermass = MASS_BE11;
-      break;
-    case 9327: //be10
-      othermass = MASS_BE10;
-      break; 
-    case 10266: //be11
-      othermass = MASS_BE9;
-      break;
-    case 11203: //be12
-      othermass = MASS_BE8;
-      break;
-    default:
-      cerr<<"Unknown mass in GetExciteE_Heavy: "<<mass<<endl;
-      return(-1);
-  }
-  
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = othermass;
-  const double M4 = mass;
-  double mQ = M1+M2-M3-M4;
-  
-  double V1 = sqrt(2*BEAM_ENERGY/M1);
-  double COMV = ( M1 / ( M1 + M2 ) ) * V1;
-  double V4 = sqrt(2*energy/M4);
-  double kPrimeM4 = COMV / V4;
-  
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double COMEnergyM4 = energy * ( 1 + kPrimeM4*kPrimeM4 - 2*kPrimeM4*cos( theta ) );
-  double QVal =  ( COMEnergyM4*( M3 + M4 ) ) / M3 - COMTotalE;
-  double ExcitedState = mQ - QVal;
-  
-  
-  double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
-  return(K);
-}
-
-double GetK(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      break;
-    default:
-      cerr<<"unrecognized Z in GetExciteE_Heavy: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-  return(GetK(Hit->GetEnergy(),Hit->GetPosition().Theta(),MASS));
-}
-
-double GetK_Corrected(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  TString isotope;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      isotope = "10be";
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      isotope = "12be";
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      isotope = "11be";
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      isotope = "8be";
-      break;
-    case 9:
-      MASS = MASS_BE9;
-      isotope = "9be";
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      isotope = Hit->GetIsotope();
-      break;
-    default:
-      cerr<<"unrecognized Z in GetExciteE_Heavy_Corrected: "<<Z<<endl;
-      MASS = Z;
-      isotope = "12be";
-  }
-  
-  return(GetK(Hit->GetCorrectedEnergy(isotope),Hit->GetPosition().Theta(),MASS));
-}
-
-double GetExciteE_Heavy(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    case 9:
-      MASS = MASS_BE9;
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      break;
-    default:
-      cerr<<"unrecognized Z in GetExciteE_Heavy: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-  return(GetExciteE_Heavy(Hit->GetEnergy(),Hit->GetDPosition().Theta(),MASS));
-}
-
-double GetExciteE_Heavy_Corrected(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  TString isotope;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      isotope = "10be";
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      isotope = "12be";
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      isotope = "11be";
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      isotope = "8be";
-      break;
-    case 9:
-      MASS = MASS_BE9;
-      isotope = "9be";
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      isotope = Hit->GetIsotope();
-      break;
-    default:
-      cerr<<"unrecognized Z in GetExciteE_Heavy_Corrected: "<<Z<<endl;
-      MASS = Z;
-      isotope = "12be";
-  }
-  
-  return(GetExciteE_Heavy(Hit->GetCorrectedEnergyMeV(isotope)*1000.,Hit->GetDPosition().Theta(),MASS));
-}
-
-double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
-{
-  const double pi=TMath::Pi();
-  
-  double *Be8Values = new double[3];
-  
-  //Make the masses for the 8Be and 4He
-  const double mBe8 = 8.0*931.494027 + 4.9416;
-  const double mAlpha = 4.0*931.494027 + 2.4249156;
-  
-  vector<double> PVecAlpha1, PVecAlpha2, pBe;
-  //Convert from energy to momentum
-  double PAlpha1 = sqrt( 2.0*mAlpha*A1H->GetEnergyMeV() );
-  double PAlpha2 = sqrt( 2.0*mAlpha*A2H->GetEnergyMeV() );
-  
-  //fill the momentum vector for the first alpha
-  PVecAlpha1.push_back( PAlpha1*sin( A1H->GetDPosition().Theta() )*cos( A1H->GetDPosition().Phi() ) );
-  PVecAlpha1.push_back( PAlpha1*sin( A1H->GetDPosition().Theta() )*sin( A1H->GetDPosition().Phi() ) );
-  PVecAlpha1.push_back( PAlpha1*cos( A1H->GetDPosition().Theta() ) );
-  
-  //fill the momentum vector for the second alpha
-  PVecAlpha2.push_back( PAlpha2*sin( A2H->GetDPosition().Theta() )*cos( A1H->GetDPosition().Phi() ) );
-  PVecAlpha2.push_back( PAlpha2*sin( A2H->GetDPosition().Theta() )*sin( A1H->GetDPosition().Phi() ) );
-  PVecAlpha2.push_back( PAlpha2*cos( A2H->GetDPosition().Theta() ) );
-  
-  //fill the 8Be vector
-  pBe.push_back( ( PVecAlpha1[0]+PVecAlpha2[0] ) );
-  pBe.push_back( ( PVecAlpha1[1]+PVecAlpha2[1] ) );
-  pBe.push_back( ( PVecAlpha1[2]+PVecAlpha2[2] ) );
-  
-  //make the 8Be physical parameters, energy, theta, phi
-  Be8Values[0] = ( (pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2]) )/ (2.*mBe8 );  //Energy, from E=p^2/2m
-  Be8Values[1] = acos( pBe[2]/ ( sqrt( pBe[0]*pBe[0] + pBe[1]*pBe[1] + pBe[2]*pBe[2] ) ) );  //Theta
-  Be8Values[2] = atan2( pBe[1],pBe[0] ); //Phi
-    
-  return Be8Values;
-}
-
-double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
-{
-  const double pi=TMath::Pi();
-  
-  double *Be10Values = new double[3];
-  
-  //Make the masses for the 8Be and 4He
-  const double mBe8 = 8.0*931.494027 + 4.9416;
-  const double mHe4 = 4.0*931.494027 + 2.4249156;
-  const double mHe6 = 6.0*931.494027 + 17.5928;
-  const double mBe10 = 10.*931.494027 + 12.6074;
-
-  const double BreakupQ = -7.409523;
-  
-  //Convert from energy to momentum
-  double PHe6Mag = sqrt( 2.0*mHe6*He6Hit->GetEnergyMeV() );
-  double PHe4Mag = sqrt( 2.0*mHe4*He4Hit->GetEnergyMeV() );
-
-  TVector3 PHe6 = He6Hit->GetDPosition();
-  TVector3 PHe4 = He4Hit->GetDPosition();
-
-  PHe6.SetMag(PHe6Mag);
-  PHe4.SetMag(PHe4Mag);
-
-  TVector3 PBe;
-
-  PBe = PHe6 + PHe4;
-  
-  Be10Values[0] = PBe.Mag2()/(2*mBe10) - BreakupQ;  //Energy, from E=p^2/2m
-  Be10Values[1] = PBe.Theta();
-  Be10Values[2] = PBe.Phi();
-
-  return Be10Values;
-}
-
-double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
-{
-  
-  double *Be8Values = new double[3];
-  
-  Be8Values = CalcBe8fromAlpha(A1H,A2H);
-  
-  //11Be(9Be,8Be)12Be*
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = MASS_BE8;
-  const double M4 = MASS_BE12;
-  double mQ = M1+M2-M3-M4;
-  
-  double VelBeam = sqrt(2*BEAM_ENERGY/M1);
-  double COMV = ( M1 / ( M1 + M2 ) ) * VelBeam;
-  double VelocityM3 = sqrt(2 * (Be8Values[0]) / M3);
-  double kPrimeM3 = COMV / VelocityM3;
-  
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double COMEnergyM3 = Be8Values[0] * ( 1 + kPrimeM3*kPrimeM3 - 2*kPrimeM3*cos( Be8Values[1] ) );
-  double QVal =  ( COMEnergyM3*( M3 + M4 ) ) / M4 - COMTotalE;
-  double ExcitedState = mQ - QVal;
-  
-  return(ExcitedState);
-  
-}
-
-double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass)
-{
-  double pi = TMath::Pi();
-
-  TVector3 tVec = TVector3(tenergy/1000.,0,0);
-  tVec.SetTheta(ttheta);
-  tVec.SetPhi(tphi);
-
-  TVector3 cVec = TVector3(cenergy/1000.,0,0);
-  cVec.SetTheta(ctheta);
-  cVec.SetPhi(cphi);
-  
-  double M4;
-  
-  switch(mass)
-  {
-    case 12:
-      M4 = MASS_BE12;
-      break;
-    case 10:
-      M4 = MASS_BE10;
-      break;
-    default:
-      cerr<<"Doppler correcting for unknown mass, reverting to 12Be.  Note Doppler assumes a Be isotope for now."<<endl;
-      M4 = MASS_BE12;
-  }
-  
-  double LabEnergyHeavy = cVec.Mag();
-  
-  double beta =  sqrt( (LabEnergyHeavy*(LabEnergyHeavy + 2.0*M4) )/( ( LabEnergyHeavy + M4 )*( LabEnergyHeavy + M4 ) ) );
-  
-  double CosTheta = cos( cVec.Angle( tVec) );
-  
-  double RelativisticCorr = (1.0 / ( sqrt( 1.0 - beta*beta ) ) );
-  
-  double EGammaDopplerCorr = ( (tVec.Mag() * RelativisticCorr) * ( (1.0 - beta*CosTheta) ) );
-  
-  return EGammaDopplerCorr;
-}
-
-double Doppler(TTigressHit* thit, TCSMHit* chit, int mass)
-{
-  return Doppler(thit->GetCore()->GetEnergy(), thit->GetPosition().Theta(), thit->GetPosition().Phi(), chit->GetEnergy(), chit->GetPosition().Theta(), chit->GetPosition().Phi(), mass);
-}
-
-double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, int mass)
-{
-  return Doppler(thit->GetCore()->GetEnergy(), thit->GetPosition().Theta(), thit->GetPosition().Phi(), cenergy, ctheta, cphi, mass);
-}
-
-TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
-{
-  bool debug = 0;
-
-  energy=energy/1000.;
-  
-  double vParticleMag = sqrt((2.*energy)/mass);
-  TVector3 vParticle = pos;
-  vParticle.SetMag(vParticleMag);
-
-  double vBeam = sqrt((2.*BEAM_ENERGY)/MASS_BE11);
-
-  double vCOMMag = (mass*vBeam)/(mass+MASS_BE11);
-  TVector3 vCOM(0.,0.,vCOMMag);
-
-  if(debug)
-  {
-    cout<<"Calculated Theta COM: "<<((vParticle-vCOM)*mass).Theta()*180./TMath::Pi()<<endl;
-  }
-  
-  return((vParticle-vCOM)*mass);
-}
-
-TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  string type;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      type = "10be";
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      type = "12be";
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      type = "8be";
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      type = "11be";
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      cout<<"I don't know what to do here, default mass set"<<endl;
-      break;
-    default:
-      cerr<<"Unrecognized Z in CalcCOMmomentum: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-//   return CalcCOMmomentum(Hit->GetPosition(),Hit->GetCorrectedEnergy(type),MASS);
-  return CalcCOMmomentum(Hit->GetPosition(),Hit->GetEnergy(),MASS);
-}
-
-double CalcCOMEnergyMeV(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-  
-  switch(Z)
-  {
-    case 10:
-      MASS = MASS_BE10;
-      break;
-    case 12:
-      MASS = MASS_BE12;
-      break;
-    case 8:
-      MASS = MASS_BE8;
-      break;
-    case 11:
-      MASS = MASS_BE11;
-      break;
-    case 0:
-      MASS = Hit->GetMassMeV();
-      break;
-    default:
-      cerr<<"Unrecognized Z in CalcCOMEnergyMeV: "<<Z<<endl;
-      MASS = Z;
-  }
-  
-  TVector3 pvec = CalcCOMmomentum(Hit,Z);
-
-  return(pvec.Mag2()/(2*MASS));
-}
-
-double CalcCOMThetaDeg(TCSMHit* Hit, int Z)
-{ 
-  TVector3 pvec = CalcCOMmomentum(Hit,Z);
-
-  return pvec.Theta()*180./TMath::Pi();
-}
-
-double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
-{
-  bool debug = 0;
-  const double pi = TMath::Pi();
-  
-  if(debug)
-    cout<<"CORR PARTICLE DEBUG ACTIVE, E: "<<Energy<<" T: "<<Theta*180./pi<<" P: "<<Phi*180./pi<<" M: "<<Mass<<" EXPECTED MASS: "<<MASS_BE12<<" or "<<MASS_BE8<<" or "<<MASS_BE10<<endl;
-  
-  Energy = Energy/1000.;
-  
-  double *Values = new double[3];
-  
-  double pParticleMag = sqrt( 2. * Mass * Energy);
-  
-  TVector3 pParticle = TVector3(pParticleMag,0.,0.);
-  pParticle.SetTheta(Theta);
-  pParticle.SetPhi(Phi);
-  
-  if(debug)
-    cout<<"MASS_BE11: "<<MASS_BE11<<", BEAM_ENERGY: "<<BEAM_ENERGY<<" sqrt: "<<sqrt( 2. * MASS_BE11 * BEAM_ENERGY)<<", prod: "<<double(MASS_BE11) * double(BEAM_ENERGY)<<endl;
-  double pBeamMag = sqrt( 2. * MASS_BE11 * BEAM_ENERGY); //This is all in the z direction
-  
-  if(debug)
-    cout<<"MASS_BE11: "<<MASS_BE11<<", BEAM_ENERGY: "<<BEAM_ENERGY<<", pBeamMag: "<<pBeamMag<<endl;
-  
-  if(debug)
-  {
-    cout<<"PARTICLE X: "<<pParticle.X()<<" Y: "<<pParticle.Y()<<" Z: "<<pParticle.Z()<<endl;
-  }
-  
-  double CorrMass = 1.;
-  
-  if(int(Mass) == int(MASS_BE12))
-    CorrMass = MASS_BE8;
-  else if(int(Mass) == int(MASS_BE8))
-    CorrMass = MASS_BE12;
-  else if(int(Mass) == int(MASS_HE4))
-    cerr<<"Error in Corr Particle, I can't use a helium, it has to be Be8"<<endl;
-  else if(int(Mass) == int(MASS_BE10))
-    CorrMass = MASS_BE10;
-  else if(int(Mass) == int(MASS_BE11))
-    CorrMass = MASS_BE9;
-  else if(int(Mass) == int(MASS_BE9))
-    CorrMass = MASS_BE11;
-  else
-    cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
-  
-  double ECorr = BEAM_ENERGY - Energy;
-  
-  double pCorrMag = pBeamMag*pBeamMag/MASS_BE11 - pParticle.Mag2()/Mass;
-  
-  TVector3 pCorr;
-  pCorr.SetX(-pParticle.X());
-  pCorr.SetY(-pParticle.Y());
-  pCorr.SetZ(pBeamMag-pParticle.Z());
-  
-  if(debug)
-  {
-    cout<<"CORR X: "<<pCorr.X()<<" Y: "<<pCorr.Y()<<" Z: "<<pCorr.Z()<<endl;
-    cout<<"Magnitudes    Particle: "<<pParticle.Mag()<<", Beam: "<<pBeamMag<<", Corr: "<<pCorr.Mag()<<", other way: "<<pCorrMag*pCorrMag<<endl;
-    cout<<"Energies from Mag  Particle: "<<pParticle.Mag2()/(2*Mass)<<", Beam: "<<pBeamMag*pBeamMag/(2*MASS_BE11)<<", Corr: "<<pCorr.Mag2()/(2*CorrMass)<<endl;
-  }
-  
-  Values[0] = pCorr.Mag2() / (2.*CorrMass )*1000.;  //Energy, from E=p^2/2m
-  Values[1] = pCorr.Theta();
-  Values[2] = pCorr.Phi();
-  
-  if(debug)
-    cout<<"Energy: "<<Values[0]<<" Theta: "<<Values[1]*180/pi<<" Phi: "<<Values[2]*180/pi<<endl;
-  
-  if(debug)
-    cout<<"Checking energy: "<<"Particle E: "<<Energy<<", Corresponding Energy: "<<Values[0]<<", "<<BEAM_ENERGY<<" MeV - those two: "<<BEAM_ENERGY - (Energy + Values[0])<<endl;
-  
-  if(debug)
-    cout<<endl;
-  
-  return Values;
-  
-}
-
-double* CorrParticle(TCSMHit* Hit, int Z)
-{
-  double MASS = 0.;
-
-    switch(Z)
-    {
-      case 10:
-        MASS = MASS_BE10;
-        break;
-      case 12:
-        MASS = MASS_BE12;
-        break;
-      case 8:
-        MASS = MASS_BE8;
-        break;
-      case 11:
-        MASS = MASS_BE11;
-        break;
-      case 9:
-        MASS = MASS_BE9;
-        break;
-      case 0:
-        MASS = Hit->GetMassMeV();
-        break;
-      default:
-        cerr<<"Unrecognized Z in Corr Particle: "<<Z<<endl;
-        MASS = Z;
-    }
-
-  return CorrParticle(Hit->GetEnergy(),Hit->GetDPosition().Theta(),Hit->GetDPosition().Phi(),MASS);
-  
-}
-
-double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2)
-{
-  double* be8vals;
-  be8vals = CalcBe8fromAlpha(Hit1,Hit2);
-  return CorrParticle(be8vals[0],be8vals[1],be8vals[2],MASS_BE8);
-}
-
-bool AlmostEqual(double a, double b, double threshold)
-{
-  if( abs(a-b) / ((a+b)/2) < threshold )
-    return true;
-  else
-    return false;
-}
-
-double EfficiencyWeight(TTigressHit* thit)
-{
-  return(GetEffAndError(thit->GetEnergy(),0).at(0));
-}
-
-vector<double> GetEffAndError(double Energy, bool Error)
-{
-  //Takes Energy in keV
-  //Returns fractional eff, not percent
-  vector<double> retVec;
-  
-  TF1 *GrandFit = new TF1("GrandFit","exp(pow(pow([0]+[1]*log(x/100)+[2]*log(x/100)*log(x/100),-[3])+pow([4]+[5]*log(x/10)+[6]*log(x/10)*log(x/10),-[3]),-1/[3]))/100.",0,10000);
-  
-  GrandFit->SetNDF(4);
-  GrandFit->SetParameter(0,4.72185);
-  GrandFit->SetParError(0,0);
-  GrandFit->SetParameter(1,0.773074);
-  GrandFit->SetParError(1,0);
-  GrandFit->SetParameter(2,0);
-  GrandFit->SetParError(2,0);
-  GrandFit->SetParameter(3,2.81689);
-  GrandFit->SetParError(3,0.0353034);
-  GrandFit->SetParameter(4,5.82002);
-  GrandFit->SetParError(4,0.0279105);
-  GrandFit->SetParameter(5,-0.868251);
-  GrandFit->SetParError(5,0.00977358);
-  GrandFit->SetParameter(6,0.0146214);
-  GrandFit->SetParError(6,0.00163102);
-  
-  double retval = 1./GrandFit->Eval(Energy);
-  if(retval <=0.)
-    retval = -1.;
-  
-  retVec.push_back(1./GrandFit->Eval(Energy));
-  if(!Error)
-  {
-    delete GrandFit;
-    return(retVec);
-  }
-  
-  double x[8];
-  double y[8];
-  double ey[8];
-  
-  x[0]=121.178;
-  x[1]=244.69 ;
-  x[2]=344.27 ;
-  x[3]=778.9  ; 
-  x[4]=964.1  ; 
-  x[5]=1170   ; 
-  x[6]=1330   ; 
-  x[7]=1408   ; 
-  
-  y[0]=0.260881 ;
-  y[1]=0.183108 ;
-  y[2]=0.164983 ;
-  y[3]=0.091441 ;
-  y[4]=0.0766207;
-  y[5]=0.0750149;
-  y[6]=0.0681534;
-  y[7]=0.0665476;
-  
-  ey[0]=0.000487264;
-  ey[1]=0.00139078 ;
-  ey[2]=0.000613603;
-  ey[3]=0.00128622 ;
-  ey[4]=0.001336   ;
-  ey[5]=0.00103761 ;
-  ey[6]=0.00108187 ;
-  ey[7]=0.0010485  ;
-  
-  TGraphErrors *EffPlot = new TGraphErrors(8,x,y,0,ey);
-  
-  TFitResultPtr ResPtr = EffPlot->Fit(GrandFit,"MRQS");
-  
-  double point[1];
-  point[0] = Energy;
-  double err[1];  
-  ResPtr->GetConfidenceIntervals(1, 1, 1, point, err, 0.683, false); // 1 sigma  
-  
-  double error = err[0];
-  
-  retVec.push_back(error);
-  
-  delete GrandFit;
-  delete EffPlot;
-  return(retVec);
-}
-
-TVector3 GetPositionsNew(TCSMHit* Hit, char pos)
-{
-  int hs = -1;
-  int vs = -1;
-  
-  if(pos == 'D' || pos == 'd')
-  {
-    hs = Hit->GetDHorizontalStrip();
-    vs = Hit->GetDVerticalStrip();
-  }
-  else if(pos == 'E' || pos == 'e')
-  {
-    hs = Hit->GetEHorizontalStrip();
-    vs = Hit->GetEVerticalStrip();
-  }
-  return GetPositionsNew(Hit->GetDetectorNumber(), pos, hs, vs);
-}
-
-TVector3 GetPositionsNew(int detector,char pos, int horizontalstrip, int verticalstrip)
-{
-  //horizontal strips collect N charge!
-  //vertical strips collect P charge!
-  //verticalstrip -=1; //the loop that calls this works in 1-16, but here i work in 0-15
-  //horizontalstrip -=1;
-  //all dE detectors are flipped compared to the E detectors.
-  
-  //for side detectors, strip 0 has lowest theta in detector 3
-  //strip 15 has lowest theta for detector 4
-  
-  TVector3 Pos;
-  TVector3 horMove;
-  TVector3 vertMove;
-  TVector3 *RetPos = new TVector3[5];
-  
-  TRandom3 *rndm = new TRandom3(0);
-  
-  double detTheta = 31. * (TMath::Pi()/180.);
-  double SideX = 66.255;
-  double SideZ = 12.99;
-  double dER = 58.98-1.5;
-  double ER = 70.99-1.5;
-  double x = 0.0,y = 0.0,z = 0.0;
-  
-  double halfpixel = 50./32.;
-  double fullpixel = 50./16.;
-  
-  if(detector<3)
-  {
-    x = (verticalstrip-8) * fullpixel  +  halfpixel;
-    y = (horizontalstrip-8) * fullpixel  +  halfpixel;
-    
-    if(pos == 'D')
-      z = dER;
-    else if(pos == 'E')
-      z = ER;
-    else
-    {
-      cerr<<" Unrecognized position: "<<pos<<", reverting to dE to fail safe."<<endl;
-      z = dER;
-    }
-    if(detector==1)
-    {
-      x=-x;
-      detTheta = -detTheta;
-    }
-    
-    //randomize
-    x += rndm->Uniform(-halfpixel,halfpixel);
-    y += rndm->Uniform(-halfpixel,halfpixel);
-    Pos.SetXYZ(x,y,z);
-    
-    
-    vertMove.SetXYZ(0.,halfpixel,0.);
-    horMove.SetXYZ(halfpixel,0.,0.);
-    
-    RetPos[0] = Pos + vertMove + horMove;
-    RetPos[1] = Pos - vertMove + horMove;
-    RetPos[2] = Pos - vertMove - horMove;
-    RetPos[3] = Pos + vertMove - horMove;
-    
-    RetPos[4] = Pos;
-    
-    RetPos[0].RotateY(detTheta);
-    RetPos[1].RotateY(detTheta);
-    RetPos[2].RotateY(detTheta);
-    RetPos[3].RotateY(detTheta);
-    RetPos[4].RotateY(detTheta);
-  }
-  
-  else
-  {
-    //According to the SolidWorks diagram, the centerline for the side detectors should be 12.01 mm from rear edge of detector.
-    //12.01/fullpixel = 3.84
-    //center of 
-    if(detector==4)
-    {
-      x = SideX;
-      verticalstrip = -verticalstrip+15;
-    }
-    else if(detector==3)
-    {
-      x = -SideX;
-    }
-    y = (horizontalstrip-8) * fullpixel  +  halfpixel;
-    z = (verticalstrip-8) * fullpixel  +  halfpixel;
-    
-    z += SideZ;
-    z += rndm->Uniform(-halfpixel,halfpixel);
-    y += rndm->Uniform(-halfpixel,halfpixel);
-    
-    Pos.SetXYZ(x,y,z);
-    vertMove.SetXYZ(0.,halfpixel,0.);
-    horMove.SetXYZ(0.,0.,halfpixel);
-    
-    RetPos[0] = Pos + vertMove + horMove;
-    RetPos[1] = Pos - vertMove + horMove;
-    RetPos[2] = Pos - vertMove - horMove;
-    RetPos[3] = Pos + vertMove - horMove;
-    
-    RetPos[4] = Pos;
-  }
-  
-  delete rndm;
-  
-  return(RetPos[4]);
-}
-
-double GetfCOM(TCSMHit *Hit, int Z)
-{
-  double K = GetK_Corrected(Hit,Z);
-  double ThetaCM = CalcCOMmomentum(Hit, Z).Theta();
-  
-  double Num = 1. + K * cos(ThetaCM);
-  double Den = pow(1. + K*K + 2*K*cos(ThetaCM),1.5);
-  return (abs(Num/Den));
-}
-
-double GetfLab(TCSMHit *Hit, int Z)
-{
-  double K = GetK_Corrected(Hit,Z);
-  double ThetaLab = Hit->GetPosition().Theta();
-  
-  double Num = sqrt(1.-pow(K*sin(ThetaLab),2.));
-  double Den = pow(Num+K*cos(ThetaLab),2.);
-  return (abs(Num/Den));
-}
-double ManualFracCOM(double ExcitedState, double ThetaCOM)
-{
-  if(ExcitedState > 15.)
-    cerr<<"ManualFracCOM takes MeV"<<endl;
-  const double M1 = MASS_BE11;
-  const double M2 = MASS_BE9;
-  const double M3 = MASS_BE10;
-  const double M4 = MASS_BE10;
-  
-  ExcitedState -= MASS_BE11 + MASS_BE9 - (MASS_BE10*2.);
-  ExcitedState = -ExcitedState;
-  
-  //   cout<<"Excited State after: "<<ExcitedState<<endl;
-  
-  double COMTotalE = M2 / ( M1 + M2 ) * BEAM_ENERGY;
-  double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
-  
-  //   cout<<"ManualFracCOM ExcitedState: "<<ExcitedState<<endl;
-  //   
-  //   cout<<"ManualFracCOM K: "<<K<<endl;
-  
-  double Num = 1. + K * cos(ThetaCOM);
-  double Den = pow(1. + K*K + 2*K*cos(ThetaCOM),1.5);
-  
-  //   cout<<"ManualFracCOM Num: "<<Num<<", Den: "<<Den<<", Result: "<<abs(Num/Den)<<endl;
-  
-  return (abs(Num/Den));
-}
-
-int RingNumber(int stripX, int stripY, int detector)
-{  
-  TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid_Be10",detector));
-  int binNo = histo->GetBin(stripX+1,stripY+1);
-  int Ring = histo->GetBinContent(binNo);
-  Ring -= 1;
-  
-  return Ring;
-}
-
-int RingNumber(TCSMHit* Hit)
-{
-  return(RingNumber(Hit->GetDVerticalStrip(),Hit->GetDHorizontalStrip(),Hit->GetDetectorNumber()));
-}
-
-double RingSA(int Ring, int Det)
-{  
-  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid",Det));
-  double TotalSolidAngle = spec->GetBinContent(Ring+1);
-  
-  return TotalSolidAngle;
-}
-
-void RingRange(int Ring, int Det, int State)
-{
-  TGraph* g = (TGraph*)ringFile->Get(Form("COM_d%i_s%i",Det,State));
-  Double_t xp, yp;
-  g->GetPoint(Ring,xp,yp);
-  cout<<"PID RingRange: " <<yp<<" +/- "<<g->GetErrorY(Ring)<<endl;
-}
-
-double RingSA_err(int Ring, int Det)
-{  
-  TH1D* spec = (TH1D*)ringFile->Get(Form("SA_0_d%i_pid_err",Det));
-  double TotalSolidAngle_err = spec->GetBinContent(Ring+1);
-  
-  return TotalSolidAngle_err;
-}
-
-double PixelSA(int StripX, int StripY)
-{  
-  TH1D* spec = (TH1D*)SAFile->Get("sa1d");
-  double SA = spec->GetBinContent(StripX+1,StripY+1);
-  return SA;
-}
-
-// double PixelSAErr(int StripX, int StripY)
-// {  
-//   TH1D* spec_min = (TH1D*)SAFile_min->Get("sa1d");
-//   double SA_min = spec_min->GetBinContent(StripX+1,StripY+1);
-//   TH1D* spec_max = (TH1D*)SAFile_max->Get("sa1d");
-//   double SA_max = spec_max->GetBinContent(StripX+1,StripY+1);
-//   return sqrt(2)*(SA_max-SA_min);
+// TVector3 GetPositionsNew(TCSMHit* Hit, char pos)
+// {
+//   int hs = -1;
+//   int vs = -1;
+//   
+//   if(pos == 'D' || pos == 'd')
+//   {
+//     hs = Hit->GetDHorizontalStrip();
+//     vs = Hit->GetDVerticalStrip();
+//   }
+//   else if(pos == 'E' || pos == 'e')
+//   {
+//     hs = Hit->GetEHorizontalStrip();
+//     vs = Hit->GetEVerticalStrip();
+//   }
+//   return GetPositionsNew(Hit->GetDetectorNumber(), pos, hs, vs);
+// }
+// 
+// TVector3 GetPositionsNew(int detector,char pos, int horizontalstrip, int verticalstrip)
+// {
+//   //horizontal strips collect N charge!
+//   //vertical strips collect P charge!
+//   //verticalstrip -=1; //the loop that calls this works in 1-16, but here i work in 0-15
+//   //horizontalstrip -=1;
+//   //all dE detectors are flipped compared to the E detectors.
+//   
+//   //for side detectors, strip 0 has lowest theta in detector 3
+//   //strip 15 has lowest theta for detector 4
+//   
+//   TVector3 Pos;
+//   TVector3 horMove;
+//   TVector3 vertMove;
+//   TVector3 *RetPos = new TVector3[5];
+//   
+//   TRandom3 *rndm = new TRandom3(0);
+//   
+//   double detTheta = 31. * (TMath::Pi()/180.);
+//   double SideX = 66.255;
+//   double SideZ = 12.99;
+//   double dER = 58.98-1.5;
+//   double ER = 70.99-1.5;
+//   double x = 0.0,y = 0.0,z = 0.0;
+//   
+//   double halfpixel = 50./32.;
+//   double fullpixel = 50./16.;
+//   
+//   if(detector<3)
+//   {
+//     x = (verticalstrip-8) * fullpixel  +  halfpixel;
+//     y = (horizontalstrip-8) * fullpixel  +  halfpixel;
+//     
+//     if(pos == 'D')
+//       z = dER;
+//     else if(pos == 'E')
+//       z = ER;
+//     else
+//     {
+//       cerr<<" Unrecognized position: "<<pos<<", reverting to dE to fail safe."<<endl;
+//       z = dER;
+//     }
+//     if(detector==1)
+//     {
+//       x=-x;
+//       detTheta = -detTheta;
+//     }
+//     
+//     //randomize
+//     x += rndm->Uniform(-halfpixel,halfpixel);
+//     y += rndm->Uniform(-halfpixel,halfpixel);
+//     Pos.SetXYZ(x,y,z);
+//     
+//     
+//     vertMove.SetXYZ(0.,halfpixel,0.);
+//     horMove.SetXYZ(halfpixel,0.,0.);
+//     
+//     RetPos[0] = Pos + vertMove + horMove;
+//     RetPos[1] = Pos - vertMove + horMove;
+//     RetPos[2] = Pos - vertMove - horMove;
+//     RetPos[3] = Pos + vertMove - horMove;
+//     
+//     RetPos[4] = Pos;
+//     
+//     RetPos[0].RotateY(detTheta);
+//     RetPos[1].RotateY(detTheta);
+//     RetPos[2].RotateY(detTheta);
+//     RetPos[3].RotateY(detTheta);
+//     RetPos[4].RotateY(detTheta);
+//   }
+//   
+//   else
+//   {
+//     //According to the SolidWorks diagram, the centerline for the side detectors should be 12.01 mm from rear edge of detector.
+//     //12.01/fullpixel = 3.84
+//     //center of 
+//     if(detector==4)
+//     {
+//       x = SideX;
+//       verticalstrip = -verticalstrip+15;
+//     }
+//     else if(detector==3)
+//     {
+//       x = -SideX;
+//     }
+//     y = (horizontalstrip-8) * fullpixel  +  halfpixel;
+//     z = (verticalstrip-8) * fullpixel  +  halfpixel;
+//     
+//     z += SideZ;
+//     z += rndm->Uniform(-halfpixel,halfpixel);
+//     y += rndm->Uniform(-halfpixel,halfpixel);
+//     
+//     Pos.SetXYZ(x,y,z);
+//     vertMove.SetXYZ(0.,halfpixel,0.);
+//     horMove.SetXYZ(0.,0.,halfpixel);
+//     
+//     RetPos[0] = Pos + vertMove + horMove;
+//     RetPos[1] = Pos - vertMove + horMove;
+//     RetPos[2] = Pos - vertMove - horMove;
+//     RetPos[3] = Pos + vertMove - horMove;
+//     
+//     RetPos[4] = Pos;
+//   }
+//   
+//   delete rndm;
+//   
+//   return(RetPos[4]);
 // }
 
-double PixelSA(TCSMHit* hit)
-{
-  return(PixelSA(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip()));
-}
 
-double EdgeEffectFactor(int StripX, int StripY, int Detector)
-{
-  TH2D* histo = (TH2D*)edgeFile->Get(Form("PunchThrough%i_D_normalized_adjusted",Detector));
-  int binNo = histo->GetBin(StripX+1,StripY+1);
-  double edgeFact = histo->GetBinContent(binNo);
-  if (edgeFact <=0)
-    return 0.;
-  return 1./edgeFact;
-}
 
-double EdgeEffectFactor(TCSMHit* hit)
-{
-  return(EdgeEffectFactor(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetDetectorNumber()));
-}
 
-double Keri_GetfCM(double Exstate, double ThetaCM)
-{
-  double K = Keri_GetKTransfer(Exstate);
-  
-  //   cout<< "Keri K: "<<K<<endl;
-  
-  double Num = 1. + K * cos(ThetaCM);
-  double Den = pow(1. + K*K + 2*K*cos(ThetaCM),1.5);
-  
-  //   cout<<"Keri Num: "<<Num<<", Den: "<<Den<<", Result: "<<abs(Num/Den)<<endl;
-  
-  if (Num>0)
-    return (Num/Den);
-  else
-    return (-Num/Den);
-}
-
-double Keri_GetKTransfer(double Exstate)
-{
-  double m1 = MASS_BE11;
-  double m2 = MASS_BE9;
-  double m3 = MASS_BE10;
-  double m4 = MASS_BE10;
-  
-  double ExciteM = (m4 + Exstate);
-  double QExcite = (m2 + m1 - m3 - ExciteM);
-  double CenterOfMassTotalE = (m2*BEAM_ENERGY)/(m1+m2);
-  double K = sqrt((m1*m4*CenterOfMassTotalE)/(m2*m3*(CenterOfMassTotalE+QExcite)));
-  //   cout<<"Keri QExcite: "<<QExcite<<endl;
-  //   double K = sqrt((M1*M4*COMTotalE)/(M2*M3*(COMTotalE+ExcitedState)));
-  
-  return (K);
-}
-
-double toDegrees(double ang)
-{
-  return ang*180./TMath::Pi();
-}
-
-double toRadians(double ang)
-{
-  return ang*TMath::Pi()/180.;
-}
-
-int GetGamState(double doppVal)
-{
-  int doppI = -2;
-  
-  if(doppVal>=3.337 && doppVal<=3.402)
-    doppI = 3368;
-  else if(doppVal>=2.577 && doppVal<=2.612)
-    doppI = 2589;
-  else if(doppVal>=2.876 && doppVal<=2.913)
-    doppI = 2894;
-  else if(doppVal>=2.86 && doppVal<=2.87)
-    doppI = 2867;
-  else if(doppVal>=5.951 && doppVal<=5.986)
-    doppI = 5958;
-  
-  //3368,2589,2894,2867,5958
-  
-  return doppI;
-}
-
-int GetExState(double exVal, int iso)
-{
-  int exI = -1;
-
-  if(iso == 10)
-  {
-    if(SIMULATED_DATA)
-    {
-      if(exVal >= -1.5 && exVal<= 1.2)
-        exI = 0;
-      else if(exVal >= 2. && exVal<= 4.)
-        exI = 3;      
-      else if(exVal >= 4.5 && exVal <= 8)
-        exI = 6;
-      else if(exVal >= 7.7 && exVal <= 10.7)
-        exI = 9;
-      else if(exVal >= 10.7 && exVal <= 14)
-        exI = 12;
-    }
-    else
-    {
-      if(exVal >= -1 && exVal<= 1.2)
-        exI = 0;              
-      else if(exVal >= 2.5 && exVal<= 4.4)
-        exI = 3;              
-      else if(exVal >= 4.5 && exVal<= 7.5)
-        exI = 6;
-      else if(exVal >= 7.5 && exVal<= 10.5)
-        exI = 9;
-      else if(exVal >= 11.2 && exVal <= 12.7)
-        exI = 12;
-    }
-  }
-  
-  else if(iso == 11 || iso == 9)
-  {
-    if(SIMULATED_DATA)
-    {
-      if(exVal >= -3 && exVal <= 1)
-        exI = 0;
-      else if(exVal >= 1.1 && exVal <= 4)
-        exI=3;
-    }
-    
-    else
-    {
-      if(exVal >= -1.5 && exVal <= 1)
-        exI = 0;
-      else if(exVal >= 1.5 && exVal <= 3.5)
-        exI = 3;
-    }
-  }
-  
-  else
-  {
-    cerr<<"GetExState not defined for "<<iso<<"Be"<<endl;
-    exI = -2;
-  }
-  
-  return exI;
-}
