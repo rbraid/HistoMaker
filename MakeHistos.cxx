@@ -1,6 +1,3 @@
-#include "FunctionsForMakeHistos.hh"
-#include "SetupHistos_only.hh"
-
 bool SIMULATED_DATA;
 
 TFile* ringFile;

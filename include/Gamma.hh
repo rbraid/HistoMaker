@@ -2,6 +2,11 @@
 #define GAMMA_H
 
 #include <cstdio>
+#include "TTigress.h"
+#include "TCSM.h"
+#include <TMath.h>
+#include <TVector3.h>
+#include "GlobalSettings.hh"
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);

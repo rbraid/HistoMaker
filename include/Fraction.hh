@@ -2,6 +2,9 @@
 #define FRACTION_H
 
 #include <cstdio>
+#include "GlobalSettings.hh"
+#include <TMath.h>
+#include "TCSM.h"
 
 double GetfCOM(TCSMHit* Hit, int Z);
 double GetfLab(TCSMHit* Hit, int Z);

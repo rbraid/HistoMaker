@@ -2,6 +2,8 @@
 #define DEPRICIATED_H
 
 #include <cstdio>
+#include "TCSM.h"
+#include "GlobalSettings.hh"
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
 double* CalcBe10fromHe64(TCSMHit *He6Hit, TCSMHit *He4Hit);

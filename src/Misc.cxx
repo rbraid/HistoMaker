@@ -2,7 +2,7 @@
 
 bool AlmostEqual(double a, double b, double threshold)
 {
-  if( abs(a-b) / ((a+b)/2) < threshold )
+  if( TMath::Abs(a-b) / ((a+b)/2) < threshold )
     return true;
   else
     return false;
