@@ -1,3 +1,5 @@
+#include "../include/Fraction.hh"
+
 double GetK(double energy, double theta, double mass)
 {
   energy=energy/1000.;

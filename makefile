@@ -1,23 +1,29 @@
-CXX=g++
-RM=rm -f
 CPPFLAGS= -g -O3 -Wl,--no-as-needed $(shell grsi-config --cflags)
 LDFLAGS= -g $(shell root-config --ldflags) $(shell grsi-config --root)
 LDLIBS= $(shell grsi-config --all-libs)
 
-SRCS=MakeHistos.cxx FunctionsForMakeHistos.cxx SetupHistos_only.cxx
-OBJS=$(subst .cc,.o,$(SRCS))
+EXE = hellomake
 
-all: MakeHistos
+SRC_DIR = src
+OBJ_DIR = obj
 
-MakeHistos: $(OBJS)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o RunMe $(OBJS) $(LDLIBS) 
+SRC = $(wildcard $(SRC_DIR)/*.cxx)
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-FunctionsForMakeHistos.o: FunctionsForMakeHistos.cc FunctionsForMakeHistos.hh
+CPPFLAGS += -Iinclude
+CFLAGS += -Wall
+LDFLAGS += -Llib
+LDLIBS += -lm
 
-SetupHistos_only.o: SetupHistos_only.hh SetupHistos_only.cc
+.PHONY: all clean
+
+all: $(EXE)
+
+$(EXE): $(OBJ)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS)
-
-distclean: clean
-	$(RM) tool
+	$(RM) $(OBJ)

@@ -1,3 +1,5 @@
+#include "../include/Depriciated.hh"
+
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
 {
   const double pi=TMath::Pi();

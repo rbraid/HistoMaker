@@ -1,3 +1,4 @@
+#include "../include/States.hh"
 
 int GetGamState(double doppVal)
 {

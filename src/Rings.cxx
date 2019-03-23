@@ -1,3 +1,5 @@
+#include "../include/Rings.hh"
+
 int RingNumber(int stripX, int stripY, int detector)
 {  
   TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid_Be10",detector));

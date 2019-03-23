@@ -1,3 +1,5 @@
+#include "../include/Gamma.hh"
+
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass)
 {
   double pi = TMath::Pi();

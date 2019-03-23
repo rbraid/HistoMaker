@@ -1,3 +1,5 @@
+#include "../include/CenterOfMass.hh"
+
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass)
 {
   bool debug = 0;

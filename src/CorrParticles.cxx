@@ -1,3 +1,4 @@
+#include "../include/CorrParticles.hh"
 
 double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
 {

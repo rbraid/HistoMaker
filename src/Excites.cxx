@@ -1,3 +1,5 @@
+#include "../include/Excites.hh"
+
 double GetExciteE_Heavy(double energy, double theta, double mass)
 {
   //   cout<<"BeamE: "<<BeamE<<endl;
