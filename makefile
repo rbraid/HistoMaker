@@ -9,6 +9,7 @@ OBJ_DIR = obj
 
 SRC = $(wildcard $(SRC_DIR)/*.cxx)
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+$(info OBJ is ${OBJ})
 
 CPPFLAGS += -Iinclude
 CFLAGS += -Wall
@@ -25,5 +26,5 @@ $(EXE): $(OBJ)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-clean:
-	$(RM) $(OBJ)
+# clean:
+# 	$(RM) $(OBJ)

@@ -624,9 +624,9 @@ int main(int argc, char **argv)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
   
-  ringFile = TFile::Open("DumbRings.root","read");
-  edgeFile = TFile::Open("edge.root","read");
-  SAFile = TFile::Open("solidAngleDiag.root","read");
+  ringFile = TFile::Open("inputRootFiles/DumbRings.root","read");
+  edgeFile = TFile::Open("inputRootFiles/edge.root","read");
+  SAFile = TFile::Open("inputRootFiles/solidAngleDiag.root","read");
   
   TList *outlist = new TList;
   SetupHistos(outlist);
@@ -663,7 +663,9 @@ int main(int argc, char **argv)
       outputname = "output.root";
   }
   
-  TFile f(outputname,"recreate");
+  TString loc = Form("outputRootFiles/%s",outputname)
+  if(DEBUG) cout<<"Saving to "<<loc<<endl;
+  TFile f(loc,"recreate");
   f.cd();
   outlist->Write();
   f.Close();
