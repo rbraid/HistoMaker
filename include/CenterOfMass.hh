@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <TVector3.h>
 #include "TCSM.h"
+#include "GlobalSettings.hh"
 
 TVector3 CalcCOMmomentum(TVector3 pos, double energy, double mass);
 TVector3 CalcCOMmomentum(TCSMHit* Hit, int Z = 0);

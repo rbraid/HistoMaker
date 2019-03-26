@@ -37,6 +37,6 @@ extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
 extern TFile* edgeFile;
-extern TFile* SAFile;
+// extern TFile* SAFile;
 
 #endif

@@ -7,6 +7,9 @@
 #include <TMath.h>
 #include <TVector3.h>
 #include "GlobalSettings.hh"
+#include <TF1.h>
+#include <TGraphErrors.h>
+#include <TFitResult.h>
 
 double Doppler(TTigressHit* thit, TCSMHit* chit, int mass);
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass);

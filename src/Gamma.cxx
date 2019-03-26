@@ -1,9 +1,7 @@
 #include "../include/Gamma.hh"
 
 double Doppler(double tenergy, double ttheta, double tphi, double cenergy, double ctheta, double cphi, int mass)
-{
-  double pi = TMath::Pi();
-  
+{  
   TVector3 tVec = TVector3(tenergy/1000.,0,0);
   tVec.SetTheta(ttheta);
   tVec.SetPhi(tphi);

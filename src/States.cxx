@@ -20,13 +20,13 @@ int GetGamState(double doppVal)
   return doppI;
 }
 
-int GetExState(double exVal, int iso)
+int GetExState(double exVal, int iso, bool sim)
 {
   int exI = -1;
   
   if(iso == 10)
   {
-    if(SIMULATED_DATA)
+    if(sim)
     {
       if(exVal >= -1.5 && exVal<= 1.2)
         exI = 0;
@@ -56,7 +56,7 @@ int GetExState(double exVal, int iso)
   
   else if(iso == 11 || iso == 9)
   {
-    if(SIMULATED_DATA)
+    if(sim)
     {
       if(exVal >= -3 && exVal <= 1)
         exI = 0;
@@ -75,7 +75,7 @@ int GetExState(double exVal, int iso)
   
   else
   {
-    cerr<<"GetExState not defined for "<<iso<<"Be"<<endl;
+    std::cerr<<"GetExState not defined for "<<iso<<"Be"<<std::endl;
     exI = -2;
   }
   

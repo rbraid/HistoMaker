@@ -2,7 +2,7 @@ bool SIMULATED_DATA;
 
 TFile* ringFile;
 TFile* edgeFile;
-TFile* SAFile;
+// TFile* SAFile;
 
 TTigress *tigress =  new TTigress;
 TCSM *csm =  new TCSM;
@@ -133,12 +133,12 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           double ex10c =GetExciteE_Heavy_Corrected(hit,10);
           if(DEBUG) cout<<"Have 10Be Excite"<<endl;
           
-          int state = GetExState(ex10c,10);
+          int state = GetExState(ex10c,10,SIMULATED_DATA);
 
           if(state != -1)
           {
             if(DEBUG) cout<<"Have 10Be state assigned"<<endl;
-            int ring = RingNumber(hit);
+            int ring = RingNumber(hit,ringFile);
             
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);           
@@ -164,13 +164,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           if(temp1) temp1->Fill(ex11c);
           
           if(DEBUG) cout<<"Have 11Be"<<endl;
-          int state = GetExState(ex11c,11);
+          int state = GetExState(ex11c,11,SIMULATED_DATA);
 
           if(state != -1)
           {
             if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber())<<endl;
             
-            int ring = RingNumber(hit);
+            int ring = RingNumber(hit,ringFile);
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);
           }
@@ -196,13 +196,13 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
           
           double ex9c =GetExciteE_Heavy_Corrected(hit,9);
           if(DEBUG) cout<<"Have 9Be"<<endl;
-          int state = GetExState(ex9c,9);
+          int state = GetExState(ex9c,9,SIMULATED_DATA);
           
           if(state != -1)
           {
             if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
             
-            int ring = RingNumber(hit);
+            int ring = RingNumber(hit,ringFile);
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);
           }
@@ -283,7 +283,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",hit->GetDetectorNumber(),Doppler));
                 if(expg) expg->Fill(excite);
                 TH1D* tp = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",hit->GetDetectorNumber(),Doppler));
-                if(tp) tp->Fill(RingNumber(hit));
+                if(tp) tp->Fill(RingNumber(hit,ringFile));
               }
             }
           }
@@ -447,14 +447,14 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             
             if(DEBUG) cout<<"Have Excited States"<<endl;
                         
-            int stateA = GetExState(ex10cA);
-            int stateB = GetExState(ex10cB);
+            int stateA = GetExState(ex10cA,SIMULATED_DATA);
+            int stateB = GetExState(ex10cB,SIMULATED_DATA);
             
             if(stateA != -1)
             {
               if(DEBUG) cout<<"Have State A "<<stateA<<endl;
               
-              int ring = RingNumber(hita);
+              int ring = RingNumber(hita,ringFile);
               
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
               tmpptr->Fill(ring);
@@ -463,7 +463,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             {
               if(DEBUG) cout<<"Have State B "<<stateB<<endl;
               
-              int ring = RingNumber(hitb);
+              int ring = RingNumber(hitb,ringFile);
               
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
               tmpptr->Fill(ring);
@@ -511,18 +511,18 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
               double excA =GetExciteE_Heavy_Corrected(hita,aNum);
               double excB =GetExciteE_Heavy_Corrected(hitb,bNum);
               
-              int stateA = GetExState(excA,11);
-              int stateB = GetExState(excB,11);
+              int stateA = GetExState(excA,11,SIMULATED_DATA);
+              int stateB = GetExState(excB,11,SIMULATED_DATA);
               
               if(stateA != -1)
               {
-                int ring = RingNumber(hita);                  
+                int ring = RingNumber(hita,ringFile);                  
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateA,hita->GetDetectorNumber(),aNum));
                 tmpptr->Fill(ring);
               }
               if(stateB != -1)
               {
-                int ring = RingNumber(hitb);
+                int ring = RingNumber(hitb,ringFile);
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateB,hitb->GetDetectorNumber(),bNum));
                 tmpptr->Fill(ring);
               }
@@ -626,7 +626,7 @@ int main(int argc, char **argv)
   
   ringFile = TFile::Open("inputRootFiles/DumbRings.root","read");
   edgeFile = TFile::Open("inputRootFiles/edge.root","read");
-  SAFile = TFile::Open("inputRootFiles/solidAngleDiag.root","read");
+//   SAFile = TFile::Open("inputRootFiles/solidAngleDiag.root","read");
   
   TList *outlist = new TList;
   SetupHistos(outlist);
