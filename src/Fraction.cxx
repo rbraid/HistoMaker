@@ -3,7 +3,6 @@
 double GetK(double energy, double theta, double mass)
 {
   energy=energy/1000.;
-  const double pi = TMath::Pi();
   
   double othermass;
   

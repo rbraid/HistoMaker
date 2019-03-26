@@ -47,7 +47,7 @@ double* CorrParticle(double Energy, double Theta, double Phi, double Mass)
   else
     cerr<<"Error in Corr Particle, I don't recognize the mass"<<endl;
   
-  double ECorr = BEAM_ENERGY - Energy;
+//   double ECorr = BEAM_ENERGY - Energy;
   
   double pCorrMag = pBeamMag*pBeamMag/MASS_BE11 - pParticle.Mag2()/Mass;
   

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include "TCSM.h"
 #include "GlobalSettings.hh"
+#include <TH2D.h>
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H);
 double* CalcBe10fromHe64(TCSMHit *He6Hit, TCSMHit *He4Hit);

@@ -5,6 +5,7 @@
 #include "GlobalSettings.hh"
 #include <TMath.h>
 #include "TCSM.h"
+#include "CenterOfMass.hh"
 
 double GetfCOM(TCSMHit* Hit, int Z);
 double GetfLab(TCSMHit* Hit, int Z);

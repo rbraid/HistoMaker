@@ -1,9 +1,7 @@
 #include "../include/Depriciated.hh"
 
 double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
-{
-  const double pi=TMath::Pi();
-  
+{  
   double *Be8Values = new double[3];
   
   //Make the masses for the 8Be and 4He
@@ -39,13 +37,11 @@ double* CalcBe8fromAlpha(TCSMHit *A1H,TCSMHit *A2H)
 }
 
 double* CalcBe10fromHe64(TCSMHit *He6Hit,TCSMHit *He4Hit)
-{
-  const double pi=TMath::Pi();
-  
+{  
   double *Be10Values = new double[3];
   
   //Make the masses for the 8Be and 4He
-  const double mBe8 = 8.0*931.494027 + 4.9416;
+//   const double mBe8 = 8.0*931.494027 + 4.9416;
   const double mHe4 = 4.0*931.494027 + 2.4249156;
   const double mHe6 = 6.0*931.494027 + 17.5928;
   const double mBe10 = 10.*931.494027 + 12.6074;
@@ -101,24 +97,24 @@ double GetExciteE_Light(TCSMHit *A1H, TCSMHit *A2H)
   
 }
 
-double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2)
-{
-  double* be8vals;
-  be8vals = CalcBe8fromAlpha(Hit1,Hit2);
-  return CorrParticle(be8vals[0],be8vals[1],be8vals[2],MASS_BE8);
-}
+// double* CorrParticleFromAlphas(TCSMHit* Hit1, TCSMHit* Hit2)
+// {
+//   double* be8vals;
+//   be8vals = CalcBe8fromAlpha(Hit1,Hit2);
+//   return CorrParticle(be8vals[0],be8vals[1],be8vals[2],MASS_BE8);
+// }
 
-double EdgeEffectFactor(int StripX, int StripY, int Detector)
-{
-  TH2D* histo = (TH2D*)edgeFile->Get(Form("PunchThrough%i_D_normalized_adjusted",Detector));
-  int binNo = histo->GetBin(StripX+1,StripY+1);
-  double edgeFact = histo->GetBinContent(binNo);
-  if (edgeFact <=0)
-    return 0.;
-  return 1./edgeFact;
-}
-
-double EdgeEffectFactor(TCSMHit* hit)
-{
-  return(EdgeEffectFactor(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetDetectorNumber()));
-}
+// double EdgeEffectFactor(int StripX, int StripY, int Detector)
+// {
+//   TH2D* histo = (TH2D*)edgeFile->Get(Form("PunchThrough%i_D_normalized_adjusted",Detector));
+//   int binNo = histo->GetBin(StripX+1,StripY+1);
+//   double edgeFact = histo->GetBinContent(binNo);
+//   if (edgeFact <=0)
+//     return 0.;
+//   return 1./edgeFact;
+// }
+// 
+// double EdgeEffectFactor(TCSMHit* hit)
+// {
+//   return(EdgeEffectFactor(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip(),hit->GetDetectorNumber()));
+// }
