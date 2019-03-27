@@ -6,8 +6,8 @@ void SetupHistos(TList *outlist)
   TH1I *temp1INT = 0;
   TH2D *temp2 = 0;
   TH2I *temp2INT = 0;
-  TH3D *temp3 = 0;
-  TH3I *temp3INT = 0;
+//   TH3D *temp3 = 0;
+//   TH3I *temp3INT = 0;
   
   
   for(int id = 1; id<=2;id++)

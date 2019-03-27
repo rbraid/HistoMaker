@@ -1,6 +1,28 @@
-CPPFLAGS= -g -O3 -Wl,--no-as-needed $(shell grsi-config --cflags)
-LDFLAGS= -g $(shell root-config --ldflags) $(shell grsi-config --root)
-LDLIBS= $(shell grsi-config --all-libs)
+$(info  *****************)
+CPPFLAGS= -g -O3 -Wl,--no-as-needed -Wall -Wno-unused-function
+$(info CPPFLAGS is ${CPPFLAGS})
+CPPFLAGS+= $(shell root-config --cflags)
+$(info Adding ROOT: $(shell root-config --cflags) to CPPFLAGS)
+CPPFLAGS+= $(shell grsi-config --cflags) 
+$(info Adding GRSI: $(shell grsi-config --cflags) to CPPFLAGS)
+# $(info FULL CPPFLAGS is ${CPPFLAGS})
+
+$(info  *****************)
+LDFLAGS= -g 
+$(info LDFLAGS is ${LDFLAGS})
+LDFLAGS+=$(shell root-config --ldflags) 
+$(info Adding ROOT: $(shell root-config --ldflags) to LDFLAGS)
+LDFLAGS+=$(shell grsi-config --root)
+$(info Adding GRSI: $(shell grsi-config --root) to LDFLAGS)
+
+$(info  *****************)
+LDLIBS= -lm
+$(info LDLIBS is ${LDLIBS})
+LDLIBS+=$(shell root-config --glibs) 
+$(info Adding ROOT: $(shell root-config --glibs) to LDLIBS)
+LDLIBS+=$(shell grsi-config --all-libs)  
+$(info Adding GRSI: $(shell grsi-config --all-libs) to LDLIBS)
+$(info  *****************)
 
 EXE = RunMe
 
@@ -9,22 +31,14 @@ OBJ_DIR = obj
 
 SRC = $(wildcard $(SRC_DIR)/*.cxx)
 OBJ = $(SRC:$(SRC_DIR)/%.cxx=$(OBJ_DIR)/%.o)
-# $(info OBJ is ${OBJ})
-
-CPPFLAGS += -Iinclude
-CFLAGS += -Wall
-LDFLAGS += -Llib
-LDLIBS += -lm
-
-.PHONY: all clean
 
 all: $(EXE)
 
 $(EXE): $(OBJ)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lSpectrum
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cxx
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CPPFLAGS) -c $< -o $@ 
 
-# clean:
-# 	$(RM) $(OBJ)
+clean:
+	$(RM) $(OBJ)

@@ -1,3 +1,5 @@
+#include "../include/MakeHistos.hh"
+
 bool SIMULATED_DATA;
 
 TFile* ringFile;
@@ -77,8 +79,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       
       TH1D *temp1 = 0;
       TH2D *temp2 = 0;
-      TH2I *temp2INT = 0;
-      TH3D *temp3 = 0;
+//       TH2I *temp2INT = 0;
+//       TH3D *temp3 = 0;
       TCSMHit *hit = csm->GetHit(y);
       
       if(DEBUG)
@@ -476,9 +478,9 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       {
         int aNum = iso;
         int bNum = -1;
-        if(aNum = 11)
+        if(aNum == 11)
           bNum = 9;
-        else if(aNum = 9)
+        else if(aNum == 9)
           bNum = 11;
         else
           cout<<"Erorr: iso = "<<iso<<endl;
@@ -663,7 +665,7 @@ int main(int argc, char **argv)
       outputname = "output.root";
   }
   
-  TString loc = Form("outputRootFiles/%s",outputname)
+  TString loc = Form("outputRootFiles/%s",outputname);
   if(DEBUG) cout<<"Saving to "<<loc<<endl;
   TFile f(loc,"recreate");
   f.cd();

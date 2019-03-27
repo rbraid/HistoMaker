@@ -6,7 +6,6 @@ double GetExciteE_Heavy(double energy, double theta, double mass)
   //   cout<<"BeE: "<<energy<<endl;
   //   cout<<"BeT: "<<theta<<endl;
   energy=energy/1000.;
-  const double pi = TMath::Pi();
   
   double othermass;
   

@@ -22,17 +22,26 @@
 #include <TTree.h>
 #include <TApplication.h>
 
-#include "TNucleus.h"
-#include "TKinematics.h"
-#include "Globals.h"
+// #include "TNucleus.h"
+// #include "TKinematics.h"
+// #include "Globals.h"
 #include "TTigress.h"
 #include "TCSM.h"
 
-#include "GlobalSettings.hh"
+#include "../include/GlobalSettings.hh"
+
+#include "../include/CenterOfMass.hh"
+#include "../include/CorrParticles.hh"
+#include "../include/Excites.hh"
+#include "../include/Fraction.hh"
+#include "../include/Gamma.hh"
+#include "../include/Misc.hh"
+#include "../include/Rings.hh"
+#include "../include/States.hh"
+#include "../include/SetupHistos_only.hh"
 
 #define DEBUG 0
 
-const double BEAM_ENERGY = 30.14;
 extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
