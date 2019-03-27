@@ -449,8 +449,8 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
             
             if(DEBUG) cout<<"Have Excited States"<<endl;
                         
-            int stateA = GetExState(ex10cA,SIMULATED_DATA);
-            int stateB = GetExState(ex10cB,SIMULATED_DATA);
+            int stateA = GetExState(ex10cA,10,SIMULATED_DATA);
+            int stateB = GetExState(ex10cB,10,SIMULATED_DATA);
             
             if(stateA != -1)
             {
@@ -586,7 +586,7 @@ int main(int argc, char **argv)
   
   
   TApplication *app = new TApplication("app",0,0);
-  TFile cf("cuts.root");
+  TFile cf("inputRootFiles/cuts.root");
   TIter *iter = new TIter(cf.GetListOfKeys());
   
   int ncuts = 0;
@@ -665,7 +665,7 @@ int main(int argc, char **argv)
       outputname = "output.root";
   }
   
-  TString loc = Form("outputRootFiles/%s",outputname);
+  TString loc = Form("outputRootFiles/%s",outputname.Data());
   if(DEBUG) cout<<"Saving to "<<loc<<endl;
   TFile f(loc,"recreate");
   f.cd();

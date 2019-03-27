@@ -4,6 +4,6 @@
 #include <iostream>
 
 int GetGamState(double doppVal);
-int GetExState(double exVal, int iso = 10, bool sim = 0);
+int GetExState(double exVal, int iso, bool sim);
 
 #endif
