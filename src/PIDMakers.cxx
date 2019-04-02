@@ -1,0 +1,86 @@
+#include "../include/PIDMakers.hh"
+
+void Process10BePID(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
+{
+  TTigress *tigress =  new TTigress;
+  TCSM *csm =  new TCSM;
+  TList *cutlist = new TList;
+  
+  TH1D *temp1 = 0;
+  TH2D *temp2 = 0;
+  TString Be10Cut;
+  Be10Cut = "pid_low_thick_10Be_%i_v2";
+  if(sim)
+    Be10Cut = "pid_low_thick_10Be_%i_sim";
+  
+  int nentries = chain->GetEntries();
+  for(int x=0; x<nentries; x++)
+  {
+    chain->GetEntry(x);
+    
+    if(csm->GetMultiplicity()==0)
+      continue;
+    
+    for(int y=0; y<csm->GetMultiplicity(); y++)
+    {
+      TCSMHit *hit = csm->GetHit(y);
+      
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+        {
+          hit->SetIsotope(10,"be");
+          
+          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+          
+          double excite = GetExciteE_Heavy(hit,10);
+          temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
+          if(temp1) temp1->Fill(excite);
+          
+          double excitec = GetExciteE_Heavy_Corrected(hit,10);
+          temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr",hit->GetDetectorNumber()));
+          if(temp1) temp1->Fill(excitec);
+          
+          for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+          {
+            TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+            
+            if(tigresshit->GetCore()->GetEnergy()>10)
+            {
+              temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",hit->GetDetectorNumber()));
+              temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+              temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
+              temp1->Fill(Doppler(tigresshit,hit,10));
+              
+              temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",hit->GetDetectorNumber()));
+              temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+              temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
+              temp1->Fill(Doppler(tigresshit,hit,10),EfficiencyWeight(tigresshit));
+              
+              double dopp = Doppler(tigresshit,hit,10);
+              int Gamma = GetGamState(dopp);
+              if(Gamma >0)
+              {
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
+                if(expg) expg->Fill(excitec);
+              }
+            }
+          }
+          
+          double ex10c =GetExciteE_Heavy_Corrected(hit,10);
+          
+          int state = GetExState(ex10c,10,sim);
+          
+          if(state != -1)
+          {
+            int ring = RingNumber(hit,ringFile);
+            
+            TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));   
+            tmpptr->Fill(ring);           
+          }
+        }
+      }
+    }
+  }
+}

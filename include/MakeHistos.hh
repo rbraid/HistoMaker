@@ -39,6 +39,7 @@
 #include "../include/Rings.hh"
 #include "../include/States.hh"
 #include "../include/SetupHistos_only.hh"
+#include "../include/PIDMakers.hh"
 
 #define DEBUG 0
 
