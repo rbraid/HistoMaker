@@ -25,16 +25,16 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
   TString He6Cut;
   
   Be12Cut = "pid_low_thick_12Be_%i_v2";
-  Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
-  if(SIMULATED_DATA)
-    Be11Cut = "pid_low_thick_11Be_%i_v2_sim";
+//   Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
+//   if(SIMULATED_DATA)
+//     Be11Cut = "pid_low_thick_11Be_%i_v2_sim";
   Be10Cut = "pid_low_thick_10Be_%i_v2";
   if(SIMULATED_DATA)
     Be10Cut = "pid_low_thick_10Be_%i_sim";
   
-  Be9Cut = "pid_low_thick_9Be_%i_v1";
-  if(SIMULATED_DATA)
-    Be9Cut = "pid_low_thick_9Be_%i_v1_sim";
+//   Be9Cut = "pid_low_thick_9Be_%i_v1";
+//   if(SIMULATED_DATA)
+//     Be9Cut = "pid_low_thick_9Be_%i_v1_sim";
   
   He4Cut = "pid_low_thick_4He_%i_v1";
   He6Cut = "pid_low_thick_6He_%i_v1";
@@ -61,11 +61,11 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       continue;
     
     
-    int hits[4] = {0};
-    for(int y=0; y<csm->GetMultiplicity(); y++)
-    {
-      hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
-    }
+//     int hits[4] = {0};
+//     for(int y=0; y<csm->GetMultiplicity(); y++)
+//     {
+//       hits[csm->GetHit(y)->GetDetectorNumber()-1]++;
+//     }
     
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -91,69 +91,7 @@ void ProcessChain(TChain *chain,TList *outlist)//, MakeFriend *myFriend)
       if(DEBUG) hit->Print();
       
       //////////////////////////////////////////////////
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hit->GetDetectorNumber()))))
-      {
-        if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-        {
-          if(!hit->IsotopeSet())
-            hit->SetIsotope(11,"be");
-          
-          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11",hit->GetDetectorNumber()));
-          if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-          
-          temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
-          if(temp1) temp1->Fill(GetExciteE_Heavy(hit,11));
-          
-          double ex11c =GetExciteE_Heavy_Corrected(hit,11);
-          temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",hit->GetDetectorNumber()));
-          if(temp1) temp1->Fill(ex11c);
-          
-          if(DEBUG) cout<<"Have 11Be"<<endl;
-          int state = GetExState(ex11c,11,SIMULATED_DATA);
 
-          if(state != -1)
-          {
-            if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber())<<endl;
-            
-            int ring = RingNumber(hit,ringFile);
-            TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber()));   
-            tmpptr->Fill(ring);
-          }
-        }
-      }    
-      
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be9Cut,hit->GetDetectorNumber()))))
-      {
-        if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-        {
-          if(!hit->IsotopeSet())
-            hit->SetIsotope(9,"be");
-          
-          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be9",hit->GetDetectorNumber()));
-          temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-          
-          temp1 = (TH1D*)outlist->FindObject(Form("Be9Ex%i",hit->GetDetectorNumber()));
-          if(temp1) temp1->Fill(GetExciteE_Heavy(hit,9));
-          
-          double ex11c =GetExciteE_Heavy_Corrected(hit,9);
-          temp1 = (TH1D*)outlist->FindObject(Form("Be9Ex%i_corr",hit->GetDetectorNumber()));
-          if(temp1) temp1->Fill(ex11c);
-          
-          double ex9c =GetExciteE_Heavy_Corrected(hit,9);
-          if(DEBUG) cout<<"Have 9Be"<<endl;
-          int state = GetExState(ex9c,9,SIMULATED_DATA);
-          
-          if(state != -1)
-          {
-            if(DEBUG) cout<<"Looking for "<<Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber())<<endl;
-            
-            int ring = RingNumber(hit,ringFile);
-            TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_9Be",state,hit->GetDetectorNumber()));   
-            tmpptr->Fill(ring);
-          }
-        }
-      }     
-      
       if(DEBUG) cout<<"PID"<<endl;
       if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
       {
@@ -576,7 +514,9 @@ int main(int argc, char **argv)
   TList *outlist = new TList;
   SetupHistos(outlist);
   ProcessChain(chain,outlist);
-  Process10BePID(chain,outlist,ringFile,SIMULATED_DATA);
+  Process11BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  Process9BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  Process10BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
   outlist->Sort();
   
   if(DEBUG)

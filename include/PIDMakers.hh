@@ -14,6 +14,8 @@
 #include "Gamma.hh"
 #include "Rings.hh"
 
-void Process10BePID(TChain* chain,TList* outlist,TFile* ringFile, bool sim);
+void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim);
+void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim);
+void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim);
 
 #endif
