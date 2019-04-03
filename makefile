@@ -1,28 +1,28 @@
-$(info  *****************)
+# $(info  *****************)
 CPPFLAGS= -g -O3 -Wl,--no-as-needed -Wall -Wno-unused-function
-$(info CPPFLAGS is ${CPPFLAGS})
+# $(info CPPFLAGS is ${CPPFLAGS})
 CPPFLAGS+= $(shell root-config --cflags)
-$(info Adding ROOT: $(shell root-config --cflags) to CPPFLAGS)
+# $(info Adding ROOT: $(shell root-config --cflags) to CPPFLAGS)
 CPPFLAGS+= $(shell grsi-config --cflags) 
-$(info Adding GRSI: $(shell grsi-config --cflags) to CPPFLAGS)
+# $(info Adding GRSI: $(shell grsi-config --cflags) to CPPFLAGS)
 # $(info FULL CPPFLAGS is ${CPPFLAGS})
 
-$(info  *****************)
+# $(info  *****************)
 LDFLAGS= -g 
-$(info LDFLAGS is ${LDFLAGS})
+# $(info LDFLAGS is ${LDFLAGS})
 LDFLAGS+=$(shell root-config --ldflags) 
-$(info Adding ROOT: $(shell root-config --ldflags) to LDFLAGS)
+# $(info Adding ROOT: $(shell root-config --ldflags) to LDFLAGS)
 LDFLAGS+=$(shell grsi-config --root)
-$(info Adding GRSI: $(shell grsi-config --root) to LDFLAGS)
+# $(info Adding GRSI: $(shell grsi-config --root) to LDFLAGS)
 
-$(info  *****************)
+# $(info  *****************)
 LDLIBS= -lm
-$(info LDLIBS is ${LDLIBS})
+# $(info LDLIBS is ${LDLIBS})
 LDLIBS+=$(shell root-config --glibs) 
-$(info Adding ROOT: $(shell root-config --glibs) to LDLIBS)
+# $(info Adding ROOT: $(shell root-config --glibs) to LDLIBS)
 LDLIBS+=$(shell grsi-config --all-libs)  
-$(info Adding GRSI: $(shell grsi-config --all-libs) to LDLIBS)
-$(info  *****************)
+# $(info Adding GRSI: $(shell grsi-config --all-libs) to LDLIBS)
+# $(info  *****************)
 
 EXE = RunMe
 
