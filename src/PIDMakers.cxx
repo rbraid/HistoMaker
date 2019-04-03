@@ -5,6 +5,9 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   
+  chain->SetBranchAddress("TCSM",&csm);
+  chain->SetBranchAddress("TTigress",&tigress);
+  
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be10Cut;
@@ -82,13 +85,15 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
       }
     }
   }
+  delete csm;
+  delete tigress;
 }
 
 void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
 {
-//   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
-//   TList *cutlist = new TList;
+
+  chain->SetBranchAddress("TCSM",&csm);
   
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
@@ -140,14 +145,14 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, 
       }    
     }
   }
+  delete csm;
 }
 
 void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
 {
-//   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
-//   TList *cutlist = new TList;
-  
+  chain->SetBranchAddress("TCSM",&csm);
+
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be11Cut;
@@ -196,4 +201,5 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
       } 
     }
   }
+  delete csm;
 }

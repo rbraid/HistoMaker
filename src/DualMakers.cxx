@@ -4,6 +4,8 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
 {
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
+  chain->SetBranchAddress("TCSM",&csm);
+  chain->SetBranchAddress("TTigress",&tigress);
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -180,6 +182,7 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
 {
 //   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
+  chain->SetBranchAddress("TCSM",&csm);
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)

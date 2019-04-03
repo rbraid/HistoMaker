@@ -4,7 +4,10 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
 {
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
-
+  
+  chain->SetBranchAddress("TCSM",&csm);
+  chain->SetBranchAddress("TTigress",&tigress);
+  
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v2";
   if(sim)
@@ -58,5 +61,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
       }
     }
   }
+  delete csm;
+  delete tigress;
 }
 

@@ -3,6 +3,7 @@
 void ProcessGammas(TChain* chain,TList* outlist)
 {
   TTigress *tigress =  new TTigress;
+  chain->SetBranchAddress("TTigress",&tigress);
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -25,4 +26,5 @@ void ProcessGammas(TChain* chain,TList* outlist)
       }
     }
   }
+  delete tigress;
 }
