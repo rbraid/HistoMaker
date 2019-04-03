@@ -2,6 +2,9 @@
 
 void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
 {
+  TStopwatch w;
+  w.Start();
+  
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   
@@ -61,7 +64,14 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
         }
       }
     }
+    if(x%200000==0)
+    {
+      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      fflush(stdout);
+      w.Continue();
+    }
   }
+  cout<<endl;
   delete csm;
   delete tigress;
 }

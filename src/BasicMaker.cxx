@@ -2,7 +2,8 @@
 
 void ProcessBasic(TChain* chain,TList* outlist)
 {
-  
+  TStopwatch w;
+  w.Start();
   TCSM *csm =  new TCSM;
   
   chain->SetBranchAddress("TCSM",&csm);
@@ -38,6 +39,13 @@ void ProcessBasic(TChain* chain,TList* outlist)
         }
       }
     }
+    if(x%200000==0)
+    {
+      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      fflush(stdout);
+      w.Continue();
+    }
   }
+  cout<<endl;
   delete csm;
 }

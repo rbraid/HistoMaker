@@ -14,6 +14,7 @@
 #include "Gamma.hh"
 #include "Rings.hh"
 #include "CorrParticles.hh"
+#include <TStopwatch.h>
 
 void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim);
 

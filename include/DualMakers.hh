@@ -15,6 +15,7 @@
 #include "Rings.hh"
 #include "CorrParticles.hh"
 #include <TH2I.h>
+#include <TStopwatch.h>
 
 void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim);
 void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim);

@@ -7,6 +7,7 @@
 #include <TList.h>
 #include <TH1D.h>
 #include "Gamma.hh"
+#include <TStopwatch.h>
 
 void ProcessGammas(TChain* chain,TList* outlist);
 

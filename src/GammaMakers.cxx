@@ -2,6 +2,9 @@
 
 void ProcessGammas(TChain* chain,TList* outlist)
 {
+  TStopwatch w;
+  w.Start();
+  
   TTigress *tigress =  new TTigress;
   chain->SetBranchAddress("TTigress",&tigress);
   
@@ -25,6 +28,13 @@ void ProcessGammas(TChain* chain,TList* outlist)
         temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit));
       }
     }
+    if(x%200000==0)
+    {
+      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      fflush(stdout);
+      w.Continue();
+    }
   }
+  cout<<endl;
   delete tigress;
 }
