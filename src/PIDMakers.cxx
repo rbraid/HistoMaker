@@ -51,6 +51,9 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
           temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(excitec,tigress->GetAddBackMultiplicity());
           
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_csmMult",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,csm->GetMultiplicity());
+          
           for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(y);

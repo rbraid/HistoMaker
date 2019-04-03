@@ -89,6 +89,11 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Energy in MeV");
     temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
     
+    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_csmMult",id),"Be-10 Excitation Energy, with straggling correction, vs CSM Multiplicity",1400,-10,60,5,0,5));
+    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_csmMult",id));
+    temp2->GetXaxis()->SetTitle("Energy in MeV");
+    temp2->GetYaxis()->SetTitle("CSM Multiplicity");
+    
     outlist->Add(new TH1D(Form("Be10Ex%i_corr_supp",id),"Be-10 Excitation Energy, with straggling correction kinematically suppressed",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_supp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
