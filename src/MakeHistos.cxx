@@ -3,138 +3,12 @@
 bool SIMULATED_DATA;
 
 TFile* ringFile;
-// TFile* edgeFile;
-
-TTigress *tigress =  new TTigress;
-TCSM *csm =  new TCSM;
-TList *cutlist = new TList;
-
-void ProcessChain(TChain *chain,TList *outlist)
-{
-  int nentries = chain->GetEntries();
-  TStopwatch w;
-  w.Start();
-  TString Be10Cut;
-  
-  Be10Cut = "pid_low_thick_10Be_%i_v2";
-  if(SIMULATED_DATA)
-    Be10Cut = "pid_low_thick_10Be_%i_sim";
-
-  if(DEBUG)
-  {
-    cout<<"Starting ProcessChain"<<endl;
-  }
-  
-  for(int x=0; x<nentries; x++)
-  {
-    chain->GetEntry(x);
-    
-    
-    if(DEBUG)
-    {
-      cout<<"nentries: "<<nentries<<endl;
-    }
-    
-    if(csm->GetMultiplicity()==0)
-      continue;
-
-    for(int y=0; y<csm->GetMultiplicity(); y++)
-    {
-      if(DEBUG)
-      {
-        cout<<"Main Get Multiplicity()"<<endl;
-      }
-
-      TH2D *temp2 = 0;
-      TCSMHit *hit = csm->GetHit(y);
-      
-      if(DEBUG)
-      {
-        cout<<"General"<<endl;
-      }
-      
-      if(DEBUG) hit->Print();
-      
-      if(DEBUG) cout<<"PID"<<endl;
-      if(hit->GetEEnergy()>0 && hit->GetDEnergy()>0)
-      {
-        temp2 = (TH2D*)outlist->FindObject(Form("pid_%i",hit->GetDetectorNumber()));
-        if(temp2) temp2->Fill(hit->GetEEnergy()/1000.,hit->GetDEnergy()/1000.);
-        if(hit->GetDthickness()>5)
-        {
-          if(hit->GetDEnergy()>0 && hit->GetEEnergy()>0)
-          {
-            temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
-            if(temp2) temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
-          }
-        }
-      }
-      
-      if(hit->GetDetectorNumber()<3)
-      {
-        temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
-        temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
-      }
-    }
-
-    //***********************
-    //  Other 10Be
-    //***********************
-    for(int i =0; i<csm->GetMultiplicity();i++)
-    {	
-      TCSMHit *hit = csm->GetHit(i);
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hit->GetDetectorNumber()))))
-      {
-        if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
-        {
-          double* CorrVals = CorrParticle(hit, 10);
-          
-          TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
-          mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
-          
-          for(int asdf=0; asdf<tigress->GetAddBackMultiplicity();asdf++)
-          {
-            TTigressHit *tigresshit = tigress->GetAddBackHit(asdf);
-            
-            if(tigresshit->GetCore()->GetEnergy()>10)
-            {
-              double dopp = Doppler(tigresshit,CorrVals[0],CorrVals[1],CorrVals[2],10);
-              TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
-              dopptr->Fill(dopp);
-              TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
-              dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
-              
-              int Doppler = GetGamState(dopp);
-                            
-              if(Doppler > 0)
-              {
-                double excite = GetExciteE_Heavy_Corrected(hit,10);
-                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",hit->GetDetectorNumber(),Doppler));
-                if(expg) expg->Fill(excite);
-                TH1D* tp = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",hit->GetDetectorNumber(),Doppler));
-                if(tp) tp->Fill(RingNumber(hit,ringFile));
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if(x%20000==0)
-    {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
-      fflush(stdout);
-      w.Continue();
-    }
-  }
-  
-  cout<<endl;  
-}
-
-
 
 int main(int argc, char **argv)
 {
+  TTigress *tigress =  new TTigress;
+  TCSM *csm =  new TCSM;
+  
   if(argc<2)
   {
     printf("try adding analysis trees to the command line.\n");
@@ -176,6 +50,8 @@ int main(int argc, char **argv)
   
   int ncuts = 0;
   
+  TList* cutlist = new TList;
+  
   while(TObject *obj = iter->Next())
   {
     obj = ((TKey *)obj)->ReadObj();
@@ -210,35 +86,37 @@ int main(int argc, char **argv)
   if(!SIMULATED_DATA)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
-  
+    
   ringFile = TFile::Open("inputRootFiles/DumbRings.root","read");
-//   edgeFile = TFile::Open("inputRootFiles/edge.root","read");
-//   SAFile = TFile::Open("inputRootFiles/solidAngleDiag.root","read");
   
   TList *outlist = new TList;
   cout<<"*Beginning"<<endl;
   SetupHistos(outlist);
   cout<<"*Histos Set"<<endl;
-  ProcessChain(chain,outlist);
-  cout<<"*ProcessChain Done."<<endl;
   
-  Process11BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process11BePID Done."<<endl;
+  ProcessBasic(chain,outlist);
+  cout<<"*ProcessBasic Done."<<endl;
   
-  Process9BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process9BePID Done."<<endl;
-  
-  Process10BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process10BePID Done."<<endl;
-  
-  ProcessDual10Be(chain,outlist,ringFile,SIMULATED_DATA);
-  cout<<"*ProcessDual10Be Done."<<endl;
-  
-  ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
-  cout<<"*ProcessDualElastic Done."<<endl;
-  
-  ProcessGammas(chain,outlist);
-  cout<<"*ProcessGammas Done."<<endl;
+//   Process11BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+//   cout<<"*Process11BePID Done."<<endl;
+//   
+//   Process9BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+//   cout<<"*Process9BePID Done."<<endl;
+//   
+//   Process10BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+//   cout<<"*Process10BePID Done."<<endl;
+//   
+//   ProcessOpposite(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+//   cout<<"*ProcessOpposite Done."<<endl;
+//   
+//   ProcessDual10Be(chain,outlist,ringFile,SIMULATED_DATA);
+//   cout<<"*ProcessDual10Be Done."<<endl;
+//   
+//   ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
+//   cout<<"*ProcessDualElastic Done."<<endl;
+//   
+//   ProcessGammas(chain,outlist);
+//   cout<<"*ProcessGammas Done."<<endl;
   
   outlist->Sort();
   
@@ -283,6 +161,9 @@ int main(int argc, char **argv)
   {
     cout<<"All done"<<endl;
   }
+  
+  delete csm;
+  delete tigress;
   
   return 0;
 }

@@ -4,7 +4,6 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
 {
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
-//   TList *cutlist = new TList;
   
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
