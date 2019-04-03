@@ -28,25 +28,27 @@
 #include "TTigress.h"
 #include "TCSM.h"
 
-#include "../include/GlobalSettings.hh"
+#include "GlobalSettings.hh"
 
-#include "../include/CenterOfMass.hh"
-#include "../include/CorrParticles.hh"
-#include "../include/Excites.hh"
-#include "../include/Fraction.hh"
-#include "../include/Gamma.hh"
-#include "../include/Misc.hh"
-#include "../include/Rings.hh"
-#include "../include/States.hh"
-#include "../include/SetupHistos_only.hh"
-#include "../include/PIDMakers.hh"
+#include "CenterOfMass.hh"
+#include "CorrParticles.hh"
+#include "Excites.hh"
+#include "Fraction.hh"
+#include "Gamma.hh"
+#include "Misc.hh"
+#include "Rings.hh"
+#include "States.hh"
+#include "SetupHistos_only.hh"
+#include "PIDMakers.hh"
+#include "DualMakers.hh"
+#include "GammaMakers.hh"
 
 #define DEBUG 0
 
 extern bool SIMULATED_DATA;
 
 extern TFile* ringFile;
-extern TFile* edgeFile;
+// extern TFile* edgeFile;
 // extern TFile* SAFile;
 
 #endif
