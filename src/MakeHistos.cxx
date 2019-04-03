@@ -6,6 +6,9 @@ TFile* ringFile;
 
 int main(int argc, char **argv)
 {
+  TStopwatch wGlobal;
+  wGlobal.Start();
+  
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   
@@ -167,6 +170,8 @@ int main(int argc, char **argv)
   
   delete csm;
   delete tigress;
+  
+  cout<<endl<<"Total Real Time: "<<DGREEN<<wGlobal.RealTime()/60.<<" minutes."<<RESET_COLOR<<endl;
   
   return 0;
 }
