@@ -6,7 +6,8 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
   TCSM *csm =  new TCSM;
   
   chain->SetBranchAddress("TCSM",&csm);
-  chain->SetBranchAddress("TTigress",&tigress);
+  if(!sim)
+    chain->SetBranchAddress("TTigress",&tigress);
   
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;

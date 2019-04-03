@@ -5,7 +5,8 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   chain->SetBranchAddress("TCSM",&csm);
-  chain->SetBranchAddress("TTigress",&tigress);
+  if(!sim)
+    chain->SetBranchAddress("TTigress",&tigress);
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)

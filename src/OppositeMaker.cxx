@@ -6,7 +6,8 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
   TCSM *csm =  new TCSM;
   
   chain->SetBranchAddress("TCSM",&csm);
-  chain->SetBranchAddress("TTigress",&tigress);
+  if(!sim)
+    chain->SetBranchAddress("TTigress",&tigress);
   
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v2";

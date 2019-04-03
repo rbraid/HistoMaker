@@ -94,6 +94,7 @@ int main(int argc, char **argv)
   SetupHistos(outlist);
   cout<<"*Histos Set"<<endl;
   
+
   ProcessBasic(chain,outlist);
   cout<<"*ProcessBasic Done."<<endl;
   
@@ -115,9 +116,11 @@ int main(int argc, char **argv)
   ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
   cout<<"*ProcessDualElastic Done."<<endl;
   
-  ProcessGammas(chain,outlist);
-  cout<<"*ProcessGammas Done."<<endl;
-  
+  if(!SIMULATED_DATA)
+  {
+    ProcessGammas(chain,outlist);
+    cout<<"*ProcessGammas Done."<<endl;
+  }
   outlist->Sort();
   
   if(DEBUG)
