@@ -54,6 +54,15 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
           temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_csmMult",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(excitec,csm->GetMultiplicity());
           
+          if(csm->GetMultiplicity() > 1)
+          {
+            if(excitec > 7 && excitec <8.25)
+            {
+              temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",hit->GetDetectorNumber()));
+              if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+            }
+          }
+          
           for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(y);
