@@ -39,9 +39,6 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
       
-      if(hita->GetDetectorNumber() > 2 || hitb->GetDetectorNumber() > 2)
-        continue;    
-      
       if(hita->IsotopeSet()) //This avoids double counting from the PID spectrum
         continue;
       if(hitb->IsotopeSet())
@@ -164,14 +161,14 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
               int ring = RingNumber(hita,ringFile);
               
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-              tmpptr->Fill(ring);
+              if(tmpptr) tmpptr->Fill(ring);
             }
             if(stateB != -1)
             {              
               int ring = RingNumber(hitb,ringFile);
               
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-              tmpptr->Fill(ring);
+              if(tmpptr) tmpptr->Fill(ring);
             }
           }
         }
