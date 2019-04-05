@@ -1,11 +1,11 @@
 #include "../include/MakeHistos.hh"
 
-bool SIMULATED_DATA;
-
-TFile* ringFile;
 
 int main(int argc, char **argv)
 {
+  bool SIMULATED_DATA;
+  TFile* ringFile;
+  
   TStopwatch wGlobal;
   wGlobal.Start();
   

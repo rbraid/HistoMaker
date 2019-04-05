@@ -17,7 +17,7 @@
 // #include <TGraphAsymmErrors.h>
 // #include <TF1.h>
 // #include <TFitResult.h>
-// #include <TStopwatch.h>
+#include <TStopwatch.h>
 #include <TKey.h>
 #include <TTree.h>
 #include <TApplication.h>
@@ -46,11 +46,5 @@
 #include "BasicMaker.hh"
 
 #define DEBUG 0
-
-extern bool SIMULATED_DATA;
-
-extern TFile* ringFile;
-// extern TFile* edgeFile;
-// extern TFile* SAFile;
 
 #endif
