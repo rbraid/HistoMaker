@@ -298,7 +298,7 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
 }
