@@ -47,5 +47,6 @@ void ProcessBasic(TChain* chain,TList* outlist)
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
 }

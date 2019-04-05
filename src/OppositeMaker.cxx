@@ -72,6 +72,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
   delete tigress;
 }

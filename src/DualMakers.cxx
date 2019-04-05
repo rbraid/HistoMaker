@@ -185,6 +185,7 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete tigress;
   delete csm;
 }
@@ -301,5 +302,6 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
 }

@@ -96,7 +96,6 @@ int main(int argc, char **argv)
   cout<<"*Beginning"<<endl;
   SetupHistos(outlist);
   cout<<"*Histos Set"<<endl;
-  
 
   ProcessBasic(chain,outlist);
   cout<<"*ProcessBasic Done."<<endl;

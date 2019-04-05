@@ -119,6 +119,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
   delete tigress;
 }
@@ -189,6 +190,7 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, 
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
 }
 
@@ -255,5 +257,6 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete csm;
 }

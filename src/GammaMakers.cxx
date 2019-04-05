@@ -36,5 +36,6 @@ void ProcessGammas(TChain* chain,TList* outlist)
     }
   }
   cout<<endl;
+  chain->ResetBranchAddresses();
   delete tigress;
 }
