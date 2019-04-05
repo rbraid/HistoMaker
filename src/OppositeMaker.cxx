@@ -37,6 +37,10 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
           TH2D* mathptr = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_opp_math",hit->GetDetectorNumber()));
           mathptr->Fill(CorrVals[1]*180./TMath::Pi(),CorrVals[0]/1000);
           
+          int multGT2 = 0; //Number of gammas that have an energy greater than the noise local minimum at about 1.5
+          int multGT3 = 0; //Number of gammas that have an energy above the 3368 peak
+          int multInterest = 0; //Number of gammas that are in our peaks of interest
+          
           for(int asdf=0; asdf<tigress->GetAddBackMultiplicity();asdf++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(asdf);
@@ -51,6 +55,12 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
               
               int Doppler = GetGamState(dopp);
               
+              if(dopp>=3.5)
+                multGT3++;
+              
+              if(dopp>=1.5)
+                multGT2++;
+              
               if(Doppler > 0)
               {
                 double excite = GetExciteE_Heavy_Corrected(hit,10);
@@ -58,9 +68,21 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
                 if(expg) expg->Fill(excite);
                 TH1D* tp = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",hit->GetDetectorNumber(),Doppler));
                 if(tp) tp->Fill(RingNumber(hit,ringFile));
+                
+                multInterest++;
               }
             }
           }
+          double excitec = GetExciteE_Heavy_Corrected(hit,10);
+          
+          TH2D* temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,tigress->GetAddBackMultiplicity());
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_gt2",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multGT2);
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_gt3",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multGT3);
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_interest",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multInterest);
         }
       }
     }
