@@ -67,35 +67,53 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
             }
           }
           
+          int multGT2 = 0; //Number of gammas that have an energy greater than the noise local minimum at about 1.5
+          int multGT3 = 0; //Number of gammas that have an energy above the 3368 peak
+          int multInterest = 0; //Number of gammas that are in our peaks of interest
+          
           for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(y);
             
             if(tigresshit->GetCore()->GetEnergy()>10)
             {
+              double dopp = Doppler(tigresshit,hit,10);
+              
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",hit->GetDetectorNumber()));
               temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
-              temp1->Fill(Doppler(tigresshit,hit,10));
+              temp1->Fill(dopp);
               
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",hit->GetDetectorNumber()));
               temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
-              temp1->Fill(Doppler(tigresshit,hit,10),EfficiencyWeight(tigresshit));
+              temp1->Fill(dopp,EfficiencyWeight(tigresshit));
               
-              double dopp = Doppler(tigresshit,hit,10);
+              if(dopp>=3.5)
+                multGT3++;
+              
+              if(dopp>=1.5)
+                multGT2++;
+              
               int Gamma = GetGamState(dopp);
               if(Gamma >0)
               {
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
                 if(expg) expg->Fill(excitec);
+                multInterest++;
               }
             }
           }
           
-          double ex10c =GetExciteE_Heavy_Corrected(hit,10);
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_gt2",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multGT2);
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_gt3",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multGT3);
+          temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_interest",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,multInterest);
+
           
-          int state = GetExState(ex10c,10,sim);
+          int state = GetExState(excitec,10,sim);
           
           if(state != -1)
           {
