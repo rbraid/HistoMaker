@@ -9,6 +9,14 @@ void SetupHistos(TList *outlist)
 //   TH3D *temp3 = 0;
 //   TH3I *temp3INT = 0;
   
+  for(int id = 1; id<=4;id++)
+  {
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_Fred",id),Form("EvTheta %i of the identified 10Be, gates of multiplicity > 1 and in breakup peak range.",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  }
+  
   
   for(int id = 1; id<=2;id++)
   {
@@ -124,11 +132,6 @@ void SetupHistos(TList *outlist)
     
     outlist->Add(new TH2D(Form("EvTheta_%i_BE10",id),Form("EvTheta %i of the identified 10Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",id));
-    temp2->GetXaxis()->SetTitle("Theta in Degrees");
-    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
-    
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_Fred",id),Form("EvTheta %i of the identified 10Be, gates of multiplicity > 1 and in breakup peak range.",id),100,0,100,350,0,70));
-    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     

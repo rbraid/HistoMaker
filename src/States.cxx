@@ -3,20 +3,6 @@
 int GetGamState(double doppVal)
 {
   int doppI = -2;
-  
-//   if(doppVal>=3.337 && doppVal<=3.402)
-//     doppI = 3368;
-//   else if(doppVal>=2.577 && doppVal<=2.612)
-//     doppI = 2589;
-//   else if(doppVal>=2.876 && doppVal<=2.913)
-//     doppI = 2894;
-//   else if(doppVal>=2.86 && doppVal<=2.87)
-//     doppI = 2867;
-//   else if(doppVal>=5.951 && doppVal<=5.986)
-//     doppI = 5958;
-  
-  //3368,2589,2894,2867,5958
-  
   int nSigma = 3;
   
   if(InGaussian(doppVal, 2.58975, 9.12827e-03, nSigma))
