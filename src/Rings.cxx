@@ -3,11 +3,12 @@
 int RingNumber(int stripX, int stripY, int detector, TFile* ringFile)
 {  
   TH2D* histo = (TH2D*)ringFile->Get(Form("Total_Rings_0_d%i_pid_Be10",detector));
-  int binNo = histo->GetBin(stripX+1,stripY+1);
   int Ring = -1;
   if(histo)
+  {
+    int binNo = histo->GetBin(stripX+1,stripY+1);
     Ring = histo->GetBinContent(binNo);
-  
+  }
   Ring -= 1;
   
   return Ring;
@@ -35,7 +36,7 @@ double RingSA_err(int Ring, int Det, TFile* ringFile)
   double TotalSolidAngle_err = -2;
   
   if(spec)
-spec->GetBinContent(Ring+1);
+    spec->GetBinContent(Ring+1);
   
   return TotalSolidAngle_err;
 }
