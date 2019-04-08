@@ -98,31 +98,22 @@ int main(int argc, char **argv)
   cout<<"*Histos Set"<<endl;
 
   ProcessBasic(chain,outlist);
-  cout<<"*ProcessBasic Done."<<endl;
   
   Process11BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process11BePID Done."<<endl;
   
   Process9BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process9BePID Done."<<endl;
   
   Process10BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*Process10BePID Done."<<endl;
   
   ProcessOpposite(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
-  cout<<"*ProcessOpposite Done."<<endl;
   
   ProcessDual10Be(chain,outlist,ringFile,SIMULATED_DATA);
-  cout<<"*ProcessDual10Be Done."<<endl;
   
   ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
-  cout<<"*ProcessDualElastic Done."<<endl;
   
   if(!SIMULATED_DATA)
-  {
     ProcessGammas(chain,outlist);
-    cout<<"*ProcessGammas Done."<<endl;
-  }
+  
   outlist->Sort();
   
   if(DEBUG)

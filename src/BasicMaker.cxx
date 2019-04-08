@@ -41,12 +41,12 @@ void ProcessBasic(TChain* chain,TList* outlist)
     }
     if(x%200000==0)
     {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      printf("ProcessBasic " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
       fflush(stdout);
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("ProcessBasic " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
 }

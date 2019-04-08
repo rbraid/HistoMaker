@@ -377,8 +377,28 @@ void SetupHistos(TList *outlist)
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
       
+      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_tightgate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_tightgate",det,gammas[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_loosegate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_loosegate",det,gammas[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
       outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
       temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
+      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
     }

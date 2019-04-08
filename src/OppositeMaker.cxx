@@ -53,7 +53,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
               TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
               dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
               
-              int Doppler = GetGamState(dopp);
+              int Doppler = GetGamState(dopp,3);
               
               if(dopp>=3.5)
                 multGT3++;
@@ -70,6 +70,20 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
                 if(tp) tp->Fill(RingNumber(hit,ringFile));
                 
                 multInterest++;
+              }
+              Doppler = GetGamState(dopp,2);
+              if(Doppler > 0)
+              {
+                double excite = GetExciteE_Heavy_Corrected(hit,10);
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_tightgate",hit->GetDetectorNumber(),Doppler));
+                if(expg) expg->Fill(excite);
+              }
+              Doppler = GetGamState(dopp,4);
+              if(Doppler > 0)
+              {
+                double excite = GetExciteE_Heavy_Corrected(hit,10);
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_loosegate",hit->GetDetectorNumber(),Doppler));
+                if(expg) expg->Fill(excite);
               }
             }
           }
@@ -88,12 +102,12 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
     }
     if(x%200000==0)
     {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      printf("ProcessOpposite " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
       fflush(stdout);
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("ProcessOpposite " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
   delete tigress;

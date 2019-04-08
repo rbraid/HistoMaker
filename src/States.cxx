@@ -1,9 +1,8 @@
 #include "../include/States.hh"
 
-int GetGamState(double doppVal)
+int GetGamState(double doppVal, int nSigma)
 {
   int doppI = -2;
-  int nSigma = 3;
   
   if(InGaussian(doppVal, 2.58975, 9.12827e-03, nSigma))
   {

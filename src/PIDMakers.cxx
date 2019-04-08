@@ -95,12 +95,24 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
               if(dopp>=1.5)
                 multGT2++;
               
-              int Gamma = GetGamState(dopp);
+              int Gamma = GetGamState(dopp,3);
               if(Gamma >0)
               {
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
                 if(expg) expg->Fill(excitec);
                 multInterest++;
+              }
+              Gamma = GetGamState(dopp,2);
+              if(Gamma >0)
+              {
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_tightgate",hit->GetDetectorNumber(),Gamma));
+                if(expg) expg->Fill(excitec);
+              }
+              Gamma = GetGamState(dopp,4);
+              if(Gamma >0)
+              {
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_loosegate",hit->GetDetectorNumber(),Gamma));
+                if(expg) expg->Fill(excitec);
               }
             }
           }
@@ -127,12 +139,12 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
     }
     if(x%200000==0)
     {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      printf("Process10BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
       fflush(stdout);
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("Process10BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
   delete tigress;
@@ -198,12 +210,12 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, 
     }
     if(x%200000==0)
     {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      printf("Process9BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
       fflush(stdout);
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("Process9BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
 }
@@ -265,12 +277,12 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
     }
     if(x%200000==0)
     {
-      printf("\tprocessed " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
+      printf("Process11BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\r",x,nentries,w.RealTime());
       fflush(stdout);
       w.Continue();
     }
   }
-  cout<<endl;
+  printf("Process11BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
 }
