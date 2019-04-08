@@ -224,9 +224,6 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
       
-      if(hita->GetDetectorNumber() > 2 || hitb->GetDetectorNumber() > 2)
-        continue;    
-      
       if(hita->IsotopeSet()) //This avoids double counting from the PID spectrum
         continue;
       if(hitb->IsotopeSet())
@@ -264,9 +261,9 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
               //               hita->SetIsotope(aNum,"Be");
               //               hitb->SetIsotope(bNum,"Be");
               TH2D* tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hita->GetDetectorNumber(),aNum));
-              tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
+              if(tmpptr2d) tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
               tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hitb->GetDetectorNumber(),bNum));
-              tmpptr2d->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
+              if(tmpptr2d) tmpptr2d->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
               
               double excA =GetExciteE_Heavy_Corrected(hita,aNum);
               double excB =GetExciteE_Heavy_Corrected(hitb,bNum);
@@ -278,13 +275,13 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
               {
                 int ring = RingNumber(hita,ringFile);                  
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateA,hita->GetDetectorNumber(),aNum));
-                tmpptr->Fill(ring);
+                if(tmpptr) tmpptr->Fill(ring);
               }
               if(stateB != -1)
               {
                 int ring = RingNumber(hitb,ringFile);
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateB,hitb->GetDetectorNumber(),bNum));
-                tmpptr->Fill(ring);
+                if(tmpptr) tmpptr->Fill(ring);
               }
             }
           }
