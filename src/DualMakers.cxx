@@ -1,6 +1,6 @@
 #include "../include/DualMakers.hh"
 
-void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
+void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -10,6 +10,8 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
   chain->SetBranchAddress("TCSM",&csm);
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -187,7 +189,7 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
   delete csm;
 }
 
-void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
+void ProcessDualElastic(TChain* chain,TList* outlist,TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -195,6 +197,8 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TFile* ringFile, bool sim)
 //   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   chain->SetBranchAddress("TCSM",&csm);
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)

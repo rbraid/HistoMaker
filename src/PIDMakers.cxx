@@ -1,6 +1,6 @@
 #include "../include/PIDMakers.hh"
 
-void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
+void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -11,6 +11,8 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
   chain->SetBranchAddress("TCSM",&csm);
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
@@ -119,7 +121,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
   delete tigress;
 }
 
-void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
+void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -134,6 +136,8 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, 
   Be9Cut = "pid_low_thick_9Be_%i_v1";
   if(sim)
     Be9Cut = "pid_low_thick_9Be_%i_v1_sim";
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -189,7 +193,7 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, 
   delete csm;
 }
 
-void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
+void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -203,6 +207,8 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile,
   Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
   if(sim)
     Be11Cut = "pid_low_thick_11Be_%i_v2_sim";
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)

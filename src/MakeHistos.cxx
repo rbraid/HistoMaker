@@ -4,7 +4,6 @@
 int main(int argc, char **argv)
 {
   bool SIMULATED_DATA;
-  TFile* ringFile;
   
   TStopwatch wGlobal;
   wGlobal.Start();
@@ -90,7 +89,14 @@ int main(int argc, char **argv)
     chain->SetBranchAddress("TTigress",&tigress);
   chain->SetBranchAddress("TCSM",&csm);
     
-  ringFile = TFile::Open("inputRootFiles/DumbRings.root","read");
+  TList *suppList = new TList;
+  
+  TFile* ringFile = TFile::Open("inputRootFiles/DumbRings.root","read");
+  suppList->Add(ringFile);
+  
+  TFile* gammaFile = TFile::Open("inputRootFiles/GammaInfo.root","read");
+  suppList->Add(gammaFile);
+  
   
   TList *outlist = new TList;
   cout<<"*Beginning"<<endl;
@@ -99,20 +105,20 @@ int main(int argc, char **argv)
 
   ProcessBasic(chain,outlist);
   
-  Process11BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  Process11BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  Process9BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  Process9BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  Process10BePID(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  Process10BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  ProcessOpposite(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  ProcessOpposite(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  ProcessDual10Be(chain,outlist,ringFile,SIMULATED_DATA);
+  ProcessDual10Be(chain,outlist,suppList,SIMULATED_DATA);
   
-  ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
+  ProcessDualElastic(chain,outlist,suppList,SIMULATED_DATA);
   
   SetupHistosDualAndPID(outlist);
-  ProcessPIDandDual(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   if(!SIMULATED_DATA)
     ProcessGammas(chain,outlist);

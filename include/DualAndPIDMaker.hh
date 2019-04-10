@@ -16,6 +16,6 @@
 #include <TStopwatch.h>
 #include "CorrParticles.hh"
 
-void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim);
+void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
 
 #endif

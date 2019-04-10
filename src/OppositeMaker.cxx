@@ -1,6 +1,6 @@
 #include "../include/OppositeMaker.hh"
 
-void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile, bool sim)
+void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -11,6 +11,8 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFile
   chain->SetBranchAddress("TCSM",&csm);
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
+  
+  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v2";
