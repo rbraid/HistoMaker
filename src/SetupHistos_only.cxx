@@ -11,7 +11,7 @@ void SetupHistos(TList *outlist)
   
   for(int id = 1; id<=4;id++)
   {
-    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_Fred",id),Form("EvTheta %i of the identified 10Be, gates of multiplicity > 1 and in breakup peak range.",id),100,0,100,350,0,70));
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_Fred",id),Form("EvTheta %i of particle associated with the identified 10Be",id),100,0,100,350,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
