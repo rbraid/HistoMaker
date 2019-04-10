@@ -44,6 +44,7 @@
 #include "GammaMakers.hh"
 #include "OppositeMaker.hh"
 #include "BasicMaker.hh"
+#include "DualAndPIDMaker.hh"
 
 #define DEBUG 0
 

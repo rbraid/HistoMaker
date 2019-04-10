@@ -111,6 +111,8 @@ int main(int argc, char **argv)
   
   ProcessDualElastic(chain,outlist,ringFile,SIMULATED_DATA);
   
+  ProcessPIDandDual(chain,outlist,cutlist,ringFile,SIMULATED_DATA);
+  
   if(!SIMULATED_DATA)
     ProcessGammas(chain,outlist);
   
