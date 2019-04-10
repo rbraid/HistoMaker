@@ -121,7 +121,7 @@ int main(int argc, char **argv)
   ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   if(!SIMULATED_DATA)
-    ProcessGammas(chain,outlist);
+    ProcessGammas(chain,outlist,suppList);
   
   outlist->Sort();
   

@@ -48,12 +48,12 @@ double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, in
   return Doppler(thit->GetCore()->GetEnergy(), thit->GetPosition().Theta(), thit->GetPosition().Phi(), cenergy, ctheta, cphi, mass);
 }
 
-double EfficiencyWeight(TTigressHit* thit)
+double OldEfficiencyWeight(TTigressHit* thit)
 {
   return(GetEffAndError(thit->GetEnergy(),0).at(0));
 }
 
-vector<double> GetEffAndError(double Energy, bool Error)
+vector<double> OldGetEffAndError(double Energy, bool Error)
 {
   //Takes Energy in keV
   //Returns fractional eff, not percent
@@ -135,4 +135,25 @@ vector<double> GetEffAndError(double Energy, bool Error)
   delete GrandFit;
   delete EffPlot;
   return(retVec);
+}
+
+double EfficiencyWeight(TTigressHit* thit, TFile* gammaFile)
+{
+  return(GetEffAndError(thit->GetEnergy(),gammaFile).at(0));
+}
+
+vector<double> GetEffAndError(double Energy, TFile* gammaFile)
+{
+  //the old one takes 54 seconds 
+  vector<double> retVec;
+  TF1* func = (TF1*)gammaFile->Get("GrandFit");
+  double tmpVal = func->Eval(Energy);
+  
+  if(tmpVal >0)
+    tmpVal = 1./tmpVal;
+  else
+    tmpVal = -1;
+  retVec.push_back(tmpVal);
+  
+  return retVec;
 }

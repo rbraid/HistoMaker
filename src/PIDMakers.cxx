@@ -13,6 +13,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
     chain->SetBranchAddress("TTigress",&tigress);
   
   TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
+  TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
   
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
@@ -82,10 +83,11 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",hit->GetDetectorNumber()));
               temp1->Fill(dopp);
               
+              double weight = EfficiencyWeight(tigresshit,gammaFile);
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_eff",hit->GetDetectorNumber()));
-              temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
+              temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.,weight);
               temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_eff",hit->GetDetectorNumber()));
-              temp1->Fill(dopp,EfficiencyWeight(tigresshit));
+              temp1->Fill(dopp,weight);
               
               int Gamma = GetGamState(dopp,4);
               if(Gamma >0)

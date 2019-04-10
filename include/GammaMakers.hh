@@ -9,6 +9,6 @@
 #include "Gamma.hh"
 #include <TStopwatch.h>
 
-void ProcessGammas(TChain* chain,TList* outlist);
+void ProcessGammas(TChain* chain,TList* outlist,TList* suppList);
 
 #endif

@@ -1,12 +1,14 @@
 #include "../include/GammaMakers.hh"
 
-void ProcessGammas(TChain* chain,TList* outlist)
+void ProcessGammas(TChain* chain,TList* outlist,TList* suppList)
 {
   TStopwatch w;
   w.Start();
   
   TTigress *tigress =  new TTigress;
   chain->SetBranchAddress("TTigress",&tigress);
+  
+  TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -25,7 +27,7 @@ void ProcessGammas(TChain* chain,TList* outlist)
       temp->Fill(hit->GetCore()->GetEnergy()/1000.);
       if(hit->GetCore()->GetEnergy() > 10 && hit->GetCore()->GetEnergy() < 3000){
         temp = (TH1D*)outlist->FindObject("GammaSum_eff");
-        temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit));
+        temp->Fill(hit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(hit,gammaFile));
       }
     }
     if(x%200000==0)

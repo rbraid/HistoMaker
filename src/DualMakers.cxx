@@ -11,7 +11,8 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
   
-  TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
+  TFile* ringFile = (TFile*) suppList->FindObject("inputRootFiles/DumbRings.root");
+  TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -129,9 +130,11 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
                 gamptrh->Fill(Doppler(tigresshit,Hhit,10));
                 gamptrl->Fill(Doppler(tigresshit,Lhit,10));
                 
-                gamptreff->Fill(tigresshit->GetCore()->GetEnergy()/1000.,EfficiencyWeight(tigresshit));
-                gamptrheff->Fill(Doppler(tigresshit,Hhit,10),EfficiencyWeight(tigresshit));
-                gamptrleff->Fill(Doppler(tigresshit,Lhit,10),EfficiencyWeight(tigresshit));
+                double weight = EfficiencyWeight(tigresshit,gammaFile);
+                
+                gamptreff->Fill(tigresshit->GetCore()->GetEnergy()/1000.,weight);
+                gamptrheff->Fill(Doppler(tigresshit,Hhit,10),weight);
+                gamptrleff->Fill(Doppler(tigresshit,Lhit,10),weight);
                 
                 double doppH = Doppler(tigresshit,Hhit,10);
                 double doppL = Doppler(tigresshit,Lhit,10);

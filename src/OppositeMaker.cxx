@@ -13,6 +13,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
     chain->SetBranchAddress("TTigress",&tigress);
   
   TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
+  TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
   
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v2";
@@ -49,7 +50,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
               TH1D* dopptr = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math",hit->GetDetectorNumber()));
               dopptr->Fill(dopp);
               TH1D* dopptreff = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp_opp_math_eff",hit->GetDetectorNumber()));
-              dopptreff->Fill(dopp,EfficiencyWeight(tigresshit));
+              dopptreff->Fill(dopp,EfficiencyWeight(tigresshit,gammaFile));
               
               int Doppler = GetGamState(dopp,4);
 
