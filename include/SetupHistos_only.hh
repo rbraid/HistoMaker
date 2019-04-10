@@ -8,5 +8,6 @@
 #include <cstdio>
 
 void SetupHistos(TList *outlist);
+void SetupHistosDualAndPID(TList *outlist);
 
 #endif

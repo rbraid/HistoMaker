@@ -419,3 +419,16 @@ void SetupHistos(TList *outlist)
     temp1INT->GetYaxis()->SetTitle("Counts");
   }
 }
+
+void SetupHistosDualAndPID(TList *outlist)
+{
+  TH2D *temp2 = 0;
+  
+  for(int id = 1; id<=4;id++)
+  {
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_DualAndPID",id),Form("EvTheta in detector %i of the particle passing dual id cuts, that is associated with a PID 10Be",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_DualAndPID",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+  }
+}

@@ -12,8 +12,6 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFi
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
   
-  TH1D *temp1 = 0;
-  TH2D *temp2 = 0;
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v2";
   if(sim)
@@ -24,8 +22,10 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFi
   {
     chain->GetEntry(x);
     
-    if(csm->GetMultiplicity()==0)
+    if(csm->GetMultiplicity()<2)
       continue;
+    
+    int be10loc = -2;
     
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
@@ -36,7 +36,36 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFi
         if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
         {
           hit->SetIsotope(10,"be");
-          
+          be10loc = y;
+        }
+      }
+    }
+    
+    if(be10loc>=0)
+    {
+      TCSMHit *Be10Hit = csm->GetHit(be10loc);
+      
+      for(int y=0; y<csm->GetMultiplicity(); y++)
+      {
+        if(y==be10loc)
+          continue;
+        
+        TCSMHit *hit = csm->GetHit(y);
+        double* CorrVals = CorrParticle(Be10Hit, 10);
+        double energydiff = (hit->GetEnergy() - CorrVals[0])/1000.; // MeV
+        double thetadiff = (hit->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
+        double phidiff = (hit->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
+        
+        if(phidiff >= -10 && phidiff <= 10)
+        {
+          if(energydiff >= -2.5 && energydiff <= .5)
+          {
+            if(thetadiff >= -3 && thetadiff <= 5)
+            {  
+              TH2D* temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_DualAndPID",hit->GetDetectorNumber()));
+              if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+            }
+          }
         }
       }
     }
