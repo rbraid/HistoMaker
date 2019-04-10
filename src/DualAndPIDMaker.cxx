@@ -64,6 +64,10 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TFile* ringFi
             {  
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_DualAndPID",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+              
+              double excitec = GetExciteE_Heavy_Corrected(hit,10);
+              TH1D* temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_DualAndPID",hit->GetDetectorNumber()));
+              if(temp1) temp1->Fill(excitec);
             }
           }
         }
