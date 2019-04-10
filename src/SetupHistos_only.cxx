@@ -97,38 +97,8 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Energy in MeV");
     temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
     
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_gt2",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas greater than 1.5 MeV",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_gt2",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_gt3",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas greater than the 3368 peak",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_gt3",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_interest",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas in peaks of interest",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_interest",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
     outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_opp",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity",1400,-10,60,10,0,10));
     temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_opp_gt2",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas greater than 1.5 MeV",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_gt2",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_opp_gt3",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas greater than the 3368 peak",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_gt3",id));
-    temp2->GetXaxis()->SetTitle("Energy in MeV");
-    temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
-    
-    outlist->Add(new TH2D(Form("Be10Ex%i_corr_v_tigressMult_opp_interest",id),"Be-10 Excitation Energy, with straggling correction, vs Tigress Multiplicity of gammas in peaks of interest",1400,-10,60,10,0,10));
-    temp2 = (TH2D*)outlist->FindObject(Form("Be10Ex%i_corr_v_tigressMult_opp_interest",id));
     temp2->GetXaxis()->SetTitle("Energy in MeV");
     temp2->GetYaxis()->SetTitle("Tigress Multiplicity");
     
@@ -377,28 +347,8 @@ void SetupHistos(TList *outlist)
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
       
-      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_tightgate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
-      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_tightgate",det,gammas[gammaiter]));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
-      
-      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_loosegate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
-      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_loosegate",det,gammas[gammaiter]));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
-      
       outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
       temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
-      
-      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp_loosegate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
-      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_loosegate",det,gammas[gammaiter]));
-      temp1->GetXaxis()->SetTitle("Energy in MeV");
-      temp1->GetYaxis()->SetTitle("Counts");
-      
-      outlist->Add(new TH1D(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]),Form("Be-10 Excitation Energy, cut on %i gamma ray",gammas[gammaiter]),1400,-10,60));
-      temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp_tightgate",det,gammas[gammaiter]));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
     }
