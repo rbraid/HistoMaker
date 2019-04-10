@@ -423,6 +423,7 @@ void SetupHistos(TList *outlist)
 void SetupHistosDualAndPID(TList *outlist)
 {
   TH2D *temp2 = 0;
+  TH1D *temp1 = 0;
   
   for(int id = 1; id<=4;id++)
   {
