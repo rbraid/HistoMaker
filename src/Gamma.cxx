@@ -146,14 +146,35 @@ vector<double> GetEffAndError(double Energy, TFile* gammaFile)
 {
   //the old one takes 54 seconds 
   vector<double> retVec;
+  TGraphErrors* graph = (TGraphErrors*)gammaFile->Get("PresumPlot4_AfterFit");
   TF1* func = (TF1*)gammaFile->Get("GrandFit");
+  
+  TFitResultPtr ResPtr = graph->Fit(func,"MRSEQ");
+  
   double tmpVal = func->Eval(Energy);
+  double point[1];
+  point[0] = Energy;
+  double err[1];  
+  ResPtr->GetConfidenceIntervals(1, 1, 1, point, err, 0.683, false); // 1 sigma  
+  double percenterror = err[0]/tmpVal;
   
   if(tmpVal >0)
     tmpVal = 1./tmpVal;
   else
+  {
     tmpVal = -1;
+    retVec.push_back(-1);
+    retVec.push_back(0);
+    return retVec; 
+  }
   retVec.push_back(tmpVal);
+  double abserror = percenterror*tmpVal;
+  retVec.push_back(abserror);
+
+//   cout<<"GetEffAndError Debug"<<endl;
+//   cout<<"Energy: "<<Energy<<endl;
+//   cout<<"Eff: "<<retVec.at(0)<<endl;
+//   cout<<"Err: "<<retVec.at(1)<<endl<<endl;
   
   return retVec;
 }
