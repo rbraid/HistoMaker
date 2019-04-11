@@ -139,10 +139,10 @@ vector<double> OldGetEffAndError(double Energy, bool Error)
 
 double EfficiencyWeight(TTigressHit* thit, TFile* gammaFile)
 {
-  return(GetEffAndError(thit->GetEnergy(),gammaFile).at(0));
+  return(GetEffAndError(thit->GetEnergy(),gammaFile,0).at(0));
 }
 
-vector<double> GetEffAndError(double Energy, TFile* gammaFile)
+vector<double> GetEffAndError(double Energy, TFile* gammaFile, bool error)
 {
   //the old one takes 54 seconds 
   vector<double> retVec;
@@ -152,6 +152,12 @@ vector<double> GetEffAndError(double Energy, TFile* gammaFile)
   TFitResultPtr ResPtr = graph->Fit(func,"MRSEQ");
   
   double tmpVal = func->Eval(Energy);
+  if(!error)
+  {
+    retVec.push_back(1/tmpVal);
+    return retVec;
+  }
+  
   double point[1];
   point[0] = Energy;
   double err[1];  

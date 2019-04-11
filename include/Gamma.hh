@@ -19,6 +19,6 @@ double OldEfficiencyWeight(TTigressHit* thit);
 vector<double> OldGetEffAndError(double Energy, bool Error = 0);
 
 double EfficiencyWeight(TTigressHit* thit, TFile* gammaFile);
-vector<double> GetEffAndError(double Energy, TFile* gammaFile);
+vector<double> GetEffAndError(double Energy, TFile* gammaFile, bool error);
 
 #endif
