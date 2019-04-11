@@ -139,30 +139,25 @@ vector<double> OldGetEffAndError(double Energy, bool Error)
 
 double EfficiencyWeight(TTigressHit* thit, TFile* gammaFile)
 {
-  return(GetEffAndError(thit->GetEnergy(),gammaFile,0).at(0));
+  return(GetEffAndError(thit->GetEnergy(),gammaFile).at(0));
 }
 
-vector<double> GetEffAndError(double Energy, TFile* gammaFile, bool error)
+vector<double> GetEffAndError(double Energy, TFile* gammaFile)
 {
   //the old one takes 54 seconds 
   vector<double> retVec;
-  TGraphErrors* graph = (TGraphErrors*)gammaFile->Get("PresumPlot4_AfterFit");
-  TF1* func = (TF1*)gammaFile->Get("GrandFit");
+  TGraphErrors* graph = (TGraphErrors*)gammaFile->Get("EffandErr");
   
-  TFitResultPtr ResPtr = graph->Fit(func,"MRSEQ");
+  double *yarr = graph->GetY();
   
-  double tmpVal = func->Eval(Energy);
-  if(!error)
-  {
-    retVec.push_back(1/tmpVal);
-    return retVec;
-  }
+  int graphpoint = int((Energy)/10.);
+
+  double tmpVal = yarr[graphpoint];
+
+  double *yEarr = graph->GetEY();
   
-  double point[1];
-  point[0] = Energy;
-  double err[1];  
-  ResPtr->GetConfidenceIntervals(1, 1, 1, point, err, 0.683, false); // 1 sigma  
-  double percenterror = err[0]/tmpVal;
+  double abserror = yEarr[graphpoint];
+  double percenterror = abserror/tmpVal;
   
   if(tmpVal >0)
     tmpVal = 1./tmpVal;
@@ -174,7 +169,7 @@ vector<double> GetEffAndError(double Energy, TFile* gammaFile, bool error)
     return retVec; 
   }
   retVec.push_back(tmpVal);
-  double abserror = percenterror*tmpVal;
+  abserror = percenterror*tmpVal;
   retVec.push_back(abserror);
 
 //   cout<<"GetEffAndError Debug"<<endl;
