@@ -32,3 +32,6 @@ Run*
 *.root
 .DS_Store
 
+# Various outputs
+*.png
+callgrind*
