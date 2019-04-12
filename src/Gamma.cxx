@@ -50,7 +50,7 @@ double Doppler(TTigressHit* thit, double cenergy, double ctheta, double cphi, in
 
 double OldEfficiencyWeight(TTigressHit* thit)
 {
-  return(GetEffAndError(thit->GetEnergy(),0).at(0));
+  return(OldGetEffAndError(thit->GetEnergy(),0).at(0));
 }
 
 vector<double> OldGetEffAndError(double Energy, bool Error)
