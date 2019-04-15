@@ -66,6 +66,17 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
                 TCSMHit *otherhit = csm->GetHit(iter);
                 temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",otherhit->GetDetectorNumber()));
                 if(temp2) temp2->Fill(otherhit->GetThetaDeg(),otherhit->GetEnergyMeV());
+                
+                if(otherhit->GetDetectorNumber() == SideAdjacent(hit))
+                {
+                  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_adj",hit->GetDetectorNumber()));
+                  if(temp1) temp1->Fill(excitec);
+                }
+                else if(otherhit->GetDetectorNumber() == SideOpposite(hit))
+                {
+                  temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_opp",hit->GetDetectorNumber()));
+                  if(temp1) temp1->Fill(excitec);
+                }
               }
             }
           }
