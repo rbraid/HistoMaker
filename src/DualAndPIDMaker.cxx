@@ -56,12 +56,16 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TList* suppLi
         double thetadiff = (hit->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
         double phidiff = (hit->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
         
+        Bool_t pass = kFALSE;
+        
         if(phidiff >= -10 && phidiff <= 10)
         {
           if(energydiff >= -2.5 && energydiff <= .5)
           {
             if(thetadiff >= -3 && thetadiff <= 5)
             {  
+              pass = kTRUE;
+              
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_DualAndPID",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
               
@@ -70,6 +74,16 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TList* suppLi
               if(temp1) temp1->Fill(excitec);
             }
           }
+        }
+        
+        if(!pass)
+        {
+          TH2D* temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_not_DualAndPID",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
+          
+          double excitec = GetExciteE_Heavy_Corrected(hit,10);
+          TH1D* temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_not_DualAndPID",hit->GetDetectorNumber()));
+          if(temp1) temp1->Fill(excitec);
         }
       }
     }

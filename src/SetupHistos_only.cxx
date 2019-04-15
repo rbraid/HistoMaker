@@ -382,8 +382,18 @@ void SetupHistosDualAndPID(TList *outlist)
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
     
-    outlist->Add(new TH1D(Form("Be10Ex%i_corr_DualAndPID",id),"Be-10 Excitation Energy, with straggling correction",1400,-10,60));
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr_DualAndPID",id),"Excitation Energy of the particle passing dual id cuts, that is associated with a PID 10Be, with straggling correction",1400,-10,60));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_DualAndPID",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH2D(Form("EvTheta_%i_BE10_not_DualAndPID",id),Form("EvTheta in detector %i of the particle NOT passing dual id cuts, that is associated with a PID 10Be",id),100,0,100,350,0,70));
+    temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_not_DualAndPID",id));
+    temp2->GetXaxis()->SetTitle("Theta in Degrees");
+    temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH1D(Form("Be10Ex%i_corr_not_DualAndPID",id),"Excitation Energy of the particle NOT passing dual id cuts, that is associated with a PID 10Be, with straggling correction",1400,-10,60));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_corr_not_DualAndPID",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
   }
