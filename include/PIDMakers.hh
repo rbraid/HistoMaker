@@ -14,6 +14,7 @@
 #include "Gamma.hh"
 #include "Rings.hh"
 #include <TStopwatch.h>
+#include "Misc.hh"
 
 void Process9BePID(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
 void Process10BePID(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
