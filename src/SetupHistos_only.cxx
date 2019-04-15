@@ -20,13 +20,23 @@ void SetupHistos(TList *outlist)
   
   for(int id = 1; id<=2;id++)
   {
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),"Gamma spectrum",30000,0,30));
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i",id),"Gamma spectrum associated with 10Be PID",30000,0,30));
     temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     
-    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),"Gamma spectrum",30000,0,30));
-    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i",id));
+    outlist->Add(new TH1D(Form("Be10_Gamma_%i_dopp",id),"Gamma spectrum, doppler corrected on 10Be PID",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_%i_dopp",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be11_Gamma_%i",id),"Gamma spectrum assocaited with a 11Be PID",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be11_Gamma_%i",id));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
+    
+    outlist->Add(new TH1D(Form("Be11_Gamma_%i_dopp",id),"Gamma spectrum, doppler corrected on 11Be PID",30000,0,30));
+    temp1 = (TH1D*)outlist->FindObject(Form("Be11_Gamma_%i_dopp",id));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
     

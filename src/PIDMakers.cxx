@@ -212,8 +212,11 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   w.Start();
   
   TCSM *csm =  new TCSM;
+  TTigress *tigress = new TTigress;
   chain->SetBranchAddress("TCSM",&csm);
-
+  if(!sim)
+    chain->SetBranchAddress("TTigress",&tigress);
+  
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be11Cut;
@@ -260,6 +263,21 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);
           }
+          
+          for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
+          {
+            TTigressHit *tigresshit = tigress->GetAddBackHit(y);
+            
+            if(tigresshit->GetCore()->GetEnergy()>10)
+            {
+              double dopp = Doppler(tigresshit,hit,11);
+              
+              temp1 = (TH1D*)outlist->FindObject(Form("Be11_Gamma_%i",hit->GetDetectorNumber()));
+              temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+              temp1 = (TH1D*)outlist->FindObject(Form("Be11_Gamma_%i_dopp",hit->GetDetectorNumber()));
+              temp1->Fill(dopp);
+            }
+          }
         }
       } 
     }
@@ -273,4 +291,5 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   printf("Process11BePID " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
+  delete tigress;
 }
