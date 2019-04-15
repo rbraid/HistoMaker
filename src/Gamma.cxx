@@ -20,6 +20,12 @@ double Doppler(double tenergy, double ttheta, double tphi, double cenergy, doubl
     case 10:
       M4 = MASS_BE10;
       break;
+    case 9:
+      M4 = MASS_BE9;
+      break;
+    case 11:
+      M4 = MASS_BE11;
+      break;
     default:
       cerr<<"Doppler correcting for unknown mass, reverting to 12Be.  Note Doppler assumes a Be isotope for now."<<endl;
       M4 = MASS_BE12;
