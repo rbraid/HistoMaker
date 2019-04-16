@@ -1,48 +1,64 @@
 #include "../include/States.hh"
 
-int GetGamState(double doppVal, int nSigma)
+int GetGamState(double doppVal, int nSigma, int iso)
 {
   int doppI = -2;
   
-  if(InGaussian(doppVal, 2.58975, 9.12827e-03, nSigma))
+  if(iso == 10)
   {
-    if(doppI == -2)
-      doppI = 2589;
-    else
+    if(InGaussian(doppVal, 2.58975, 9.12827e-03, nSigma))
     {
-      std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<2589<<std::endl;
-      doppI = 2589;
+      if(doppI == -2)
+        doppI = 2589;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<2589<<std::endl;
+        doppI = 2589;
+      }
+    }
+    if(InGaussian(doppVal, 2.89422, 5.18030e-03, nSigma))
+    {
+      if(doppI == -2)
+        doppI = 2894;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<2894<<std::endl;
+        doppI = 2894;
+      }
+    }
+    if(InGaussian(doppVal, 3.37119, 1.22753e-02, nSigma))
+    {
+      if(doppI == -2)
+        doppI = 3368;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<3368<<std::endl;
+        doppI = 3368;
+      }
+    }
+    
+    if(InGaussian(doppVal, 5.96114e+00, 3.13731e-02, nSigma))
+    {
+      if(doppI == -2)
+        doppI = 5958;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<5958<<std::endl;
+        doppI = 5958;
+      }
     }
   }
-  if(InGaussian(doppVal, 2.89422, 5.18030e-03, nSigma))
+  else if(iso == 11)
   {
-    if(doppI == -2)
-      doppI = 2894;
-    else
+    if(InGaussian(doppVal, 0.3199, 0.0012, nSigma))
     {
-      std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<2894<<std::endl;
-      doppI = 2894;
-    }
-  }
-  if(InGaussian(doppVal, 3.37119, 1.22753e-02, nSigma))
-  {
-    if(doppI == -2)
-      doppI = 3368;
-    else
-    {
-      std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<3368<<std::endl;
-      doppI = 3368;
-    }
-  }
-  
-  if(InGaussian(doppVal, 5.96114e+00, 3.13731e-02, nSigma))
-  {
-    if(doppI == -2)
-      doppI = 5958;
-    else
-    {
-      std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<5958<<std::endl;
-      doppI = 5958;
+      if(doppI == -2)
+        doppI = 320;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<320<<std::endl;
+        doppI = 320;
+      }
     }
   }
   
