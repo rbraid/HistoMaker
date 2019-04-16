@@ -378,6 +378,23 @@ void SetupHistos(TList *outlist)
     temp1INT->GetXaxis()->SetTitle("Energy in MeV");
     temp1INT->GetYaxis()->SetTitle("Counts");
   }
+  
+  int gammas11[1] = {320};
+  for(int gammaiter = 0; gammaiter<1; gammaiter++)
+  {
+    for(int det = 1; det<3;det++)
+    {
+      outlist->Add(new TH1D(Form("Be11Ex%i_gcut_%i",det,gammas11[gammaiter]),Form("Be-11 Excitation Energy, cut on %i gamma ray",gammas11[gammaiter]),1400,-10,60));
+      temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_gcut_%i",det,gammas11[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Energy in MeV");
+      temp1->GetYaxis()->SetTitle("Counts");
+      
+      outlist->Add(new TH1D(Form("RingCounts_d%i_11Be_gtag_%i",det,gammas11[gammaiter]),Form("11Be counts per ring for detector %i, pid detection, tagged on %i gamma",det,gammas11[gammaiter]),100,0,100));
+      temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_11Be_gtag_%i",det,gammas11[gammaiter]));
+      temp1->GetXaxis()->SetTitle("Ring Number");
+      temp1->GetYaxis()->SetTitle("Counts");
+    }
+  }
 }
 
 void SetupHistosDualAndPID(TList *outlist)

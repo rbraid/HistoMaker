@@ -139,8 +139,8 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
                 double doppH = Doppler(tigresshit,Hhit,10);
                 double doppL = Doppler(tigresshit,Lhit,10);
                                 
-                int DopplerIH = GetGamState(doppH);
-                int DopplerIL = GetGamState(doppL);
+                int DopplerIH = GetGamState(doppH,4,10);
+                int DopplerIL = GetGamState(doppL,4,10);
                 
                 if(DopplerIH > 0)
                 {

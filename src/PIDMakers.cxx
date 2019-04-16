@@ -276,6 +276,17 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
               temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
               temp1 = (TH1D*)outlist->FindObject(Form("Be11_Gamma_%i_dopp",hit->GetDetectorNumber()));
               temp1->Fill(dopp);
+              
+              int Gamma = GetGamState(dopp,4,11);
+              if(Gamma >0)
+              {
+                TH1D* expg = (TH1D*)outlist->FindObject(Form("Be11Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
+                if(expg) expg->Fill(ex11c);
+                
+                int ring = RingNumber(hit,ringFile);
+                TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_11Be_gtag_%i",hit->GetDetectorNumber(),Gamma));   
+                tmpptr->Fill(ring);
+              }
             }
           }
         }
