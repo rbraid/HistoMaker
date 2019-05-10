@@ -172,6 +172,8 @@ int main(int argc, char **argv)
   
   cout<<endl<<"Total Real Time: "<<DGREEN<<wGlobal.RealTime()/60.<<" minutes."<<RESET_COLOR<<endl;
   
+  beep();
+  
   return 0;
 }
 

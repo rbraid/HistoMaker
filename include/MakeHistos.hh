@@ -46,6 +46,8 @@
 #include "BasicMaker.hh"
 #include "DualAndPIDMaker.hh"
 
+#include <ncurses.h>
+
 #define DEBUG 0
 
 #endif

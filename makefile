@@ -16,7 +16,7 @@ LDFLAGS+=$(shell grsi-config --root)
 # $(info Adding GRSI: $(shell grsi-config --root) to LDFLAGS)
 
 # $(info  *****************)
-LDLIBS= -lm
+LDLIBS= -lm -lncurses
 # $(info LDLIBS is ${LDLIBS})
 LDLIBS+=$(shell root-config --glibs) 
 # $(info Adding ROOT: $(shell root-config --glibs) to LDLIBS)
