@@ -271,6 +271,11 @@ void SetupHistos(TList *outlist)
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");
   temp1INT->GetYaxis()->SetTitle("Counts");
   
+  outlist->Add(new TH1I("DualBe11_ex_allcut","Be-11 Excitation Energy non-PID cut on Theta, Phi and Energy, and energy corrected",1400,-10,60));
+  temp1INT = (TH1I*)outlist->FindObject("DualBe11_ex_allcut");
+  temp1INT->GetXaxis()->SetTitle("Energy in MeV");
+  temp1INT->GetYaxis()->SetTitle("Counts");
+  
   outlist->Add(new TH1I("DualBe10_ex_allcut_highonly","Be-10 Excitation Energy non-PID cut on Theta, Phi and Energy, Higher energy hit only",1400,-10,60));
   temp1INT = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_highonly");
   temp1INT->GetXaxis()->SetTitle("Energy in MeV");

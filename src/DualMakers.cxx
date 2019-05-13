@@ -275,6 +275,12 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TList* suppList, bool sim)
               double excA =GetExciteE_Heavy_Corrected(hita,aNum);
               double excB =GetExciteE_Heavy_Corrected(hitb,bNum);
               
+              TH1I *dualex = (TH1I*)outlist->FindObject("DualBe11_ex_allcut");
+              if(aNum == 11)
+                dualex->Fill(excA);
+              else
+                dualex->Fill(excB);
+              
               int stateA = GetExState(excA,11,sim);
               int stateB = GetExState(excB,11,sim);
               
