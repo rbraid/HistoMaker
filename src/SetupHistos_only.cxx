@@ -138,7 +138,7 @@ void SetupHistos(TList *outlist)
     temp2->SetContour(666);
     temp2->SetOption("colz");
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
-    temp2->GetYaxis()->SetTitle("dE/dX in MeV/um");
+    temp2->GetYaxis()->SetTitle("dE/dX in keV/um");
     
     outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("Energy vs Theta for Detector %i",id),480,0,120,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
