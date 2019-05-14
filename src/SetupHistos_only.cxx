@@ -140,6 +140,14 @@ void SetupHistos(TList *outlist)
     temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
     temp2->GetYaxis()->SetTitle("dE/dX in keV/um");
     
+    outlist->Add(new TH2D(Form("pid_%i_summed_thickness_isolate",id),Form("Particle ID for Detector %i",id),3200,0,160,1600,0,2000));//
+    temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_isolate",id));
+    temp2->GetYaxis()->SetTitleOffset(1.5);
+    temp2->SetContour(666);
+    temp2->SetOption("colz");
+    temp2->GetXaxis()->SetTitle("Total Energy deposited in MeV");
+    temp2->GetYaxis()->SetTitle("dE/dX in keV/um");
+    
     outlist->Add(new TH2D(Form("EvTheta_%iTotal",id),Form("Energy vs Theta for Detector %i",id),480,0,120,1400,0,70));
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
