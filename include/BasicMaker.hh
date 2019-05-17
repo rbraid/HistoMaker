@@ -6,7 +6,7 @@
 #include "TCSM.h"
 #include <TChain.h>
 #include <TList.h>
-// #include <TCutG.h>
+#include <TCutG.h>
 #include <TH2D.h>
 #include <TH1D.h>
 // #include "States.hh"
@@ -16,6 +16,6 @@
 // #include "CorrParticles.hh"
 #include <TStopwatch.h>
 
-void ProcessBasic(TChain* chain,TList* outlist);
+void ProcessBasic(TChain* chain,TList* outlist,TList* cutlist);
 
 #endif

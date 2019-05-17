@@ -1,6 +1,6 @@
 #include "../include/BasicMaker.hh"
 
-void ProcessBasic(TChain* chain,TList* outlist)
+void ProcessBasic(TChain* chain,TList* outlist,TList* cutlist)
 {
   TStopwatch w;
   w.Start();
@@ -37,11 +37,24 @@ void ProcessBasic(TChain* chain,TList* outlist)
             if(temp2) temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
             
 //             if(hit->GetDVerticalStrip() == 7 && hit->GetDHorizontalStrip() == 9)
+//             if(hit->GetDVerticalStrip() == 2 )
             if(hit->GetDVerticalStrip() == 2 && hit->GetDHorizontalStrip() == 0)
             {
               temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_isolate",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx()); 
             }
+          }
+        }
+      }
+      
+      if(hit->GetDetectorNumber() == 2)
+      {
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject("bullshit")))
+        {
+          if(cut->IsInside(hit->GetEnergyMeV(),hit->GetDdE_dx()) && hit->GetEEnergy() > 10)
+          {
+            TH2I* tmp = (TH2I*)outlist->FindObject(Form("HP_%i_bs",hit->GetDetectorNumber()));
+            tmp->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
           }
         }
       }

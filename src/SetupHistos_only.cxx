@@ -15,6 +15,8 @@ void SetupHistos(TList *outlist)
     temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_Fred",id));
     temp2->GetXaxis()->SetTitle("Theta in Degrees");
     temp2->GetYaxis()->SetTitle("Total Energy deposited in MeV");
+    
+    outlist->Add(new TH2I(Form("HP_%i_bs",id),Form("Hit pattern for confusing hits",id),16,0,16,16,0,16));
   }
   
   
