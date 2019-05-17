@@ -36,9 +36,11 @@ void ProcessBasic(TChain* chain,TList* outlist,TList* cutlist)
             temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness",hit->GetDetectorNumber()));
             if(temp2) temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx());
             
-//             if(hit->GetDVerticalStrip() == 7 && hit->GetDHorizontalStrip() == 9)
-//             if(hit->GetDVerticalStrip() == 2 )
-            if(hit->GetDVerticalStrip() == 2 && hit->GetDHorizontalStrip() == 0)
+            if(hit->GetDVerticalStrip() == 7 && hit->GetDHorizontalStrip() == 9);
+            else if(hit->GetDVerticalStrip() == 2 );
+	    else if(hit->GetDVerticalStrip() == 1 && hit->GetDHorizontalStrip() == 9);
+//            if(hit->GetDVerticalStrip() == 2 && hit->GetDHorizontalStrip() == 0)
+	    else
             {
               temp2 = (TH2D*)outlist->FindObject(Form("pid_%i_summed_thickness_isolate",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(hit->GetEnergyMeV(),hit->GetDdE_dx()); 
