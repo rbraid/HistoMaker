@@ -15,7 +15,9 @@
 // #include "Rings.hh"
 // #include "CorrParticles.hh"
 #include <TStopwatch.h>
+#include <TH2I.h>
 
 void ProcessBasic(TChain* chain,TList* outlist);
+void SetupBasicHistos(TList* hlist);
 
 #endif

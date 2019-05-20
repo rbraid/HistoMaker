@@ -38,6 +38,12 @@ void ProcessBasic(TChain* chain,TList* outlist)
           }
         }
       }
+
+      TH2I* temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
+      if(temp2INT) temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+
+      temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
+      if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
     }
     if(x%200000==0)
     {
@@ -49,4 +55,21 @@ void ProcessBasic(TChain* chain,TList* outlist)
   printf("ProcessBasic " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
+}
+
+void SetupBasicHistos(TList* hlist)
+{
+  for(int det=1;det<=4;det++)
+  {
+    for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order
+    {
+      if(det>2 && type=='E')//This skips 3 and 4 E, which don't exist
+        continue;
+
+      hlist->Add(new TH2I(Form("CSM_HitPattern_%i%c",det,type),Form("HitPattern, Detector %i, Position %c",det,type),16,0,16,16,0,16));//
+      TH2I* temp2INT = (TH2I*)hlist->FindObject(Form("CSM_HitPattern_%i%c",det,type));
+      temp2INT->GetXaxis()->SetTitle("Vertical Strip Number");
+      temp2INT->GetYaxis()->SetTitle("Horizontal Strip Number");
+    }
+  }
 }

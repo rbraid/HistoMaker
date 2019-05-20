@@ -222,7 +222,7 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   TString Be11Cut;
   Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
   if(sim)
-    Be11Cut = "pid_low_thick_11Be_%i_v2_sim";
+    Be11Cut = "pid_low_thick_11Be_%i_v4_sim";
   
   TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   

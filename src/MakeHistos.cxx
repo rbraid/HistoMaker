@@ -103,6 +103,7 @@ int main(int argc, char **argv)
   SetupHistos(outlist);
   cout<<"*Histos Set"<<endl;
 
+  SetupBasicHistos(outlist);
   ProcessBasic(chain,outlist);
   
   Process11BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
