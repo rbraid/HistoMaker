@@ -148,7 +148,7 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList, 
   TString Be9Cut;
   Be9Cut = "pid_low_thick_9Be_%i_v1";
   if(sim)
-    Be9Cut = "pid_low_thick_9Be_%i_v1_sim";
+    Be9Cut = "pid_low_thick_9Be_%i_v2_sim";
   
   TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
   
