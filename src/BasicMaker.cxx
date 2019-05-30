@@ -39,11 +39,17 @@ void ProcessBasic(TChain* chain,TList* outlist)
         }
       }
 
-      TH2I* temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
-      if(temp2INT) temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+      if(hit->GetDVerticalStrip() >= 0 && hit->GetDHorizontalStrip() >= 0)
+      {
+        TH2I* temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iD",hit->GetDetectorNumber()));
+        if(temp2INT) temp2INT->Fill(hit->GetDVerticalStrip(),hit->GetDHorizontalStrip());
+      }
 
-      temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
-      if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
+      if(hit->GetEVerticalStrip() >= 0 && hit->GetEHorizontalStrip() >= 0)
+      {
+        TH2I* temp2INT = (TH2I*)outlist->FindObject(Form("CSM_HitPattern_%iE",hit->GetDetectorNumber()));
+        if(temp2INT) temp2INT->Fill(hit->GetEVerticalStrip(),hit->GetEHorizontalStrip());
+      }
     }
     if(x%200000==0)
     {
