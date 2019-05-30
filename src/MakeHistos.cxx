@@ -106,6 +106,7 @@ int main(int argc, char **argv)
   SetupBasicHistos(outlist);
   ProcessBasic(chain,outlist);
   
+  Setup11BePIDHistos(outlist);
   Process11BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   Process9BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);

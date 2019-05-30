@@ -20,4 +20,6 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist, TList* suppList,
 void Process10BePID(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
 void Process11BePID(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
 
+void Setup11BePIDHistos(TList* hlist);
+
 #endif
