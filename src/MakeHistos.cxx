@@ -121,8 +121,8 @@ int main(int argc, char **argv)
   SetupHistosDualAndPID(outlist);
   ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  if(!SIMULATED_DATA)
-    ProcessGammas(chain,outlist,suppList);
+//   if(!SIMULATED_DATA)
+//     ProcessGammas(chain,outlist,suppList);
   
   outlist->Sort();
   
