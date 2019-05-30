@@ -1,6 +1,6 @@
 #include "../include/DualMakers.hh"
 
-void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
+void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
@@ -13,6 +13,11 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
   
   TFile* ringFile = (TFile*) suppList->FindObject("inputRootFiles/DumbRings.root");
   TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
+  
+  TString Be10Cut;
+  Be10Cut = "pid_low_thick_10Be_%i_v2";
+  if(sim)
+    Be10Cut = "pid_low_thick_10Be_%i_sim";
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
@@ -42,10 +47,20 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
       
-      if(hita->IsotopeSet()) //This avoids double counting from the PID spectrum
-        continue;
-      if(hitb->IsotopeSet())
-        continue;
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hita->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
+        {
+          continue;
+        }
+      }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hitb->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hitb->GetEnergyMeV(),hitb->GetDdE_dx()) && hitb->GetEEnergy() > 10)
+        {
+          continue;
+        }
+      }
       
       double* CorrVals = CorrParticle(hita, 10);
       
@@ -192,10 +207,14 @@ void ProcessDual10Be(TChain* chain,TList* outlist,TList* suppList, bool sim)
   delete csm;
 }
 
-void ProcessDualElastic(TChain* chain,TList* outlist,TList* suppList, bool sim)
+void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* suppList, bool sim)
 {
   TStopwatch w;
   w.Start();
+  TString Be11Cut;
+  Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
+  if(sim)
+    Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   
 //   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
@@ -230,11 +249,22 @@ void ProcessDualElastic(TChain* chain,TList* outlist,TList* suppList, bool sim)
       
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
+
       
-      if(hita->IsotopeSet()) //This avoids double counting from the PID spectrum
-        continue;
-      if(hitb->IsotopeSet())
-        continue;
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hita->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
+        {
+          continue;
+        }
+      }
+      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hitb->GetDetectorNumber()))))
+      {
+        if(cut->IsInside(hitb->GetEnergyMeV(),hitb->GetDdE_dx()) && hitb->GetEEnergy() > 10)
+        {
+          continue;
+        }
+      }
       
       for(int iso = 9; iso <=11; iso+=2)
       {

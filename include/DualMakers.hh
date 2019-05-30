@@ -6,7 +6,7 @@
 #include "TCSM.h"
 #include <TChain.h>
 #include <TList.h>
-// #include <TCutG.h>
+#include <TCutG.h>
 // #include <TH2D.h>
 // #include <TH1D.h>
 #include "States.hh"
@@ -17,7 +17,7 @@
 #include <TH2I.h>
 #include <TStopwatch.h>
 
-void ProcessDual10Be(TChain* chain,TList* outlist, TList* suppList, bool sim);
-void ProcessDualElastic(TChain* chain,TList* outlist, TList* suppList, bool sim);
+void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppList, bool sim);
+void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist, TList* suppList, bool sim);
 
 #endif

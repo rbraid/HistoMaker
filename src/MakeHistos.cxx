@@ -114,9 +114,9 @@ int main(int argc, char **argv)
   
   ProcessOpposite(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  ProcessDual10Be(chain,outlist,suppList,SIMULATED_DATA);
+  ProcessDual10Be(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  ProcessDualElastic(chain,outlist,suppList,SIMULATED_DATA);
+  ProcessDualElastic(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   SetupHistosDualAndPID(outlist);
   ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
