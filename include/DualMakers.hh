@@ -20,4 +20,6 @@
 void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppList, bool sim);
 void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist, TList* suppList, bool sim);
 
+void SetupDualElasticHistos(TList* hlist);
+
 #endif

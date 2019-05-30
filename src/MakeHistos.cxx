@@ -117,6 +117,7 @@ int main(int argc, char **argv)
   
   ProcessDual10Be(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
+  SetupDualElasticHistos(outlist);
   ProcessDualElastic(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   SetupHistosDualAndPID(outlist);
