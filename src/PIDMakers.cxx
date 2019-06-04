@@ -110,11 +110,12 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
           }
 
           int state = GetExState(excitec,10,sim);
+          int ring = RingNumber(hit,ringFile);
+          temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(excitec,ring);
           
           if(state != -1)
-          {
-            int ring = RingNumber(hit,ringFile);
-            
+          {            
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_pid",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);           
           }
@@ -306,6 +307,17 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   chain->ResetBranchAddresses();
   delete csm;
   delete tigress;
+}
+
+void Setup10BePIDHistos(TList* hlist)
+{
+  for(int det = 1; det<=2;det++)
+  {
+    hlist->Add(new TH2D(Form("ExPerRing_10Be_d%i",det),"Excitation Energy Vs Ring",1400,-10,60,50,0,50));
+    TH2D* temp = (TH2D*)hlist->FindObject(Form("ExPerRing_10Be_d%i",det));
+    temp->GetXaxis()->SetTitle("Excitation in MeV");
+    temp->GetYaxis()->SetTitle("Ring");
+  }
 }
 
 void Setup11BePIDHistos(TList* hlist)

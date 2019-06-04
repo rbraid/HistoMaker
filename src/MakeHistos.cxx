@@ -111,6 +111,7 @@ int main(int argc, char **argv)
   
   Process9BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
+  Setup10BePIDHistos(outlist);
   Process10BePID(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   ProcessOpposite(chain,outlist,cutlist,suppList,SIMULATED_DATA);
