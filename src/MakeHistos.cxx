@@ -115,6 +115,7 @@ int main(int argc, char **argv)
   
   ProcessOpposite(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
+  SetupDualHistos(outlist);
   ProcessDual10Be(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
   SetupDualElasticHistos(outlist);

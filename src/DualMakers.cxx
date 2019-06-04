@@ -172,23 +172,27 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
             
             double ex10cA =GetExciteE_Heavy_Corrected(hita,10);
             double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
+            
+            int ringA = RingNumber(hita,ringFile);
+            int ringB = RingNumber(hitb,ringFile);
+
+            TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i_dual",hita->GetDetectorNumber()));
+            if(temp2) temp2->Fill(ex10cA,ringA);
+            temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i_dual",hitb->GetDetectorNumber()));
+            if(temp2) temp2->Fill(ex10cA,ringB); 
                         
             int stateA = GetExState(ex10cA,10,sim);
             int stateB = GetExState(ex10cB,10,sim);
             
             if(stateA != -1)
-            {              
-              int ring = RingNumber(hita,ringFile);
-              
+            {                            
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
-              if(tmpptr) tmpptr->Fill(ring);
+              if(tmpptr) tmpptr->Fill(ringA);
             }
             if(stateB != -1)
-            {              
-              int ring = RingNumber(hitb,ringFile);
-              
+            {                            
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
-              if(tmpptr) tmpptr->Fill(ring);
+              if(tmpptr) tmpptr->Fill(ringB);
             }
           }
         }
@@ -352,6 +356,16 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
   printf("ProcessDualElastic " DYELLOW "%i" RESET_COLOR "/" DBLUE "%i" RESET_COLOR " entries in " DRED "%.02f" RESET_COLOR " seconds\n",nentries,nentries,w.RealTime());
   chain->ResetBranchAddresses();
   delete csm;
+}
+void SetupDualHistos(TList* hlist)
+{
+  for(int det = 1; det<=2;det++)
+  {
+    hlist->Add(new TH2D(Form("ExPerRing_10Be_d%i_dual",det),"Excitation Energy Vs Ring with Dual Detection",1400,-10,60,50,0,50));
+    TH2D* temp = (TH2D*)hlist->FindObject(Form("ExPerRing_10Be_d%i_dual",det));
+    temp->GetXaxis()->SetTitle("Excitation in MeV");
+    temp->GetYaxis()->SetTitle("Ring");
+  }
 }
 
 void SetupDualElasticHistos(TList* hlist)
