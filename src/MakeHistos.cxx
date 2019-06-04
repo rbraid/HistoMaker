@@ -122,8 +122,8 @@ int main(int argc, char **argv)
   SetupDualElasticHistos(outlist);
   ProcessDualElastic(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
-  SetupHistosDualAndPID(outlist);
-  ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
+//   SetupHistosDualAndPID(outlist);
+//   ProcessPIDandDual(chain,outlist,cutlist,suppList,SIMULATED_DATA);
   
 //   if(!SIMULATED_DATA)
 //     ProcessGammas(chain,outlist,suppList);
