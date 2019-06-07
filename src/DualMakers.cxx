@@ -216,7 +216,7 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
   TStopwatch w;
   w.Start();
   TString Be11Cut;
-  Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
+  Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything
   if(sim)
     Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   

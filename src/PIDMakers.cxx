@@ -221,7 +221,7 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be11Cut;
-  Be11Cut = "pid_low_thick_11Be_%i_v2";//v1 is elastic only, v2 is everything
+  Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything, v3 is super broad
   if(sim)
     Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   
@@ -290,6 +290,9 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
                 int ring = RingNumber(hit,ringFile);
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_11Be_gtag_%i",hit->GetDetectorNumber(),Gamma));   
                 tmpptr->Fill(ring);
+                
+                temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_11Be_d%i_gtag_%i",hit->GetDetectorNumber(),Gamma));
+                if(temp2) temp2->Fill(ex11c,ring);
               }
             }
           }
@@ -328,5 +331,14 @@ void Setup11BePIDHistos(TList* hlist)
     TH2D* temp = (TH2D*)hlist->FindObject(Form("ExPerRing_11Be_d%i",det));
     temp->GetXaxis()->SetTitle("Excitation in MeV");
     temp->GetYaxis()->SetTitle("Ring");
+    
+    int gammas11[1] = {320};
+    for(int gammaiter = 0; gammaiter<1; gammaiter++)
+    {
+      hlist->Add(new TH2D(Form("ExPerRing_11Be_d%i_gtag_%i",det,gammas11[gammaiter]),"Excitation Energy Vs Ring",1400,-10,60,50,0,50));
+      TH2D* temp = (TH2D*)hlist->FindObject(Form("ExPerRing_11Be_d%i_gtag_%i",det,gammas11[gammaiter]));
+      temp->GetXaxis()->SetTitle("Excitation in MeV");
+      temp->GetYaxis()->SetTitle("Ring");
+    }
   }
 }
