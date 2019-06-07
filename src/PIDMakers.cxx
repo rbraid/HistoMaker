@@ -18,7 +18,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be10Cut;
-  Be10Cut = "pid_low_thick_10Be_%i_v2";
+  Be10Cut = "pid_low_thick_10Be_%i_v3";
   if(sim)
     Be10Cut = "pid_low_thick_10Be_%i_sim";
   
