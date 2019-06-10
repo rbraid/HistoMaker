@@ -248,7 +248,7 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
       
-      if(hita->GetEEergy() > 10)
+      if(hita->GetEEnergy() > 10)
         continue;
       
       for(int iso = 9; iso <=11; iso+=2)
