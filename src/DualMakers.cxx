@@ -238,8 +238,7 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
     {
       TCSMHit *hita;
       TCSMHit *hitb;
-      TRandom *rdm = new TRandom(x);
-      if(rdm->Integer(2))
+      if(csm->GetHit(0)->GetEnergy() > csm->GetHit(1)->GetEnergy())
       {
         hita = csm->GetHit(0);
         hitb = csm->GetHit(1);
@@ -249,11 +248,9 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
         hita = csm->GetHit(1);
         hitb = csm->GetHit(0);
       }
-      delete rdm;
       
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
-
       
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hita->GetDetectorNumber()))))
       {
@@ -280,13 +277,6 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
           bNum = 11;
         else
           cout<<"Erorr: iso = "<<iso<<endl;
-        
-        if(hita->GetEnergy() > hitb->GetEnergy())
-        {
-          TCSMHit *tmp = hita;
-          hita = hitb;
-          hitb = tmp;
-        }
         
         double* CorrVals = CorrParticle(hita, aNum);
         double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
