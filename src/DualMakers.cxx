@@ -215,10 +215,6 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
 {
   TStopwatch w;
   w.Start();
-  TString Be11Cut;
-  Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything
-  if(sim)
-    Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   
 //   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
@@ -252,20 +248,8 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
       
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hita->GetDetectorNumber()))))
-      {
-        if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
-        {
-          continue;
-        }
-      }
-      if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be11Cut,hitb->GetDetectorNumber()))))
-      {
-        if(cut->IsInside(hitb->GetEnergyMeV(),hitb->GetDdE_dx()) && hitb->GetEEnergy() > 10)
-        {
-          continue;
-        }
-      }
+      if(hita->GetEEergy() > 10)
+        continue;
       
       for(int iso = 9; iso <=11; iso+=2)
       {
