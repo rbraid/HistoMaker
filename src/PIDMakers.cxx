@@ -260,6 +260,9 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
           temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_11Be_d%i",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(ex11c,ring);
           
+          temp2 = (TH2D*)outlist->FindObject(Form("LabThetaPerRing_11Be_d%i",hit->GetDetectorNumber()));
+          if(temp2) temp2->Fill(hit->GetThetaDeg(),ring);
+          
           int state = GetExState(ex11c,11,sim);
           
           if(state != -1)
@@ -332,13 +335,18 @@ void Setup11BePIDHistos(TList* hlist)
     temp->GetXaxis()->SetTitle("Excitation in MeV");
     temp->GetYaxis()->SetTitle("Ring");
     
+    hlist->Add(new TH2D(Form("LabThetaPerRing_11Be_d%i",det),"Lab Theta Vs Ring",90,0,90,50,0,50));
+    temp = (TH2D*)hlist->FindObject(Form("LabThetaPerRing_11Be_d%i",det));
+    temp->GetXaxis()->SetTitle("Lab Theta in Degrees");
+    temp->GetYaxis()->SetTitle("Ring");
+    
     int gammas11[1] = {320};
     for(int gammaiter = 0; gammaiter<1; gammaiter++)
     {
       hlist->Add(new TH2D(Form("ExPerRing_11Be_d%i_gtag_%i",det,gammas11[gammaiter]),"Excitation Energy Vs Ring",1400,-10,60,50,0,50));
-      TH2D* temp = (TH2D*)hlist->FindObject(Form("ExPerRing_11Be_d%i_gtag_%i",det,gammas11[gammaiter]));
-      temp->GetXaxis()->SetTitle("Excitation in MeV");
-      temp->GetYaxis()->SetTitle("Ring");
+      TH2D* tempg = (TH2D*)hlist->FindObject(Form("ExPerRing_11Be_d%i_gtag_%i",det,gammas11[gammaiter]));
+      tempg->GetXaxis()->SetTitle("Excitation in MeV");
+      tempg->GetYaxis()->SetTitle("Ring");
     }
   }
 }
