@@ -221,7 +221,8 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be11Cut;
-  Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything, v3 is super broad
+//   Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything, v3 is super broad
+  Be11Cut = "elastic_test_tight_%i";
   if(sim)
     Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   
