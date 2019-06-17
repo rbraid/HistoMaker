@@ -15,7 +15,7 @@ void ProcessPIDandDual(TChain* chain,TList* outlist,TList* cutlist,TList* suppLi
   TString Be10Cut;
   Be10Cut = "pid_low_thick_10Be_%i_v3";
   if(sim)
-    Be10Cut = "pid_low_thick_10Be_%i_sim";
+    Be10Cut = "pid_thick_10Be_sim_%i_v2";
   
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
