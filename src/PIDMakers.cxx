@@ -18,7 +18,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be10Cut;
-  Be10Cut = "pid_low_thick_10Be_%i_v3";
+  Be10Cut = "pid_thick_10Be_%i_v10";
   if(sim)
     Be10Cut = "pid_thick_10Be_sim_%i_v2";
   
@@ -147,7 +147,7 @@ void Process9BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList, 
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be9Cut;
-  Be9Cut = "pid_low_thick_9Be_%i_v1";
+  Be9Cut = "pid_thick_9Be_%i_v10";
   if(sim)
     Be9Cut = "pid_low_thick_9Be_%i_v2_sim";
   
@@ -221,7 +221,7 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
   TH1D *temp1 = 0;
   TH2D *temp2 = 0;
   TString Be11Cut;
-  Be11Cut = "pid_low_thick_11Be_%i_v3";//v1 is elastic only, v2 is everything, v3 is super broad
+  Be11Cut = "pid_thick_11Be_%i_v10";//v1 is elastic only, v2 is everything, v3 is super broad
   if(sim)
     Be11Cut = "pid_sum_thick_11Be_%i_v5_sim";
   

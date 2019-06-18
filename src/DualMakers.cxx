@@ -15,7 +15,7 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
   TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
   
   TString Be10Cut;
-  Be10Cut = "pid_low_thick_10Be_%i_v3";
+  Be10Cut = "pid_thick_10Be_%i_v10";
   if(sim)
     Be10Cut = "pid_thick_10Be_sim_%i_v2";
   
