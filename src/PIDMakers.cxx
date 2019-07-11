@@ -268,10 +268,10 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
           temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i_corr",hit->GetDetectorNumber()));
           if(temp1) temp1->Fill(ex11c);
           
-          if(hit->GetDVerticalStrip() < 2 || hit->GetDVerticalStrip() > 13)
-            continue;
-          if(hit->GetDHorizontalStrip() < 2 || hit->GetDHorizontalStrip() > 13)
-            continue;         
+//           if(hit->GetDVerticalStrip() < 2 || hit->GetDVerticalStrip() > 13)
+//             continue;
+//           if(hit->GetDHorizontalStrip() < 2 || hit->GetDHorizontalStrip() > 13)
+//             continue;         
           
           int ring = RingNumber(hit,ringFile);
           temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_11Be_d%i",hit->GetDetectorNumber()));
