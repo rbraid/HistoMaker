@@ -352,7 +352,7 @@ void Setup11BePIDHistos(TList* hlist)
     temp->GetXaxis()->SetTitle("Excitation in MeV");
     temp->GetYaxis()->SetTitle("Ring");
     
-    hlist->Add(new TH2D(Form("LabThetaPerRing_11Be_d%i",det),"Lab Theta Vs Ring",90,0,90,50,0,50));
+    hlist->Add(new TH2D(Form("LabThetaPerRing_11Be_d%i",det),"Lab Theta Vs Ring",180,0,90,50,0,50));
     temp = (TH2D*)hlist->FindObject(Form("LabThetaPerRing_11Be_d%i",det));
     temp->GetXaxis()->SetTitle("Lab Theta in Degrees");
     temp->GetYaxis()->SetTitle("Ring");
