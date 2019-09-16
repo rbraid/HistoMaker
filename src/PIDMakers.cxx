@@ -80,7 +80,9 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
               }
             }
           }
-
+          
+          int ring = RingNumber(hit,ringFile);
+          
           for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
           {
             TTigressHit *tigresshit = tigress->GetAddBackHit(y);
@@ -105,12 +107,14 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
               {
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i",hit->GetDetectorNumber(),Gamma));
                 if(expg) expg->Fill(excitec);
+                              
+                TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_pid",Gamma,hit->GetDetectorNumber()));
+                if(temp2) temp2->Fill(excitec,ring);
               }
             }
           }
 
           int state = GetExState(excitec,10,sim);
-          int ring = RingNumber(hit,ringFile);
           temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(excitec,ring);
           

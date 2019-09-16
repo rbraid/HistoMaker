@@ -188,11 +188,17 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
             {                            
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
               if(tmpptr) tmpptr->Fill(ringA);
+              
+              TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
+              if(temp2) temp2->Fill(ex10cA,ringA);
             }
             if(stateB != -1)
             {                            
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
               if(tmpptr) tmpptr->Fill(ringB);
+              
+              TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
+              if(temp2) temp2->Fill(ex10cB,ringB);
             }
           }
         }

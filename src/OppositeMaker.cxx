@@ -56,11 +56,15 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
 
               if(Doppler > 0)
               {
+                int ring = RingNumber(hit,ringFile);
                 double excite = GetExciteE_Heavy_Corrected(hit,10);
                 TH1D* expg = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",hit->GetDetectorNumber(),Doppler));
                 if(expg) expg->Fill(excite);
                 TH1D* tp = (TH1D*)outlist->FindObject(Form("RingCounts_d%i_10Be_opp_%i",hit->GetDetectorNumber(),Doppler));
-                if(tp) tp->Fill(RingNumber(hit,ringFile));
+                if(tp) tp->Fill(ring);
+                
+                TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_pid_opp",Doppler,hit->GetDetectorNumber()));
+                if(temp2) temp2->Fill(excite,ring);
               }
             }
           }

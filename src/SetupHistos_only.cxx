@@ -366,6 +366,22 @@ void SetupHistos(TList *outlist)
       temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i_gcut_%i_opp",det,gammas[gammaiter]));
       temp1->GetXaxis()->SetTitle("Energy in MeV");
       temp1->GetYaxis()->SetTitle("Counts");
+      
+      
+      outlist->Add(new TH2D(Form("ExPerRing_10Be_s%i_d%i_dual",gammas[gammaiter],det),"Excitation Energy Vs Ring with Dual Detection",1400,-10,60,50,0,50));
+      TH2D* temp = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",gammas[gammaiter],det));
+      temp->GetXaxis()->SetTitle("Excitation in MeV");
+      temp->GetYaxis()->SetTitle("Ring");
+      
+      outlist->Add(new TH2D(Form("ExPerRing_10Be_s%i_d%i_pid",gammas[gammaiter],det),"Excitation Energy Vs Ring with PID Detection",1400,-10,60,50,0,50));
+      temp = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_pid",gammas[gammaiter],det));
+      temp->GetXaxis()->SetTitle("Excitation in MeV");
+      temp->GetYaxis()->SetTitle("Ring");
+      
+      outlist->Add(new TH2D(Form("ExPerRing_10Be_s%i_d%i_pid_opp",gammas[gammaiter],det),"Excitation Energy Vs Ring with PID Detection, based on doppler correction of opposite 10Be",1400,-10,60,50,0,50));
+      temp = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_pid_opp",gammas[gammaiter],det));
+      temp->GetXaxis()->SetTitle("Excitation in MeV");
+      temp->GetYaxis()->SetTitle("Ring");
     }
     
     outlist->Add(new TH1I(Form("DualBe10Ex_gcut_%i",gammas[gammaiter]),Form("Be-10 Excitation Energy dual detection cut on %i #gamma ray",gammas[gammaiter]),1400,-10,60));
