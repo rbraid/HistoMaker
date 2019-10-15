@@ -88,9 +88,11 @@ int GetExState(double exVal, int iso, bool sim)
         exI = 0;
       else if(exVal >= 2. && exVal<= 4.)
         exI = 3;      
-      else if(exVal >= 4.5 && exVal <= 8)
+      else if(exVal >= 4 && exVal <= 7.5)
         exI = 6;
-      else if(exVal >= 7.7 && exVal <= 10.7)
+      else if(exVal >= 5.50 && exVal <= 9)
+        exI = 7;
+      else if(exVal >= 7.5 && exVal <= 10.5)
         exI = 9;
       else if(exVal >= 10.7 && exVal <= 14)
         exI = 12;
@@ -101,9 +103,11 @@ int GetExState(double exVal, int iso, bool sim)
         exI = 0;              
       else if(exVal >= 2.5 && exVal<= 4.4)
         exI = 3;              
-      else if(exVal >= 4.5 && exVal<= 7.5)
+      else if(exVal >= 4.5 && exVal<= 7.)
         exI = 6;
-      else if(exVal >= 7.5 && exVal<= 10.5)
+      else if(exVal >= 7 && exVal<= 8.4)
+        exI = 7;
+      else if(exVal >= 8.4 && exVal<= 10.5)
         exI = 9;
       else if(exVal >= 11.2 && exVal <= 12.7)
         exI = 12;
