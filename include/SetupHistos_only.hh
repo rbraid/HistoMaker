@@ -6,6 +6,7 @@
 #include <TH1.h>
 #include <TList.h>
 #include <cstdio>
+#include <iostream>
 
 void SetupHistos(TList *outlist);
 void SetupHistosDualAndPID(TList *outlist);

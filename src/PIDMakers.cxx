@@ -283,11 +283,10 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
           
           temp2 = (TH2D*)outlist->FindObject(Form("LabThetaPerRing_11Be_d%i",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(hit->GetThetaDeg(),ring);
-          
           int state = GetExState(ex11c,11,sim);
           
           if(state != -1)
-          {            
+          {                   
             TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_11Be",state,hit->GetDetectorNumber()));   
             tmpptr->Fill(ring);
           }
