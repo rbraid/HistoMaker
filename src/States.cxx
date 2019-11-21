@@ -91,7 +91,7 @@ int GetExState(double exVal, int iso, bool sim)
       else if(exVal >= 4 && exVal <= 7.5) // Note there is a problem here with no exclusivity.  if you re-run 7, you need to comment out this line
         exI = 6;
       else if(exVal >= 5.50 && exVal <= 9){
-        cout<<"hack in place for state 7, this is broken"<<endl;
+//         std::cout<<"hack in place for state 7, this is broken"<<std::endl;
         exI = 7;
       }
       else if(exVal >= 5.5 && exVal <= 14)

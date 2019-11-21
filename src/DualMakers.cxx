@@ -159,13 +159,25 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
                 
                 if(DopplerIH > 0)
                 {
+                  double tmpExcite =GetExciteE_Heavy_Corrected(Hhit,10);
+                  int tmpRing = RingNumber(Hhit,ringFile);
+                  
                   TH1I* dualexgcuth = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_high",DopplerIH));
-                  if(dualexgcuth) dualexgcuth->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
+                  if(dualexgcuth) dualexgcuth->Fill(tmpExcite);
+                  
+                  TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_g%i_d%i_dual",DopplerIH,Hhit->GetDetectorNumber()));
+                  if(temp2) temp2->Fill(tmpExcite,tmpRing);
                 }
                 if(DopplerIL > 0)
                 {
+                  double tmpExcite =GetExciteE_Heavy_Corrected(Lhit,10);
+                  int tmpRing = RingNumber(Lhit,ringFile);
+                  
                   TH1I* dualexgcutl = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_low",DopplerIL));
-                  if(dualexgcutl) dualexgcutl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
+                  if(dualexgcutl) dualexgcutl->Fill(tmpExcite);
+                  
+                  TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_g%i_d%i_dual",DopplerIL,Lhit->GetDetectorNumber()));
+                  if(temp2) temp2->Fill(tmpExcite,tmpRing);
                 }
               }
             }         

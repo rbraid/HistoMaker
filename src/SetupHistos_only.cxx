@@ -317,7 +317,7 @@ void SetupHistos(TList *outlist)
       if(state != 0 && state != 3 && state != 6 && state!= 7 && state != 9 && state != 12)
         continue;
       
-      std::cout<<state<<std::endl;
+//       std::cout<<state<<std::endl;
       outlist->Add(new TH1D(Form("RingCounts_s%i_d%i_dual",state,det),Form("Counts per ring for state %i, detector %i, dual detection",state,det),100,0,100));
       temp1 = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",state,det));
       temp1->GetXaxis()->SetTitle("Ring Number");
@@ -375,8 +375,8 @@ void SetupHistos(TList *outlist)
       temp1->GetYaxis()->SetTitle("Counts");
       
       
-      outlist->Add(new TH2D(Form("ExPerRing_10Be_s%i_d%i_dual",gammas[gammaiter],det),"Excitation Energy Vs Ring with Dual Detection",1400,-10,60,50,0,50));
-      TH2D* temp = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",gammas[gammaiter],det));
+      outlist->Add(new TH2D(Form("ExPerRing_10Be_g%i_d%i_dual",gammas[gammaiter],det),"Excitation Energy Vs Ring with Dual Detection",1400,-10,60,50,0,50));
+      TH2D* temp = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_g%i_d%i_dual",gammas[gammaiter],det));
       temp->GetXaxis()->SetTitle("Excitation in MeV");
       temp->GetYaxis()->SetTitle("Ring");
       
