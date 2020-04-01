@@ -37,7 +37,7 @@ int GetGamState(double doppVal, int nSigma, int iso)
       }
     }
 
-    if(doppVal >= 4)
+    if(doppVal >= 4.8)
     {
       if(doppI == -2)
         doppI = 5958;
