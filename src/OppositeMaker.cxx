@@ -56,6 +56,15 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(dopp,ring);
 
+              if(dopp > 4.8)
+              {
+                double excitec = GetExciteE_Heavy_Corrected(hit,10);
+
+                TH2D* temp2 = (TH2D*)outlist->FindObject(Form("SIvGAM_d%i_r%i",hit->GetDetectorNumber(),ring));
+                if(temp2) cout<<"Filling "<<temp2->GetName()<<" with "<<dopp<<", "<<excitec<<endl;
+                if(temp2) temp2->Fill(dopp,excitec);
+              }
+
               int Doppler = GetGamState(dopp,4);
 
               if(Doppler > 0)
@@ -91,3 +100,19 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
   delete tigress;
 }
 
+void SetupOppositeHistos(TList* hlist)
+{
+  for(int det = 1; det<=2; det++)
+  {
+    for(int ring=0; ring<30; ring++)
+    {
+      hlist->Add(new TH2D(Form("SIvGAM_d%i_r%02i",det,ring),"Excitation Energy Vs Ring",1000,0,10,1500,0,15));
+      TH2D* temp = (TH2D*)hlist->FindObject(Form("SIvGAM_d%i_r%02i",det,ring));
+      // cout<<"New Plot Added?: "<<Form("SIvGAM_d%i_r%02i",det,ring)<<endl;
+      // if(temp)
+      //   cout<<"Yes! "<<temp->GetName()<<endl;
+      temp->GetXaxis()->SetTitle("Gamma Ray Energy");
+      temp->GetYaxis()->SetTitle("Excitation Energy");
+    }
+  }
+}

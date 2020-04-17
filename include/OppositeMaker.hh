@@ -17,5 +17,6 @@
 #include <TStopwatch.h>
 
 void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist, TList* suppList, bool sim);
+void SetupOppositeHistos(TList* hlist);
 
 #endif
