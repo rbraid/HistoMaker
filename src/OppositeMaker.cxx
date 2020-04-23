@@ -61,7 +61,6 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
                 double excitec = GetExciteE_Heavy_Corrected(hit,10);
 
                 TH2D* temp2 = (TH2D*)outlist->FindObject(Form("SIvGAM_d%i_r%i",hit->GetDetectorNumber(),ring));
-                if(temp2) cout<<"Filling "<<temp2->GetName()<<" with "<<dopp<<", "<<excitec<<endl;
                 if(temp2) temp2->Fill(dopp,excitec);
               }
 
@@ -108,9 +107,6 @@ void SetupOppositeHistos(TList* hlist)
     {
       hlist->Add(new TH2D(Form("SIvGAM_d%i_r%02i",det,ring),"Excitation Energy Vs Ring",1000,0,10,1500,0,15));
       TH2D* temp = (TH2D*)hlist->FindObject(Form("SIvGAM_d%i_r%02i",det,ring));
-      // cout<<"New Plot Added?: "<<Form("SIvGAM_d%i_r%02i",det,ring)<<endl;
-      // if(temp)
-      //   cout<<"Yes! "<<temp->GetName()<<endl;
       temp->GetXaxis()->SetTitle("Gamma Ray Energy");
       temp->GetYaxis()->SetTitle("Excitation Energy");
     }
