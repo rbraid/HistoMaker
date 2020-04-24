@@ -100,7 +100,7 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
               if(state != -1)
               {
                 temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_s%i",state));
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+                temp1->Fill(dopp);
               }
 
               double weight = EfficiencyWeight(tigresshit,gammaFile);

@@ -62,7 +62,7 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
               if(state != -1)
               {
                 TH1D* temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_s%i_opp",state));
-                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+                temp1->Fill(dopp);
               }
 
               if(dopp > 4.8)
