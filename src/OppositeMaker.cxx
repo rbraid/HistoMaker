@@ -56,6 +56,15 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp",hit->GetDetectorNumber()));
               if(temp2) temp2->Fill(dopp,ring);
 
+              double excitec = GetExciteE_Heavy_Corrected(hit,10);
+              int state = GetExState(excitec,10,sim);
+
+              if(state != -1)
+              {
+                TH1D* temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_s%i_opp",state));
+                temp1->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
+              }
+
               if(dopp > 4.8)
               {
                 double excitec = GetExciteE_Heavy_Corrected(hit,10);
@@ -110,5 +119,15 @@ void SetupOppositeHistos(TList* hlist)
       temp->GetXaxis()->SetTitle("Gamma Ray Energy");
       temp->GetYaxis()->SetTitle("Excitation Energy");
     }
+  }
+
+  for(int state = 0; state<13; state++)
+  {
+    if(state != 0 && state != 3 && state != 6 && state!= 7 && state != 9 && state != 12)
+      continue;
+    hlist->Add(new TH1D(Form("Be10_Gamma_s%i_opp",state),Form("Doppler Corrected (on opposite particle) Gamma Spectrum, with 10Be in State %i",state),30000,0,30));
+    TH1D* temp1 = (TH1D*)hlist->FindObject(Form("Be10_Gamma_s%i_opp",state));
+    temp1->GetXaxis()->SetTitle("Energy in MeV");
+    temp1->GetYaxis()->SetTitle("Counts");
   }
 }
