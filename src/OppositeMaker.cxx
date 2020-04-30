@@ -63,6 +63,9 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
               {
                 TH1D* temp1 = (TH1D*)outlist->FindObject(Form("Be10_Gamma_s%i_opp",state));
                 temp1->Fill(dopp);
+
+                TH2D* gprs = (TH2D*)outlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp_s%i",hit->GetDetectorNumber(),state));
+                if(gprs) gprs->Fill(dopp,ring);
               }
 
               if(dopp > 4.8)
@@ -129,5 +132,14 @@ void SetupOppositeHistos(TList* hlist)
     TH1D* temp1 = (TH1D*)hlist->FindObject(Form("Be10_Gamma_s%i_opp",state));
     temp1->GetXaxis()->SetTitle("Energy in MeV");
     temp1->GetYaxis()->SetTitle("Counts");
+
+    for(int det = 1; det<=2; det++)
+    {
+      hlist->Add(new TH2D(Form("GamPerRing_10Be_d%i_pid_opp_s%i",det,state),Form("Doppler Corrected Energy Vs Ring with PID Detection, based on doppler correction of opposite 10Be, cut on State %i",state),10000,0,10,50,0,50));
+      TH2D* temp2 = (TH2D*)hlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp_s%i",det,state));
+      temp2->GetXaxis()->SetTitle("Energy in MeV");
+      temp2->GetYaxis()->SetTitle("Ring");
+    }
   }
+
 }
