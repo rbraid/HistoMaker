@@ -68,6 +68,16 @@ void ProcessOpposite(TChain* chain,TList* outlist,TList* cutlist,TList* suppList
                 if(gprs) gprs->Fill(dopp,ring);
               }
 
+              double centroid = 6.27223;
+              double sigma = .539652;
+              double nSig = 4.25;
+
+              if(excitec >= centroid - nSig*sigma  && excitec <= centroid + nSig*sigma)
+              {
+                TH2D* gprs6 = (TH2D*)outlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp_sBig6",hit->GetDetectorNumber()));
+                if(gprs6) gprs6->Fill(dopp,ring);
+              }
+
               if(dopp > 4.8)
               {
                 double excitec = GetExciteE_Heavy_Corrected(hit,10);
@@ -142,4 +152,11 @@ void SetupOppositeHistos(TList* hlist)
     }
   }
 
+  for(int det = 1; det<=2; det++)
+  {
+    hlist->Add(new TH2D(Form("GamPerRing_10Be_d%i_pid_opp_sBig6",det),Form("Doppler Corrected Energy Vs Ring with PID Detection, based on doppler correction of opposite 10Be, cut on State Big6"),10000,0,10,50,0,50));
+    TH2D* temp2 = (TH2D*)hlist->FindObject(Form("GamPerRing_10Be_d%i_pid_opp_sBig6",det));
+    temp2->GetXaxis()->SetTitle("Energy in MeV");
+    temp2->GetYaxis()->SetTitle("Ring");
+  }
 }
