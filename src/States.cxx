@@ -36,19 +36,8 @@ int GetGamState(double doppVal, int nSigma, int iso)
         doppI = 3368;
       }
     }
-
-    if(doppVal >= 4.8)
-    {
-      if(doppI == -2)
-        doppI = 5958;
-      else
-      {
-        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<5958<<std::endl;
-        doppI = 5958;
-      }
-    }
-
-    // if(InGaussian(doppVal, 5.96114e+00, 3.13731e-02, nSigma))
+    //
+    // if(doppVal >= 4.8)
     // {
     //   if(doppI == -2)
     //     doppI = 5958;
@@ -58,6 +47,17 @@ int GetGamState(double doppVal, int nSigma, int iso)
     //     doppI = 5958;
     //   }
     // }
+
+    if(InGaussian(doppVal, 5.96114e+00, 3.13731e-02, nSigma))
+    {
+      if(doppI == -2)
+        doppI = 5958;
+      else
+      {
+        std::cout<<"Warning: reassignment in GetGamState. From "<<doppI<<" to "<<5958<<std::endl;
+        doppI = 5958;
+      }
+    }
   }
   else if(iso == 11)
   {
