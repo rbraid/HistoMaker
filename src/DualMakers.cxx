@@ -4,29 +4,29 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
 {
   TStopwatch w;
   w.Start();
-  
+
   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   chain->SetBranchAddress("TCSM",&csm);
   if(!sim)
     chain->SetBranchAddress("TTigress",&tigress);
-  
+
   TFile* ringFile = (TFile*) suppList->FindObject("inputRootFiles/DumbRings.root");
   TFile* gammaFile = (TFile*) suppList->FindObject("inputRootFiles/GammaInfo.root");
-  
+
   TString Be10Cut;
   Be10Cut = "pid_thick_10Be_%i_v10";
   if(sim)
     Be10Cut = "pid_thick_10Be_sim_%i_v2";
-  
+
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
   {
     chain->GetEntry(x);
-    
+
     if(csm->GetMultiplicity()==0)
       continue;
-    
+
     if(csm->GetMultiplicity() == 2)
     {
       TCSMHit *hita;
@@ -43,10 +43,10 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
         hitb = csm->GetHit(0);
       }
       delete rdm;
-      
+
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
-      
+
       if(TCutG *cut = (TCutG*)(cutlist->FindObject(Form(Be10Cut,hita->GetDetectorNumber()))))
       {
         if(cut->IsInside(hita->GetEnergyMeV(),hita->GetDdE_dx()) && hita->GetEEnergy() > 10)
@@ -61,9 +61,9 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
           continue;
         }
       }
-      
+
       double* CorrVals = CorrParticle(hita, 10);
-      
+
       TH2I *dualn = (TH2I*)outlist->FindObject("Dual10Be_nocut");
       dualn->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
       dualn->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
@@ -75,38 +75,38 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
         TH2I *dualp = (TH2I*)outlist->FindObject("Dual10Be_phicut");
         dualp->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
         dualp->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-        
+
         if(thetadiff >= -3 && thetadiff <= 5)
         {
           TH2I *dualt = (TH2I*)outlist->FindObject("Dual10Be_thetacut");
           dualt->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
           dualt->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
         }
-        
+
         if(energydiff >= -2.5 && energydiff <= .5)
         {
           TH2I *duale = (TH2I*)outlist->FindObject("Dual10Be_encut");
           duale->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
           duale->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-          
+
           if(thetadiff >= -3 && thetadiff <= 5)
-          {            
+          {
             TH2I *duala = (TH2I*)outlist->FindObject("Dual10Be_allcut");
             duala->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
             duala->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-            
+
             TH2I *dualac = (TH2I*)outlist->FindObject("Dual10Be_allcut_corrected");
             dualac->Fill(hita->GetThetaDeg(),hita->GetCorrectedEnergyMeV("10be"));
             dualac->Fill(hitb->GetThetaDeg(),hitb->GetCorrectedEnergyMeV("10be"));
-            
+
             double excitecA = GetExciteE_Heavy_Corrected(hita,10);
             double excitecB = GetExciteE_Heavy_Corrected(hitb,10);
-            
+
             TH1I *dualex = (TH1I*)outlist->FindObject("DualBe10_ex_allcut");
             dualex->Fill(excitecA);
             dualex->Fill(excitecB);
-            
-            
+
+
             TH1I *gamptr = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas");
             TH1I *gamptrs = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_supp");
             TH1I *gamptrh = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_high");
@@ -116,7 +116,7 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
             TH1I *gamptrleff = (TH1I*)outlist->FindObject("DualBe10_allcut_gammas_dopp_low_eff");
             TCSMHit* Hhit;
             TCSMHit* Lhit;
-            
+
             if(hita->GetEnergyMeV()>=hitb->GetEnergyMeV())
             {
               Hhit = hita;
@@ -127,16 +127,16 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
               Hhit = hitb;
               Lhit = hita;
             }
-            
+
             TH1I *dualexh = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_highonly");
             dualexh->Fill(GetExciteE_Heavy_Corrected(Hhit,10));
             TH1I *dualexl = (TH1I*)outlist->FindObject("DualBe10_ex_allcut_lowonly");
             dualexl->Fill(GetExciteE_Heavy_Corrected(Lhit,10));
-            
+
             for(int y=0; y<tigress->GetAddBackMultiplicity();y++)
             {
               TTigressHit *tigresshit = tigress->GetAddBackHit(y);
-              
+
               if(tigresshit->GetCore()->GetEnergy()>10)
               {
                 gamptr->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
@@ -144,27 +144,27 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
                   gamptrs->Fill(tigresshit->GetCore()->GetEnergy()/1000.);
                 gamptrh->Fill(Doppler(tigresshit,Hhit,10));
                 gamptrl->Fill(Doppler(tigresshit,Lhit,10));
-                
+
                 double weight = EfficiencyWeight(tigresshit,gammaFile);
-                
+
                 gamptreff->Fill(tigresshit->GetCore()->GetEnergy()/1000.,weight);
                 gamptrheff->Fill(Doppler(tigresshit,Hhit,10),weight);
                 gamptrleff->Fill(Doppler(tigresshit,Lhit,10),weight);
-                
+
                 double doppH = Doppler(tigresshit,Hhit,10);
                 double doppL = Doppler(tigresshit,Lhit,10);
-                                
+
                 int DopplerIH = GetGamState(doppH,4,10);
                 int DopplerIL = GetGamState(doppL,4,10);
-                
+
                 if(DopplerIH > 0)
                 {
                   double tmpExcite =GetExciteE_Heavy_Corrected(Hhit,10);
                   int tmpRing = RingNumber(Hhit,ringFile);
-                  
+
                   TH1I* dualexgcuth = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_high",DopplerIH));
                   if(dualexgcuth) dualexgcuth->Fill(tmpExcite);
-                  
+
                   TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_g%i_d%i_dual",DopplerIH,Hhit->GetDetectorNumber()));
                   if(temp2) temp2->Fill(tmpExcite,tmpRing);
                 }
@@ -172,43 +172,43 @@ void ProcessDual10Be(TChain* chain,TList* outlist, TList* cutlist, TList* suppLi
                 {
                   double tmpExcite =GetExciteE_Heavy_Corrected(Lhit,10);
                   int tmpRing = RingNumber(Lhit,ringFile);
-                  
+
                   TH1I* dualexgcutl = (TH1I*)outlist->FindObject(Form("DualBe10Ex_gcut_%i_low",DopplerIL));
                   if(dualexgcutl) dualexgcutl->Fill(tmpExcite);
-                  
+
                   TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_g%i_d%i_dual",DopplerIL,Lhit->GetDetectorNumber()));
                   if(temp2) temp2->Fill(tmpExcite,tmpRing);
                 }
               }
-            }         
-            
+            }
+
             double ex10cA =GetExciteE_Heavy_Corrected(hita,10);
             double ex10cB =GetExciteE_Heavy_Corrected(hitb,10);
-            
+
             int ringA = RingNumber(hita,ringFile);
             int ringB = RingNumber(hitb,ringFile);
 
             TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i_dual",hita->GetDetectorNumber()));
             if(temp2) temp2->Fill(ex10cA,ringA);
             temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_d%i_dual",hitb->GetDetectorNumber()));
-            if(temp2) temp2->Fill(ex10cA,ringB); 
-                        
+            if(temp2) temp2->Fill(ex10cA,ringB);
+
             int stateA = GetExState(ex10cA,10,sim);
             int stateB = GetExState(ex10cB,10,sim);
-            
+
             if(stateA != -1)
-            {                            
+            {
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
               if(tmpptr) tmpptr->Fill(ringA);
-              
+
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",stateA,hita->GetDetectorNumber()));
               if(temp2) temp2->Fill(ex10cA,ringA);
             }
             if(stateB != -1)
-            {                            
+            {
               TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
               if(tmpptr) tmpptr->Fill(ringB);
-              
+
               TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_10Be_s%i_d%i_dual",stateB,hitb->GetDetectorNumber()));
               if(temp2) temp2->Fill(ex10cB,ringB);
             }
@@ -233,21 +233,21 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
 {
   TStopwatch w;
   w.Start();
-  
+
 //   TTigress *tigress =  new TTigress;
   TCSM *csm =  new TCSM;
   chain->SetBranchAddress("TCSM",&csm);
-  
+
   TFile* ringFile = (TFile*)suppList->FindObject("inputRootFiles/DumbRings.root");
-  
+
   int nentries = chain->GetEntries();
   for(int x=0; x<nentries; x++)
   {
     chain->GetEntry(x);
-    
+
     if(csm->GetMultiplicity()==0)
       continue;
-    
+
     if(csm->GetMultiplicity() == 2)
     {
       TCSMHit *hita;
@@ -262,13 +262,13 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
         hita = csm->GetHit(1);
         hitb = csm->GetHit(0);
       }
-      
+
       if(hita->GetDetectorNumber() == hitb->GetDetectorNumber())
         continue;
-      
+
       if(hita->GetEEnergy() > 10)
         continue;
-      
+
       for(int iso = 9; iso <=11; iso+=2)
       {
         int aNum = iso;
@@ -279,12 +279,12 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
           bNum = 11;
         else
           cout<<"Erorr: iso = "<<iso<<endl;
-        
+
         double* CorrVals = CorrParticle(hita, aNum);
         double energydiff = (hitb->GetEnergy() - CorrVals[0])/1000.; // MeV
         double thetadiff = (hitb->GetPosition().Theta() - CorrVals[1])*180./TMath::Pi(); // Degrees
         double phidiff = (hitb->GetPosition().Phi() - CorrVals[2])*180./TMath::Pi(); // Degrees
-        
+
         if(phidiff >= -10 && phidiff <= 10)
         {
           if(energydiff >= -2.5 && energydiff <= .5)
@@ -297,16 +297,16 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
               if(tmpptr2d) tmpptr2d->Fill(hita->GetThetaDeg(),hita->GetEnergyMeV());
               tmpptr2d = (TH2D*)outlist->FindObject(Form("EvTheta_%i_%iBe_corr",hitb->GetDetectorNumber(),bNum));
               if(tmpptr2d) tmpptr2d->Fill(hitb->GetThetaDeg(),hitb->GetEnergyMeV());
-              
+
               double excA =GetExciteE_Heavy_Corrected(hita,aNum);
               double excB =GetExciteE_Heavy_Corrected(hitb,bNum);
-              
+
               TH1I *dualex = (TH1I*)outlist->FindObject("DualBe11_ex_allcut");
               if(aNum == 11)
                 dualex->Fill(excA);
               else
                 dualex->Fill(excB);
-              
+
               int ringA = RingNumber(hita,ringFile);
               int ringB = RingNumber(hitb,ringFile);
               if(aNum == 11)
@@ -317,12 +317,12 @@ void ProcessDualElastic(TChain* chain,TList* outlist, TList* cutlist ,TList* sup
               else
               {
                 TH2D* temp2 = (TH2D*)outlist->FindObject(Form("ExPerRing_11Be_d%i_dual",hitb->GetDetectorNumber()));
-                if(temp2) temp2->Fill(excB,ringB); 
+                if(temp2) temp2->Fill(excB,ringB);
               }
-              
+
               int stateA = GetExState(excA,11,sim);
               int stateB = GetExState(excB,11,sim);
-              
+
               if(stateA != -1)
               {
                 TH1D* tmpptr = (TH1D*)outlist->FindObject(Form("RingCounts_s%i_d%i_%iBe_corr",stateA,hita->GetDetectorNumber(),aNum));
