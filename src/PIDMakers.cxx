@@ -274,6 +274,9 @@ void Process11BePID(TChain* chain,TList* outlist,TList* cutlist,TList* suppList,
           temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
+          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_Be11_corrected",hit->GetDetectorNumber()));
+          temp2->Fill(hit->GetThetaDeg(),hit->GetCorrectedEnergyMeV("11Be"));
+
           temp1 = (TH1D*)outlist->FindObject(Form("Be11Ex%i",hit->GetDetectorNumber()));
           if(temp1) temp1->Fill(GetExciteE_Heavy(hit,11));
 
