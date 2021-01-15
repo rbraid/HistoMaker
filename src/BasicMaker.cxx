@@ -5,24 +5,27 @@ void ProcessBasic(TChain* chain,TList* outlist)
   TStopwatch w;
   w.Start();
   TCSM *csm =  new TCSM;
-  
+
   chain->SetBranchAddress("TCSM",&csm);
-  
+
   int nentries = chain->GetEntries();
-  
+
   for(int x=0; x<nentries; x++)
   {
     chain->GetEntry(x);
-    
+
     if(csm->GetMultiplicity()==0)
       continue;
-    
+
     for(int y=0; y<csm->GetMultiplicity(); y++)
     {
 
       TH2D *temp2 = 0;
       TCSMHit *hit = csm->GetHit(y);
-      
+
+      TH2D* AngPtr = (TH2D*)outlist->FindObject("ThetaVPhi_CSM");
+      AngPtr->Fill(hit->GetPosition().Theta()*180/3.14159, hit->GetPosition().Phi()*180/3.14159);
+
       if(hit->GetDetectorNumber()<3)
       {
         temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%iTotal",hit->GetDetectorNumber()));
@@ -65,6 +68,8 @@ void ProcessBasic(TChain* chain,TList* outlist)
 
 void SetupBasicHistos(TList* hlist)
 {
+  hlist->Add(new TH2D("ThetaVPhi_CSM","Angular Coverage Map",720,0,180,720,0,180));
+
   for(int det=1;det<=4;det++)
   {
     for(char type='D';type<='E';type++) //Wow I can't believe this works.  I am glad they are in alphabetical order

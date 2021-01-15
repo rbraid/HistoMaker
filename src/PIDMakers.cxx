@@ -43,6 +43,9 @@ void Process10BePID(TChain* chain,TList* outlist,TList* cutlist,TList *suppList,
           temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10",hit->GetDetectorNumber()));
           if(temp2) temp2->Fill(hit->GetThetaDeg(),hit->GetEnergyMeV());
 
+          temp2 = (TH2D*)outlist->FindObject(Form("EvTheta_%i_BE10_corrected",hit->GetDetectorNumber()));
+          temp2->Fill(hit->GetThetaDeg(),hit->GetCorrectedEnergyMeV("10Be"));
+
           double excite = GetExciteE_Heavy(hit,10);
           temp1 = (TH1D*)outlist->FindObject(Form("Be10Ex%i",hit->GetDetectorNumber()));
           if(temp1) temp1->Fill(excite);
